@@ -1,14 +1,27 @@
 require(compiler)
 setCompilerOptions(optimize=3)
+### WRAPPER FUNCTION for fitting
+### creates grids of lambdas, fits model
+### selects according to eBIC
+
+
+
+
 
 #
-#' Title here.
+#' Estimates a concentration matrix under the pdglasso model using adaptive ADMM algorithm.
 #'
 #' Description here.
-#' @param S
-#' @param lambda1
-#' @param lambda2
-#' @param type
+#' @param S A \eqn{p \times p} covariance (or correlation) matrix.
+#' @param lambda1 A non-negative scalar (or vector) penalty that encourages
+#'   sparsity in the concentration matrix. If a vector is provided, it should match the appropriate length, i.e.
+#' @param lambda2 A non-negative scalar (or vector) penalty that encourages
+#'   equality constraints in the concentration matrix. If a vector is provided, it should match the appropriate length, i.e.
+#' @param type The type of equality constraints to be imposed; zero, one or more available options
+#'   can be selected among:
+#'  * "vertex", symmetries are imposed on the diagonal entries of the concentration matrix.
+#'  * "inside.block.edge", symmetries are imposed between elements of the LL and RR block the concentration matrix.
+#'  * "across.block.edge", symmetries are imposed between elements of the LR and RL block the concentration matrix.
 #' @param force.symm
 #' @param X.init
 #' @param rho1
@@ -24,6 +37,9 @@ setCompilerOptions(optimize=3)
 #' @export
 #'
 #' @examples
+#' !!! Create fake dataset
+#' S <- cov(toy.data)
+#' admm.pdglasso(S)
 admm.pdglasso <- function(S,
                      lambda1     = 1,
                      lambda2     = 0.0001,
@@ -138,7 +154,7 @@ admm.pdglasso <- function(S,
 }
 admm.pdglasso_C<-cmpfun(admm.pdglasso)
 
-#
+# Inner ADMM loop for the main function
 admm.inner <- function(X,
                         U,
                         rho1,
