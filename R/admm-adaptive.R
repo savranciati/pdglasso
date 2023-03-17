@@ -3,7 +3,7 @@ setCompilerOptions(optimize=3)
 ### WRAPPER FUNCTION for fitting the model
 ### creates grids of lambdas, fits model
 ### selects according to eBIC
-
+### TO DO
 
 
 #' Estimate a concentration matrix under the pdglasso model using adaptive ADMM
@@ -173,6 +173,7 @@ admm.pdglasso <- function(S,
 admm.pdglasso_C<-cmpfun(admm.pdglasso)
 
 # Inner ADMM loop for the main function
+# Most Inputs are inherited from the main call on admm.pdglasso()
 admm.inner <- function(X,
                         U,
                         rho1,
