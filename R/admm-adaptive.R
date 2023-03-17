@@ -1,15 +1,12 @@
 require(compiler)
 setCompilerOptions(optimize=3)
-### WRAPPER FUNCTION for fitting
+### WRAPPER FUNCTION for fitting the model
 ### creates grids of lambdas, fits model
 ### selects according to eBIC
 
 
 
-
-
-
-#' Estimates a concentration matrix under the pdglasso model using adaptive ADMM
+#' Estimate a concentration matrix under the pdglasso model using adaptive ADMM
 #' algorithm.
 #'
 #' Description here.
@@ -51,7 +48,10 @@ setCompilerOptions(optimize=3)
 #'   convergence of inner loop) is shown in the console while the algorithm is
 #'   running.
 #'
-#' @return AAA
+#' @return A list, whose element are:
+#' * `X`, the estimated concentration matrix under the pdglasso model; the model is identified by the values of lambda1 and lambda 2, together with the type of penalization imposed.
+#' * `acronims`, a vector of strings for the type of penalties and forced symmetries imposed when calling the function.
+#' * `internal.par`, a list of internal parameters passed to the function at the call, as well as convergence information.
 #' @export
 #'
 #' @examples
