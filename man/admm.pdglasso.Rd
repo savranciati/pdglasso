@@ -2,7 +2,7 @@
 % Please edit documentation in R/admm-adaptive.R
 \name{admm.pdglasso}
 \alias{admm.pdglasso}
-\title{Estimates a concentration matrix under the pdglasso model using adaptive ADMM
+\title{Estimate a concentration matrix under the pdglasso model using adaptive ADMM
 algorithm.}
 \usage{
 admm.pdglasso(
@@ -75,7 +75,12 @@ convergence of inner loop) is shown in the console while the algorithm is
 running.}
 }
 \value{
-AAA
+A list, whose element are:
+\itemize{
+\item \code{X}, the estimated concentration matrix under the pdglasso model; the model is identified by the values of lambda1 and lambda 2, together with the type of penalization imposed.
+\item \code{acronims}, a vector of strings for the type of penalties and forced symmetries imposed when calling the function.
+\item \code{internal.par}, a list of internal parameters passed to the function at the call, as well as convergence information.
+}
 }
 \description{
 Description here.
