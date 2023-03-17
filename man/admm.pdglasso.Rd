@@ -2,7 +2,8 @@
 % Please edit documentation in R/admm-adaptive.R
 \name{admm.pdglasso}
 \alias{admm.pdglasso}
-\title{Estimates a concentration matrix under the pdglasso model using adaptive ADMM algorithm.}
+\title{Estimates a concentration matrix under the pdglasso model using adaptive ADMM
+algorithm.}
 \usage{
 admm.pdglasso(
   S,
@@ -25,20 +26,56 @@ admm.pdglasso(
 \item{S}{A \eqn{p \times p} covariance (or correlation) matrix.}
 
 \item{lambda1}{A non-negative scalar (or vector) penalty that encourages
-sparsity in the concentration matrix. If a vector is provided, it should match the appropriate length, i.e.}
+sparsity in the concentration matrix. If a vector is provided, it should
+match the appropriate length, i.e.}
 
 \item{lambda2}{A non-negative scalar (or vector) penalty that encourages
-equality constraints in the concentration matrix. If a vector is provided, it should match the appropriate length, i.e.}
+equality constraints in the concentration matrix. If a vector is provided,
+it should match the appropriate length, i.e.}
 
-\item{type}{The type of equality constraints to be imposed; zero, one or more available options
-can be selected among:
-\itemize{
-\item "vertex", symmetries are imposed on the diagonal entries of the concentration matrix.
-\item "inside.block.edge", symmetries are imposed between elements of the LL and RR block the concentration matrix.
-\item "across.block.edge", symmetries are imposed between elements of the LR and RL block the concentration matrix.
-}}
+\item{type}{A string or vector of strings for the type of equality
+constraints to be imposed; zero, one or more available options can be
+selected among: * "vertex", symmetries are imposed on the diagonal entries
+of the concentration matrix. * "inside.block.edge", symmetries are imposed
+between elements of the LL and RR block the concentration matrix. *
+"across.block.edge", symmetries are imposed between elements of the LR and
+RL block the concentration matrix. Shortened forms are accepted too, i.e.
+"V" or "vert" for "vertex".}
 
-\item{verbose}{}
+\item{force.symm}{A string or vector of strings to impose forced symmetry on
+the corresponding block of the concentration matrix. Same options as
+"type".}
+
+\item{X.init}{(optional) A \eqn{p \times p} initial guess for the
+concentration matrix and/or starting solution for the ADMM algorithm.}
+
+\item{rho1}{A scalar; tuning parameter of the ADMM algorithm to be used for
+the outer loop. It must be strictly positive.}
+
+\item{rho2}{A scalar; tuning parameter of the ADMM algorithm to be used for
+the inner loop. It must be strictly positive.}
+
+\item{varying.rho1}{A boolean value; if \code{TRUE} the parameter rho1 is updated
+iteratively to speed-up convergence.}
+
+\item{varying.rho2}{A boolean value; if \code{TRUE} the parameter rho2 is updated
+iteratively to speed-up convergence.}
+
+\item{max_iter}{An integer; maximum number of iterations to be run in case
+the algorithm does not converge.}
+
+\item{eps.abs}{A scalar; the absolute precision required for the computation
+of primal and dual residuals of the ADMM algorithm.}
+
+\item{eps.rel}{A scalar; the relative precision required for the computation
+of primal and dual residuals of the ADMM algorithm.}
+
+\item{verbose}{A boolean value; if \code{TRUE} the progress (and internal
+convergence of inner loop) is shown in the console while the algorithm is
+running.}
+}
+\value{
+AAA
 }
 \description{
 Description here.

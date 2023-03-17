@@ -8,32 +8,50 @@ setCompilerOptions(optimize=3)
 
 
 
-#
-#' Estimates a concentration matrix under the pdglasso model using adaptive ADMM algorithm.
+
+#' Estimates a concentration matrix under the pdglasso model using adaptive ADMM
+#' algorithm.
 #'
 #' Description here.
 #' @param S A \eqn{p \times p} covariance (or correlation) matrix.
 #' @param lambda1 A non-negative scalar (or vector) penalty that encourages
-#'   sparsity in the concentration matrix. If a vector is provided, it should match the appropriate length, i.e.
+#'   sparsity in the concentration matrix. If a vector is provided, it should
+#'   match the appropriate length, i.e.
 #' @param lambda2 A non-negative scalar (or vector) penalty that encourages
-#'   equality constraints in the concentration matrix. If a vector is provided, it should match the appropriate length, i.e.
-#' @param type The type of equality constraints to be imposed; zero, one or more available options
-#'   can be selected among:
-#'  * "vertex", symmetries are imposed on the diagonal entries of the concentration matrix.
-#'  * "inside.block.edge", symmetries are imposed between elements of the LL and RR block the concentration matrix.
-#'  * "across.block.edge", symmetries are imposed between elements of the LR and RL block the concentration matrix.
-#' @param force.symm
-#' @param X.init
-#' @param rho1
-#' @param rho2
-#' @param varying.rho1
-#' @param varying.rho2
-#' @param max_iter
-#' @param eps.abs
-#' @param eps.rel
-#' @param verbose
+#'   equality constraints in the concentration matrix. If a vector is provided,
+#'   it should match the appropriate length, i.e.
+#' @param type A string or vector of strings for the type of equality
+#'   constraints to be imposed; zero, one or more available options can be
+#'   selected among: * "vertex", symmetries are imposed on the diagonal entries
+#'   of the concentration matrix. * "inside.block.edge", symmetries are imposed
+#'   between elements of the LL and RR block the concentration matrix. *
+#'   "across.block.edge", symmetries are imposed between elements of the LR and
+#'   RL block the concentration matrix. Shortened forms are accepted too, i.e.
+#'   "V" or "vert" for "vertex".
+#' @param force.symm  A string or vector of strings to impose forced symmetry on
+#'   the corresponding block of the concentration matrix. Same options as
+#'   "type".
+#' @param X.init (optional) A \eqn{p \times p} initial guess for the
+#'   concentration matrix and/or starting solution for the ADMM algorithm.
+#' @param rho1 A scalar; tuning parameter of the ADMM algorithm to be used for
+#'   the outer loop. It must be strictly positive.
+#' @param rho2 A scalar; tuning parameter of the ADMM algorithm to be used for
+#'   the inner loop. It must be strictly positive.
+#' @param varying.rho1 A boolean value; if `TRUE` the parameter rho1 is updated
+#'   iteratively to speed-up convergence.
+#' @param varying.rho2 A boolean value; if `TRUE` the parameter rho2 is updated
+#'   iteratively to speed-up convergence.
+#' @param max_iter An integer; maximum number of iterations to be run in case
+#'   the algorithm does not converge.
+#' @param eps.abs A scalar; the absolute precision required for the computation
+#'   of primal and dual residuals of the ADMM algorithm.
+#' @param eps.rel A scalar; the relative precision required for the computation
+#'   of primal and dual residuals of the ADMM algorithm.
+#' @param verbose A boolean value; if `TRUE` the progress (and internal
+#'   convergence of inner loop) is shown in the console while the algorithm is
+#'   running.
 #'
-#' @return
+#' @return AAA
 #' @export
 #'
 #' @examples
