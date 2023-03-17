@@ -1,4 +1,4 @@
-#' Build a graph from the output of a call to [`admm-pdglasso`].
+#' Build a graph from the output of a call to [`admm.pdglasso`].
 #'
 #' Description here.
 #'
