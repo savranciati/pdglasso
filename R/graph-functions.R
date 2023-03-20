@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @examples
-get.graph <- function(admm.out,
+get.pdColG <- function(admm.out,
                       th1=NULL,
                       th2=NULL,
                       verbose=FALSE){
@@ -116,7 +116,7 @@ get.graph <- function(admm.out,
   out$g   <- mat_graph+mat_sym
   out$dof <- dof
   if(verbose){
-    graph.stats(G.split(out$g))
+    #graph.stats(G.split(out$g))
     cat("\n\n")
   }
   return(out)
@@ -155,3 +155,116 @@ across.block <- function(X, new.val=NULL){
     return(X)
   }
 }
+
+
+#' Conversion from the single matrix representation of the model to the multiple matrix representation.
+#'
+#' This is the inverse of the function G.merge(), i.e. g is equal to G.merge(G.split(g)).
+#'
+#' @param g is a pXp symmetric matrix with entries 0, 1, and 2
+#'
+#' @return a list with three upper triangular matrices: G, G.sym and G.across with entries 0 and 1, any of G.sym and G.across may be NULL
+#'
+#' @export
+#'
+#' @examples
+#'
+#' # see example in function G.merge().
+G.split <- function(g) {
+  p <- dim(g)[1]
+  q <- p / 2
+  G <- (g == 1) * 1
+  G[lower.tri(G, diag = TRUE)] <- 0
+
+  # matrix "sym"
+  if (any(g[1:q, 1:q] == 2)) {
+    G.sym <- (g[1:q, 1:q] == 2) * 1
+    G.sym[lower.tri(G.sym, diag = FALSE)] <- 0
+  }else{
+    G.sym <- NULL
+  }
+
+  # matrix "across"
+  if (any(g[1:q, (q + 1):p] == 2)) {
+    G.across <- (g[1:q, (q + 1):p] == 2) * 1
+    G.across[lower.tri(G.across, diag = TRUE)] <- 0
+  } else{
+    G.across <- NULL
+  }
+  return(list(
+    G = G,
+    G.sym = G.sym,
+    G.across = G.across
+  ))
+}
+
+
+
+#' Conversion from the multiple matrix representation of the model to the single matrix representation.
+#'
+#' This is the inverse of the function [G.split], i.e. X is equal to G.split(G.merge(X)).
+#'
+#' @param X list with three upper triangular matrices with entries 0 and 1: G, G.sym and G.across, any of G.sym and G.across may be NULL
+#'
+#' @return a pXp symmetric matrix with entries 0, 1, and 2
+#' @export
+#'
+#' @examples
+#'
+#' # random generation of a list(G=G, G.sym=G.sym, G.across=G.across)
+#'
+#' q <- 5 # this can be any integer
+#' p <- q*2
+#'
+#' g.p <- matrix(sample(c(0,1), size=p^2, replace=TRUE), nrow=p, ncol=p)
+#' g.p[lower.tri(g.p, diag=TRUE)] <- 0
+#'
+#' g.q1 <- matrix(sample(c(0,1), size=q^2, replace=TRUE), nrow=q, ncol=q)
+#' g.q1[lower.tri(g.q1, diag = FALSE)] <- 0
+#'
+#' g.q2 <- matrix(sample(c(0,1), size=q^2, replace=TRUE), nrow=q, ncol=q)
+#' g.q2[lower.tri(g.q2, diag = TRUE)] <- 0
+#' g.q2sym <- g.q2+t(g.q2)
+#'
+#' g.p[1:q, 1:q] <- g.p[1:q, 1:q] *(1-g.q1)
+#' g.p[(q+1):p, (q+1):p] <- g.p[(q+1):p, (q+1):p] *(1-g.q1)
+# '
+#' g.p[1:q, (q+1):p] <- g.p[1:q, (q+1):p] * (1-g.q2sym)
+#'
+#' # list obtained
+#'
+#' X <- list(G=g.p, G.sym=g.q1, G.across=g.q2)
+#'
+#' g  <- G.merge(X)
+#' gs <- G.split(g)
+#'
+#' identical(X, gs)
+#'
+#' X <- list(G=g.p, G.sym=NULL, G.across=NULL)
+#'
+#' g  <- G.merge(X)
+#' gs <- G.split(g)
+#'
+#' identical(X, gs)
+#'
+G.merge <- function(X) {
+  p <- nrow(X$G)
+  q <- p / 2
+  G <- X$G + t(X$G) + diag(1, p)
+  # G.sym
+  if (!is.null(X$G.sym)) {
+    diag(G) <- 0
+    G.sym <- X$G.sym + t(X$G.sym)
+    G[1:q, 1:q] <- G[1:q, 1:q] + 2 * G.sym
+    G[(q + 1):p, (q + 1):p] <- G[(q + 1):p, (q + 1):p] + 2 * G.sym
+    diag(G[1:q, 1:q]) <- diag(G[(q + 1):p, (q + 1):p]) <- diag(X$G.sym) + 1
+  }
+  # G.across
+  if (!is.null(X$G.across)) {
+    G.across <- X$G.across + t(X$G.across)
+    G[1:q, (q + 1):p] <- G[1:q, (q + 1):p] + 2 * G.across
+    G[(q + 1):p, 1:q] <- G[(q + 1):p, 1:q] + 2 * t(G.across)
+  }
+  return(G)
+}
+

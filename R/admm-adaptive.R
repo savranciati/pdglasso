@@ -1,13 +1,7 @@
 require(compiler)
 setCompilerOptions(optimize=3)
-### WRAPPER FUNCTION for fitting the model
-### creates grids of lambdas, fits model
-### selects according to eBIC
-### TO DO
-
-
-#' Estimate a concentration matrix under the pdglasso model using adaptive ADMM
-#' algorithm.
+#' Estimate a concentration matrix under the pdColG model using adaptive ADMM
+#' graphical lasso algorithm.
 #'
 #' Description here.
 #' @param S A \eqn{p \times p} covariance (or correlation) matrix.
@@ -84,7 +78,7 @@ admm.pdglasso <- function(S,
   acr.force <- out.make.a$acronim.of.force
   p <- dim(S)[1]
   q <- p/2
-  if(!is.null(acr.force)) lambda2 <- lambda2.force.symm(p, lambda2, acr.type, acr.force, S)
+  if(!is.null(acr.force)) lambda2 <- lambda2.force.symm(p, lambda2, acr.type, acr.force)
   n.row.F <- get.n.row.F(q, acr.type)
 
   if(is.null(X.init)) X <-  diag(1,p) else X <- X.init
@@ -398,11 +392,11 @@ tF.by.vec <- function(v, p, acr.type){
 
 # Imposes lambda values such that symmetry is forced
 
-lambda2.force.symm <- function(p, lambda2, acr.type, acr.force, S){
+lambda2.force.symm <- function(p, lambda2, acr.type, acr.force){
   acronim <- paste("t", acr.type, "_f", acr.force, sep="")
   q       <- p/2
   dim.hs  <- q*(q-1)/2
-  lambda.max <- ceiling(max(abs(S))*10)
+  lambda.max <- Inf
   vmax.q  <- rep(lambda.max, q)
   vmax.hs <- rep(lambda.max, dim.hs)
   v2.q    <- rep(lambda2, q)
