@@ -48,10 +48,12 @@ setCompilerOptions(optimize=3)
 #'   convergence of inner loop) is shown in the console while the algorithm is
 #'   running.
 #'
-#' @return A list, whose element are:
-#' * `X`, the estimated concentration matrix under the pdglasso model; the model is identified by the values of lambda1 and lambda 2, together with the type of penalization imposed.
-#' * `acronims`, a vector of strings for the type of penalties and forced symmetries imposed when calling the function.
-#' * `internal.par`, a list of internal parameters passed to the function at the call, as well as convergence information.
+#' @return A list, whose element are: * `X`, the estimated concentration matrix
+#'   under the pdglasso model; the model is identified by the values of lambda1
+#'   and lambda 2, together with the type of penalization imposed. * `acronims`,
+#'   a vector of strings for the type of penalties and forced symmetries imposed
+#'   when calling the function. * `internal.par`, a list of internal parameters
+#'   passed to the function at the call, as well as convergence information.
 #' @export
 #'
 #' @examples

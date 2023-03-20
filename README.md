@@ -1,4 +1,4 @@
-## Coloured Graphical Lasso for Paired Data
+## Symmetric Graphical Lasso for Paired Data
 
 How to install the package:
 
