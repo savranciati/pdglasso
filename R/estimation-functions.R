@@ -1,10 +1,44 @@
 require(compiler)
 setCompilerOptions(optimize=3)
-### WRAPPER FUNCTION for fitting the model
-### creates grids of lambdas, fits model
-### selects according to eBIC
-### TO DO
 
+#' Fit and select a coloured graphical models for paired data according to eBIC
+#' criterion.
+#'
+#' Performs a sequence of calls to [admm.pdglasso()] providing two grids of
+#' values for lambda_1 and lambda_2. First, a grid search conditional on
+#' lambda_2=0 is run to select the best lambda_1 value among the candidates
+#' (according to eBIC); conditional on the best lambda_1, a similar search is
+#' performed for lambda_2. The output is the select model, given by the
+#' estimated concenration matrix and corresponding graph.
+#'
+#' @inheritParams admm.pdglasso
+#' @param n.l1 the number of values in the grid of candidates for lambda_1.
+#' @param n.l2 the number of values in the grid of candidates for lambda_2.
+#' @param gamma the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
+#'
+#' @return a list.
+#' @export
+#'
+#' @examples
+#' S <- cov(toy.data)
+#' fit.pdColG(S)
+fit.pdColG <- function(S,
+                       n.l1        = 15,
+                       n.l2        = 15,
+                       gamma       = 0.5,
+                       type        = c("vertex", "inside.block.edge", "across.block.edge"),
+                       force.symm  = NULL,
+                       X.init      = NULL,
+                       rho1        = 1,
+                       rho2        = 1,
+                       varying.rho1= TRUE,
+                       varying.rho2= TRUE,
+                       max_iter    = 1000,
+                       eps.abs     = 1e-12,
+                       eps.rel     = 1e-12,
+                       verbose     = FALSE){
+
+}
 
 
 #' Estimate a concentration matrix under the pdColG model using (adaptive) ADMM
@@ -73,7 +107,7 @@ admm.pdglasso <- function(S,
                      lambda2     = 0.0001,
                      type        = c("vertex", "inside.block.edge", "across.block.edge"),
                      force.symm  = NULL,
-                     K.init      = NULL,
+                     X.init      = NULL,
                      rho1        = 1,
                      rho2        = 1,
                      varying.rho1= TRUE,
