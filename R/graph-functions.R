@@ -169,7 +169,7 @@ across.block <- function(X, new.val=NULL){
 #'
 #' @return a list with three upper triangular matrices: G, G.sym and G.across with entries 0 and 1, any of G.sym and G.across may be NULL
 #'
-#' @export
+#' @noRd
 #'
 #' @examples
 #'
@@ -211,7 +211,7 @@ G.split <- function(g) {
 #' @param X list with three upper triangular matrices with entries 0 and 1: G, G.sym and G.across, any of G.sym and G.across may be NULL
 #'
 #' @return a pXp symmetric matrix with entries 0, 1, and 2
-#' @export
+#' @noRd
 #'
 #' @examples
 #'

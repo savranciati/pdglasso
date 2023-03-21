@@ -1,5 +1,12 @@
 require(compiler)
 setCompilerOptions(optimize=3)
+### WRAPPER FUNCTION for fitting the model
+### creates grids of lambdas, fits model
+### selects according to eBIC
+### TO DO
+
+
+
 #' Estimate a concentration matrix under the pdColG model using (adaptive) ADMM
 #' graphical lasso algorithm.
 #'
@@ -193,7 +200,7 @@ admm.pdglasso_C<-cmpfun(admm.pdglasso)
 #' @param acr.type the acronym of the called model, summarizing which penalties to use.
 #' @return Results of inner ADMM loop in matrix form.
 #'
-#'
+#' @noRd
 admm.inner <- function(X,
                         U,
                         rho1,
