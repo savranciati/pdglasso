@@ -2,7 +2,7 @@
 % Please edit documentation in R/admm-adaptive.R
 \name{admm.pdglasso}
 \alias{admm.pdglasso}
-\title{Estimate a concentration matrix under the pdColG model using adaptive ADMM
+\title{Estimate a concentration matrix under the pdColG model using (adaptive) ADMM
 graphical lasso algorithm.}
 \usage{
 admm.pdglasso(
@@ -11,7 +11,7 @@ admm.pdglasso(
   lambda2 = 1e-04,
   type = c("vertex", "inside.block.edge", "across.block.edge"),
   force.symm = NULL,
-  X.init = NULL,
+  K.init = NULL,
   rho1 = 1,
   rho2 = 1,
   varying.rho1 = TRUE,
@@ -46,9 +46,6 @@ RL block the concentration matrix. Shortened forms are accepted too, i.e.
 the corresponding block of the concentration matrix. Same options as
 "type".}
 
-\item{X.init}{(optional) A \eqn{p \times p} initial guess for the
-concentration matrix and/or starting solution for the ADMM algorithm.}
-
 \item{rho1}{A scalar; tuning parameter of the ADMM algorithm to be used for
 the outer loop. It must be strictly positive.}
 
@@ -73,20 +70,31 @@ of primal and dual residuals of the ADMM algorithm.}
 \item{verbose}{A boolean value; if \code{TRUE} the progress (and internal
 convergence of inner loop) is shown in the console while the algorithm is
 running.}
+
+\item{X.init}{(optional) A \eqn{p \times p} initial guess for the
+concentration matrix and/or starting solution for the ADMM algorithm.}
 }
 \value{
-A list, whose element are: * \code{X}, the estimated concentration matrix
+A list, whose element are:
+\itemize{
+\item \code{X}, the estimated concentration matrix
 under the pdglasso model; the model is identified by the values of lambda1
-and lambda 2, together with the type of penalization imposed. * \code{acronims},
-a vector of strings for the type of penalties and forced symmetries imposed
-when calling the function. * \code{internal.par}, a list of internal parameters
+and lambda 2, together with the type of penalization imposed.
+\item \code{acronims}, a vector of strings for the type of penalties and forced symmetries imposed
+when calling the function.
+\item \code{internal.par}, a list of internal parameters
 passed to the function at the call, as well as convergence information.
 }
+}
 \description{
-Description here.
+By providing a covariance matrix S and values for lambda_1 and lambda_2, this
+function estimates a concentration matrix X under the coloured graphical
+model for paired data, using the (adaptive) ADMM algorithm. The output is the
+matrix and a list of internal parameters used by the function, together with
+the specific call in terms of symmetries and penalties required by the user.
 }
 \examples{
-!!! Create fake dataset
+
 S <- cov(toy.data)
 admm.pdglasso(S)
 }

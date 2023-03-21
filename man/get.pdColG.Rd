@@ -25,3 +25,9 @@ a list, containing:
 \description{
 Description here.
 }
+\examples{
+
+S <- cov(toy.data)
+mod.out <- admm.pdglasso(S)
+get.pdColG(mod.out)
+}

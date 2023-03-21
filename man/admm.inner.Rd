@@ -2,7 +2,7 @@
 % Please edit documentation in R/admm-adaptive.R
 \name{admm.inner}
 \alias{admm.inner}
-\title{Title}
+\title{Inner ADMM loop called by the main function \code{\link[=admm.pdglasso]{admm.pdglasso()}}.}
 \usage{
 admm.inner(
   X,
@@ -21,6 +21,10 @@ admm.inner(
 )
 }
 \arguments{
+\item{X}{the concentration matrix at the current iteration (in matrix form).}
+
+\item{U}{the scaled dual variable of the optimization problem (in matrix form).}
+
 \item{rho1}{A scalar; tuning parameter of the ADMM algorithm to be used for
 the outer loop. It must be strictly positive.}
 
@@ -38,12 +42,25 @@ the inner loop. It must be strictly positive.}
 \item{varying.rho2}{A boolean value; if \code{TRUE} the parameter rho2 is updated
 iteratively to speed-up convergence.}
 
+\item{max_iter_int}{maximum number of iterations for this inner loop.}
+
 \item{eps.abs}{A scalar; the absolute precision required for the computation
 of primal and dual residuals of the ADMM algorithm.}
 
 \item{eps.rel}{A scalar; the relative precision required for the computation
 of primal and dual residuals of the ADMM algorithm.}
+
+\item{verbose_int}{a \code{TRUE/FALSE} to switch on/off a console message during the iterations.}
+
+\item{n.row.F}{the number of rows of the constraint matrix F.}
+
+\item{acr.type}{the acronym of the called model, summarizing which penalties to use.}
+}
+\value{
+Results of inner ADMM loop in matrix form.
 }
 \description{
-Title
+This inner ADMM loop is called by the outer loop (and main function) \code{\link[=admm.pdglasso]{admm.pdglasso()}}.
+It inherits most of the parameters, together with the two quantities X and U which are
+related to the steps of the ADMM.
 }

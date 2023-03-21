@@ -1,9 +1,14 @@
 require(compiler)
 setCompilerOptions(optimize=3)
-#' Estimate a concentration matrix under the pdColG model using adaptive ADMM
+#' Estimate a concentration matrix under the pdColG model using (adaptive) ADMM
 #' graphical lasso algorithm.
 #'
-#' Description here.
+#' By providing a covariance matrix S and values for lambda_1 and lambda_2, this
+#' function estimates a concentration matrix X under the coloured graphical
+#' model for paired data, using the (adaptive) ADMM algorithm. The output is the
+#' matrix and a list of internal parameters used by the function, together with
+#' the specific call in terms of symmetries and penalties required by the user.
+#'
 #' @param S A \eqn{p \times p} covariance (or correlation) matrix.
 #' @param lambda1 A non-negative scalar (or vector) penalty that encourages
 #'   sparsity in the concentration matrix. If a vector is provided, it should
@@ -42,16 +47,18 @@ setCompilerOptions(optimize=3)
 #'   convergence of inner loop) is shown in the console while the algorithm is
 #'   running.
 #'
-#' @return A list, whose element are: * `X`, the estimated concentration matrix
+#' @return A list, whose element are:
+#' * `X`, the estimated concentration matrix
 #'   under the pdglasso model; the model is identified by the values of lambda1
-#'   and lambda 2, together with the type of penalization imposed. * `acronims`,
-#'   a vector of strings for the type of penalties and forced symmetries imposed
-#'   when calling the function. * `internal.par`, a list of internal parameters
+#'   and lambda 2, together with the type of penalization imposed.
+#' * `acronims`, a vector of strings for the type of penalties and forced symmetries imposed
+#'   when calling the function.
+#' * `internal.par`, a list of internal parameters
 #'   passed to the function at the call, as well as convergence information.
 #' @export
 #'
 #' @examples
-#' !!! Create fake dataset
+#'
 #' S <- cov(toy.data)
 #' admm.pdglasso(S)
 admm.pdglasso <- function(S,
@@ -59,7 +66,7 @@ admm.pdglasso <- function(S,
                      lambda2     = 0.0001,
                      type        = c("vertex", "inside.block.edge", "across.block.edge"),
                      force.symm  = NULL,
-                     X.init      = NULL,
+                     K.init      = NULL,
                      rho1        = 1,
                      rho2        = 1,
                      varying.rho1= TRUE,
@@ -168,14 +175,25 @@ admm.pdglasso <- function(S,
 }
 admm.pdglasso_C<-cmpfun(admm.pdglasso)
 
-# Inner ADMM loop for the main function
+#
 
-#' Title
+#' Inner ADMM loop called by the main function [admm.pdglasso()].
+#'
+#' This inner ADMM loop is called by the outer loop (and main function) [admm.pdglasso()].
+#' It inherits most of the parameters, together with the two quantities X and U which are
+#' related to the steps of the ADMM.
 #'
 #'
-#' @return Results of inner ADMM loop.
 #' @inheritParams admm.pdglasso
-#' @noRd
+#' @param X the concentration matrix at the current iteration (in matrix form).
+#' @param U the scaled dual variable of the optimization problem (in matrix form).
+#' @param max_iter_int maximum number of iterations for this inner loop.
+#' @param verbose_int a `TRUE/FALSE` to switch on/off a console message during the iterations.
+#' @param n.row.F the number of rows of the constraint matrix F.
+#' @param acr.type the acronym of the called model, summarizing which penalties to use.
+#' @return Results of inner ADMM loop in matrix form.
+#'
+#'
 admm.inner <- function(X,
                         U,
                         rho1,
@@ -264,7 +282,7 @@ admm.inner <- function(X,
 admm.inner_C<-cmpfun(admm.inner)
 
 
-### Secondary Functions
+######### Secondary Functions
 
 # Produces acronym for the model
 #
