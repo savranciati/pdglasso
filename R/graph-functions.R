@@ -159,7 +159,7 @@ across.block <- function(X, new.val=NULL){
 
 #' Conversion from the single matrix representation of the model to the multiple matrix representation.
 #'
-#' This is the inverse of the function G.merge(), i.e. g is equal to G.merge(G.split(g)).
+#' This is the inverse of the function [G.merge()], i.e. g is equal to `G.merge(G.split(g))`.
 #'
 #' @param g is a pXp symmetric matrix with entries 0, 1, and 2
 #'
@@ -169,7 +169,7 @@ across.block <- function(X, new.val=NULL){
 #'
 #' @examples
 #'
-#' # see example in function G.merge().
+#' # see example in function [G.merge()].
 G.split <- function(g) {
   p <- dim(g)[1]
   q <- p / 2
@@ -202,7 +202,7 @@ G.split <- function(g) {
 
 #' Conversion from the multiple matrix representation of the model to the single matrix representation.
 #'
-#' This is the inverse of the function [G.split], i.e. X is equal to G.split(G.merge(X)).
+#' This is the inverse of the function [G.split], i.e. X is equal to `G.split(G.merge(X))`.
 #'
 #' @param X list with three upper triangular matrices with entries 0 and 1: G, G.sym and G.across, any of G.sym and G.across may be NULL
 #'
