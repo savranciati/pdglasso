@@ -13,9 +13,9 @@ G.split(g)
 a list with three upper triangular matrices: G, G.sym and G.across with entries 0 and 1, any of G.sym and G.across may be NULL
 }
 \description{
-This is the inverse of the function G.merge(), i.e. g is equal to G.merge(G.split(g)).
+This is the inverse of the function \code{\link[=G.merge]{G.merge()}}, i.e. g is equal to \code{G.merge(G.split(g))}.
 }
 \examples{
 
-# see example in function G.merge().
+# see example in function [G.merge()].
 }

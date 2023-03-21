@@ -169,7 +169,13 @@ admm.pdglasso <- function(S,
 admm.pdglasso_C<-cmpfun(admm.pdglasso)
 
 # Inner ADMM loop for the main function
-# Most Inputs are inherited from the main call on admm.pdglasso()
+
+#' Title
+#'
+#'
+#' @return Results of inner ADMM loop.
+#' @inheritParams admm.pdglasso
+#' @noRd
 admm.inner <- function(X,
                         U,
                         rho1,

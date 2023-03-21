@@ -13,7 +13,7 @@ G.merge(X)
 a pXp symmetric matrix with entries 0, 1, and 2
 }
 \description{
-This is the inverse of the function \link{G.split}, i.e. X is equal to G.split(G.merge(X)).
+This is the inverse of the function \link{G.split}, i.e. X is equal to \code{G.split(G.merge(X))}.
 }
 \examples{
 

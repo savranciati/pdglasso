@@ -13,6 +13,10 @@
 #' @export
 #'
 #' @examples
+#'
+#' S <- cov(toy.data)
+#' mod.out <- admm.pdglasso(S)
+#' get.pdColG(mod.out)
 get.pdColG <- function(admm.out,
                       th1=NULL,
                       th2=NULL,
