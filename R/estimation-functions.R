@@ -87,6 +87,8 @@ fit.pdColG <- function(S,
 #' @param verbose A boolean value; if `TRUE` the progress (and internal
 #'   convergence of inner loop) is shown in the console while the algorithm is
 #'   running.
+#' @param print.type A boolean value; if `TRUE` the acronym used for the model -
+#'   which penalties - is returned as printed output in the console.
 #'
 #' @return A list, whose element are:
 #' * `X`, the estimated concentration matrix
@@ -115,13 +117,14 @@ admm.pdglasso <- function(S,
                      max_iter    = 1000,
                      eps.abs     = 1e-12,
                      eps.rel     = 1e-12,
-                     verbose     = FALSE) {
+                     verbose     = FALSE,
+                     print.type  = TRUE) {
   #
   time.start    <- Sys.time()
   #
   # initializations
   #
-  out.make.a <- make.acronyms(type, force.symm)
+  out.make.a <- make.acronyms(type, force.symm, print.type=print.type)
   acr.type <- out.make.a$acronym.of.type
   acr.force <- out.make.a$acronym.of.force
   p <- dim(S)[1]
