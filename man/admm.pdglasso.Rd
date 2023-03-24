@@ -19,7 +19,8 @@ admm.pdglasso(
   max_iter = 1000,
   eps.abs = 1e-12,
   eps.rel = 1e-12,
-  verbose = FALSE
+  verbose = FALSE,
+  print.type = TRUE
 )
 }
 \arguments{
@@ -73,6 +74,9 @@ of primal and dual residuals of the ADMM algorithm.}
 \item{verbose}{A boolean value; if \code{TRUE} the progress (and internal
 convergence of inner loop) is shown in the console while the algorithm is
 running.}
+
+\item{print.type}{A boolean value; if \code{TRUE} the acronym used for the model -
+which penalties - is returned as printed output in the console.}
 }
 \value{
 A list, whose element are:

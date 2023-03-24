@@ -36,7 +36,8 @@ fit.pdColG <- function(S,
                        max_iter    = 1000,
                        eps.abs     = 1e-12,
                        eps.rel     = 1e-12,
-                       verbose     = FALSE){
+                       verbose     = FALSE,
+                       print.type  = TRUE){
 
 }
 
