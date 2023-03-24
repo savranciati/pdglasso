@@ -92,7 +92,7 @@ fit.pdColG <- function(S,
 #' * `X`, the estimated concentration matrix
 #'   under the pdglasso model; the model is identified by the values of lambda1
 #'   and lambda 2, together with the type of penalization imposed.
-#' * `acronims`, a vector of strings for the type of penalties and forced symmetries imposed
+#' * `acronyms`, a vector of strings for the type of penalties and forced symmetries imposed
 #'   when calling the function.
 #' * `internal.par`, a list of internal parameters
 #'   passed to the function at the call, as well as convergence information.
@@ -121,9 +121,9 @@ admm.pdglasso <- function(S,
   #
   # initializations
   #
-  out.make.a <- make.acronims(type, force.symm)
-  acr.type <- out.make.a$acronim.of.type
-  acr.force <- out.make.a$acronim.of.force
+  out.make.a <- make.acronyms(type, force.symm)
+  acr.type <- out.make.a$acronym.of.type
+  acr.force <- out.make.a$acronym.of.force
   p <- dim(S)[1]
   q <- p/2
   if(!is.null(acr.force)) lambda2 <- lambda2.force.symm(p, lambda2, acr.type, acr.force)
@@ -211,8 +211,8 @@ admm.pdglasso <- function(S,
                        lambda1 = lambda1, lambda2=unique(lambda2), n.iter=k,
                        n.iter.rho1_update_last=n.iter.rho1_update_last, last.rho1=rho1,
                        eps.primal=eps.pri, eps.dual=eps.dual, eps.abs=eps.abs, eps.rel=eps.rel)
-  acronims=list(acronim.of.type=acr.type, acronim.of.force=acr.force)
-  return(list(X=X, acronims=acronims, internal.par=internal.par))
+  acronyms=list(acronym.of.type=acr.type, acronym.of.force=acr.force)
+  return(list(X=X, acronyms=acronyms, internal.par=internal.par))
 }
 admm.pdglasso_C<-cmpfun(admm.pdglasso)
 
@@ -323,32 +323,77 @@ admm.inner <- function(X,
 admm.inner_C<-cmpfun(admm.inner)
 
 
+
+#' Maximum likelihood estimate
+#'
+#' Computes the m.l.e. of the concentration matrix of a colured graphical model
+#' for paired data.
+#'
+#' @param S a sample variance and covariance matrix.
+#' @param pdColG a coloured graph for paired data.
+#'
+#' @return the m.l.e. of the concentration matrix \eqn{\Sigma^{-1}}.
+#' @export
+#'
+#' @examples
+#' #
+#'
+pdColG.mle <- function(S, pdColG){
+
+  # make vector lambda1
+  lambda1 <- (mat2vec(pdColG)==0)
+  lambda1[lambda1] <- Inf
+
+  # make vector lambda 2
+  p <- nrow(pdColG)
+  q <- p/2
+  m2v <- c(diag(pdColG[1:q,1:q]), half.vec(pdColG[1:q,1:q]), half.vec(pdColG[1:q,(q+1):p]))
+  lambda2 <- (m2v==2)
+  lambda2[lambda2] <- Inf
+
+  # run SGL algorithm
+  K.hat <- admm.pdglasso(S, lambda1 = lambda1, lambda2 = lambda2, print.type=FALSE)$X
+
+  return(K.hat)
+}
+
 ######### Secondary Functions
 
-# Produces acronym for the model
-#
-make.acronims <- function(type, force.symm){
-  # internal function which actually makes the acronim
+#' Create the model acronym
+#'
+#' Creates the model acronym from the arguments `types` and `force.symm`.
+#'
+#'
+#'
+#' @param type a character vector.
+#' @param force.symm either a character vector or `NULL`.
+#' @param print.type logical (default `TRUE`) indicating whether the model details should be printed.
+#'
+#' @return A list with two character strings named `acronym.of.type` and `acronym.of.force`, the latter is  `NULL` if `force.symm` is   `NULL`.
+#' @noRd
+#'
+make.acronyms <- function(type, force.symm, print.type=TRUE){
+  # internal function which actually makes the acronym
   make.a <- function(opt.str){
     opt.str <- tolower(opt.str)
     choice  <- match.arg(opt.str, c("vertex", "inside.block.edge", "across.block.edge") , several.ok = TRUE)
-    acronim <- ""
-    if (any(choice=="vertex"))              acronim <- paste(acronim, "V", sep="")
-    if (any(choice=="inside.block.edge"))   acronim <- paste(acronim, "I", sep="")
-    if (any(choice=="across.block.edge"))   acronim <- paste(acronim, "A", sep="")
+    acronym <- ""
+    if (any(choice=="vertex"))              acronym <- paste(acronym, "V", sep="")
+    if (any(choice=="inside.block.edge"))   acronym <- paste(acronym, "I", sep="")
+    if (any(choice=="across.block.edge"))   acronym <- paste(acronym, "A", sep="")
     choice.print <- sort(toupper(unique(choice)), decreasing = TRUE)
     choice.print <- paste(choice.print, collapse = ", ")
-    choice.print <- paste("(", choice.print, ")", sep="")
-    return(list(acronim=acronim, choice.print=choice.print, choice=choice))
+    choice.print <- paste("[", choice.print, "]", sep="")
+    return(list(acronym=acronym, choice.print=choice.print, choice=choice))
   }
   #
   acr.type <- make.a(type)
-  cat("\nCall:\nRCON model for paired data with constraints\ntype of symmetry = ",  acr.type$choice.print, "\n", sep="")
   #
   if(!is.null(force.symm)){
     acr.force     <- make.a(force.symm)
     is.contained  <- acr.force$choice %in% acr.type$choice
     if(!all(is.contained)){
+      cat("\n")
       warning("'force.symm' must be a subvector of 'type'.\nSome entries of 'force.symm' not contained in 'type' have been ignored. ", call.=FALSE, immediate. = TRUE)
       if(any(is.contained)){
         force.symm <- acr.force$choice[is.contained]
@@ -358,10 +403,15 @@ make.acronims <- function(type, force.symm){
       }
     }
   }
-  if(is.null(force.symm)) acr.force <- list("acronim"=NULL, "choice.print"="NONE")
-  cat("forced  symmetry = ",  acr.force$choice.print, "\n\n", sep="")
-  return(list(acronim.of.type=acr.type$acronim, acronim.of.force=acr.force$acronim))
+  if(is.null(force.symm)) acr.force <- list("acronym"=NULL, "choice.print"="NONE")
+  if(print.type){
+    cat("\nCall:\nColoured graph for paired data with:\nallowed type of coloured symmetry = ",  acr.type$choice.print, "\n", sep="")
+    cat("forced coloured symmetry = ",  acr.force$choice.print, "\n\n", sep="")
+  }
+  return(list(acronym.of.type=acr.type$acronym, acronym.of.force=acr.force$acronym))
 }
+
+
 
 # Computes the number of constraints, i.e. number of rows of the matrix F
 #
@@ -458,7 +508,7 @@ tF.by.vec <- function(v, p, acr.type){
 # Imposes lambda values such that symmetry is forced
 
 lambda2.force.symm <- function(p, lambda2, acr.type, acr.force){
-  acronim <- paste("t", acr.type, "_f", acr.force, sep="")
+  acronym <- paste("t", acr.type, "_f", acr.force, sep="")
   q       <- p/2
   dim.hs  <- q*(q-1)/2
   lambda.max <- Inf
@@ -466,7 +516,7 @@ lambda2.force.symm <- function(p, lambda2, acr.type, acr.force){
   vmax.hs <- rep(lambda.max, dim.hs)
   v2.q    <- rep(lambda2, q)
   v2.hs   <- rep(lambda2, dim.hs)
-  switch(acronim,
+  switch(acronym,
          tV_fV = lambda.max,
          tI_fI = lambda.max,
          tA_fA = lambda.max,
