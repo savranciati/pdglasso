@@ -1,7 +1,7 @@
 require(compiler)
 setCompilerOptions(optimize=3)
 
-#' Fit and select a coloured graphical models for paired data according to eBIC
+#' Fit and select a coloured graphical model for paired data according to eBIC
 #' criterion.
 #'
 #' Performs a sequence of calls to [admm.pdglasso()] providing two grids of
@@ -88,8 +88,8 @@ fit.pdColG <- function(S,
 
   l1.path=cbind(l1.vec,eBIC.l1)
   l2.path=cbind(l2.vec,eBIC.l2)
-  colnames(l1.path) <- c("lambda1.grid", "BIC     ","  log-Likelihood  ","DF (estimated.)")
-  colnames(l2.path) <- c("lambda2.grid", "BIC     ","  log-Likelihood  ","DF (estimated.)")
+  colnames(l1.path) <- c("lambda1.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)")
+  colnames(l2.path) <- c("lambda2.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)")
 
   return(list(model=mod.out,
               pdColG=G,
@@ -420,18 +420,26 @@ pdColG.mle <- function(S, pdColG){
 }
 
 
-#' Title
+#' Compute the extended Bayesian Information Criterion (eBIC) for a given model.
 #'
-#' @param S
-#' @param mod
-#' @param n
-#' @param gamma.eBIC
-#' @param max_iter
+#' The function computes the value of the eBIC for a given model and gamma value, for the purpose
+#' of model selection.
 #'
-#' @return
+#' @param S A \eqn{p \times p} covariance (or correlation) matrix.
+#' @param mod A list, the output object of a call to [admm.pdglasso()]
+#' @param n the sample size of the data used to compute the sample covariance matrix S.
+#' @param gamma.eBIC a parameter needed to compute the eBIC; ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC.
+#'
+#' @return a vector containing three elements:
+#' * the value of the eBIC,
+#' * the log-likelihood,
+#' * and the estimated number of degrees of freedom.
 #' @export
 #'
 #' @examples
+#' S <- cov(toy_data$sample.data)
+#' mod <- admm.pdglasso(S, lambda1=1, lambda2=0.5)
+#' compute.eBIC(S,mod,n=60,gamma.eBIC=0.5)
 compute.eBIC <- function(S,mod,n,
                          gamma.eBIC=0.5){
   G <- get.pdColG(mod)
@@ -441,9 +449,9 @@ compute.eBIC <- function(S,mod,n,
   dof <- G$dof
   log.lik <- log(det(K))-sum(S*K)
   #### corrected with n/2 instead of 1/2 in front of the loglik, so -2*(n/2)*loglik=-n*loglik
-  out.list <- c(-n*log.lik+log(n)*dof+4*dof*gamma.eBIC*log(p),log.lik,dof)
-  names(out.list) <- c("BIC     ","  log-Likelihood  ","DF (estimated.)")
-  return(out.list)
+  out.vec <- c(-n*log.lik+log(n)*dof+4*dof*gamma.eBIC*log(p),log.lik,dof)
+  names(out.vec) <- c("eBIC     ","  log-Likelihood  ","DF (estimated.)")
+  return(out.vec)
 }
 
 

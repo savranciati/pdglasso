@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimation-functions.R
 \name{fit.pdColG}
 \alias{fit.pdColG}
-\title{Fit and select a coloured graphical models for paired data according to eBIC
+\title{Fit and select a coloured graphical model for paired data according to eBIC
 criterion.}
 \usage{
 fit.pdColG(

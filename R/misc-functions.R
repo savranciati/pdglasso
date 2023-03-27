@@ -127,10 +127,6 @@ vec2mat <- function(m){
 }
 
 
-
-
-
-
 ## Extracts the LL block from a matrix
 LL.block <- function(X, new.val=NULL){
   p   <- dim(X)[1]
