@@ -7,9 +7,10 @@ criterion.}
 \usage{
 fit.pdColG(
   S,
+  n,
   n.l1 = 15,
   n.l2 = 15,
-  gamma = 0.5,
+  gamma.eBIC = 0.5,
   type = c("vertex", "inside.block.edge", "across.block.edge"),
   force.symm = NULL,
   X.init = NULL,
@@ -21,17 +22,18 @@ fit.pdColG(
   eps.abs = 1e-12,
   eps.rel = 1e-12,
   verbose = FALSE,
-  print.type = TRUE
+  print.type = TRUE,
+  ...
 )
 }
 \arguments{
 \item{S}{A \eqn{p \times p} covariance (or correlation) matrix.}
 
+\item{n}{the sample size of the data used to compute the sample covariance matrix S.}
+
 \item{n.l1}{the number of values in the grid of candidates for lambda_1.}
 
 \item{n.l2}{the number of values in the grid of candidates for lambda_2.}
-
-\item{gamma}{the parameter for the eBIC computation. gamma=0 is equivalent to BIC.}
 
 \item{type}{A string or vector of strings for the type of equality
 constraints to be imposed; zero, one or more available options can be
@@ -76,9 +78,17 @@ running.}
 
 \item{print.type}{A boolean value; if \code{TRUE} the acronym used for the model -
 which penalties - is returned as printed output in the console.}
+
+\item{gamma}{the parameter for the eBIC computation. gamma=0 is equivalent to BIC.}
 }
 \value{
-a list.
+a list:
+\itemize{
+\item model, the final model;
+\item pdColG, the associated coloured graph;
+\item l1.path, a matrix containing the grid values for lambda_1 as well as quantities used in eBIC computation;
+\item l2.path, a matrix containing the grid values for lambda_2 as well as quantities used in eBIC computation.
+}
 }
 \description{
 Performs a sequence of calls to \code{\link[=admm.pdglasso]{admm.pdglasso()}} providing two grids of
@@ -89,6 +99,6 @@ performed for lambda_2. The output is the select model, given by the
 estimated concenration matrix and corresponding graph.
 }
 \examples{
-S <- cov(toy.data)
+S <- cov(toy_data$sample.data)
 fit.pdColG(S)
 }

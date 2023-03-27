@@ -99,6 +99,6 @@ the specific call in terms of symmetries and penalties required by the user.
 }
 \examples{
 
-S <- cov(toy.data)
+S <- cov(toy_data$sample.data)
 admm.pdglasso(S)
 }

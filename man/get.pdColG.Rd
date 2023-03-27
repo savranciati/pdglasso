@@ -27,7 +27,7 @@ Description here.
 }
 \examples{
 
-S <- cov(toy.data)
+S <- cov(toy_data)
 mod.out <- admm.pdglasso(S)
 get.pdColG(mod.out)
 }

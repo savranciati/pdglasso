@@ -7,7 +7,12 @@
 \format{
 \subsection{\code{toy_data}}{
 
-A data frame with 60 rows and 20 columns.
+A list containing three elements:
+\itemize{
+\item pdColG, a \eqn{p \times p} matrix describing the coloured graphical model,
+\item K, the concentration matrix associated to the model,
+\item sample.data, a data frame with 60 rows and 20 columns.
+}
 }
 }
 \source{

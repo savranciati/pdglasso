@@ -19,5 +19,5 @@ This function
 }
 \examples{
 #
-
+pdColG.summarize(toy_data$pdColG)
 }
