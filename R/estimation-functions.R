@@ -50,7 +50,7 @@ fit.pdColG <- function(S,
   max.ls <- max.lams(S)
 
   ## Prepare temp objects
-  eBIC.l1 <- eBIC.l2 <-  matrix(0,n.l1,6)
+  eBIC.l1 <- eBIC.l2 <-  matrix(0,n.l1,3)
 
   ### First grid search for lambda_1, with lambda_2=0
   l1.vec <- exp(seq(log(min(abs(S))),log(max.ls["max.l1"]), length.out=n.l1-1))
@@ -87,6 +87,8 @@ fit.pdColG <- function(S,
 
   l1.path=cbind(l1.vec,eBIC.l1)
   l2.path=cbind(l2.vec,eBIC.l2)
+  names(l1.path) <- c("lambda1.grid", "BIC     ","  log-Likelihood  ","DF (estimated.)")
+  names(l2.path) <- c("lambda2.grid", "BIC     ","  log-Likelihood  ","DF (estimated.)")
 
   return(list(model=mod.out,
               pdColG=G,
@@ -414,6 +416,39 @@ pdColG.mle <- function(S, pdColG){
 
   return(K.hat)
 }
+
+
+#' Title
+#'
+#' @param S
+#' @param mod
+#' @param n
+#' @param gamma
+#' @param max_iter
+#' @param verbose
+#'
+#' @return
+#' @export
+#'
+#' @examples
+compute.eBIC <- function(S,mod,n,
+                         gamma.eBIC=0.5){
+  G <- get.pdColG(mod)
+  K <- pdColG.mle(S,G)
+  S <- S*(n-1)/n
+  p <- dim(S)[1]
+  dof <- G$dof
+  log.lik <- log(det(K))-sum(S*K)
+  #### corrected with n/2 instead of 1/2 in front of the loglik, so -2*(n/2)*loglik=-n*loglik
+  out.list <- c(-n*log.lik+log(n)*dof+4*dof*gamma.eBIC*log(p),log.lik,dof)
+  names(out.list) <- c("BIC     ","  log-Likelihood  ","DF (estimated.)")
+  return(out.list)
+}
+
+
+
+
+
 
 ######### Secondary Functions
 
