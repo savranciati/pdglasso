@@ -7,7 +7,7 @@
 compute.eBIC(S, mod, n, gamma.eBIC = 0.5)
 }
 \arguments{
-\item{verbose}{}
+\item{max_iter}{}
 }
 \description{
 Title

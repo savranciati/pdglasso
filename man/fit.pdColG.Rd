@@ -86,6 +86,7 @@ a list:
 \itemize{
 \item model, the final model;
 \item pdColG, the associated coloured graph;
+\item best.lambdas, the selected values of lambda_1 and lambda_2 according to eBIC criterion,
 \item l1.path, a matrix containing the grid values for lambda_1 as well as quantities used in eBIC computation;
 \item l2.path, a matrix containing the grid values for lambda_2 as well as quantities used in eBIC computation.
 }

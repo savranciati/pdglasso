@@ -20,6 +20,7 @@ setCompilerOptions(optimize=3)
 #' @return a list:
 #' * model, the final model;
 #' * pdColG, the associated coloured graph;
+#' * best.lambdas, the selected values of lambda_1 and lambda_2 according to eBIC criterion,
 #' * l1.path, a matrix containing the grid values for lambda_1 as well as quantities used in eBIC computation;
 #' * l2.path, a matrix containing the grid values for lambda_2 as well as quantities used in eBIC computation.
 #' @export
@@ -66,7 +67,7 @@ fit.pdColG <- function(S,
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
 
   ### Second grid search for lambda_2, with lambda_1=best.l1
-  l2.vec <- exp(seq(log(min(abs(S))),log(max.ls[2]), length.out=n.l1-1))
+  l2.vec <- exp(seq(log(min(abs(S))),log(max.ls[2]), length.out=n.l2-1))
   l2.vec <- c(0, l2.vec)
   for(i in 1:n.l2){
     mod.out <- admm.pdglasso(S,
@@ -92,6 +93,7 @@ fit.pdColG <- function(S,
 
   return(list(model=mod.out,
               pdColG=G,
+              best.lambdas=c(best.l1,best.l2),
               l1.path=l1.path,
               l2.path=l2.path))
 
