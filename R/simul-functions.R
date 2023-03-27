@@ -23,7 +23,7 @@ require(MASS)
 #'
 #' @examples
 #' #
-simul.pdColG <- function(p,
+pdRCON.simulate <- function(p,
                             concent.mat = TRUE,
                             sample = TRUE,
                             Sigma = NULL,

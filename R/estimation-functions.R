@@ -27,8 +27,8 @@ setCompilerOptions(optimize=3)
 #'
 #' @examples
 #' S <- cov(toy_data$sample.data)
-#' fit.pdColG(S,n=60)
-fit.pdColG <- function(S,
+#' pdRCON.fit(S,n=60)
+pdRCON.fit <- function(S,
                        n,
                        n.l1        = 15,
                        n.l2        = 15,
@@ -44,8 +44,7 @@ fit.pdColG <- function(S,
                        eps.abs     = 1e-12,
                        eps.rel     = 1e-12,
                        verbose     = FALSE,
-                       print.type  = TRUE,
-                       ...){
+                       print.type  = TRUE){
 
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
   max.ls <- max.lams(S)
@@ -60,8 +59,7 @@ fit.pdColG <- function(S,
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
                              lambda2=0,
-                             print.type=FALSE,
-                             ...)
+                             print.type=FALSE)
     eBIC.l1[i,] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
   }
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
@@ -73,8 +71,7 @@ fit.pdColG <- function(S,
     mod.out <- admm.pdglasso(S,
                              lambda1=best.l1,
                              lambda2=l2.vec[i],
-                             print.type=FALSE,
-                             ...)
+                             print.type=FALSE)
     eBIC.l2[i,] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
   }
   best.l2 <- l2.vec[which.min(eBIC.l2[,1])]
@@ -400,7 +397,7 @@ admm.inner_C<-cmpfun(admm.inner)
 #' @examples
 #' #
 #'
-pdColG.mle <- function(S, pdColG){
+pdRCON.mle <- function(S, pdColG){
 
   # make vector lambda1
   lambda1 <- (mat2vec(pdColG)==0)
@@ -443,7 +440,7 @@ pdColG.mle <- function(S, pdColG){
 compute.eBIC <- function(S,mod,n,
                          gamma.eBIC=0.5){
   G <- get.pdColG(mod)
-  K <- pdColG.mle(S,G$g)
+  K <- pdRCON.mle(S,G$g)
   S <- S*(n-1)/n
   p <- dim(S)[1]
   dof <- G$dof

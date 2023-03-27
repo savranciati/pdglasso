@@ -2,8 +2,8 @@
 
 export(admm.pdglasso)
 export(compute.eBIC)
-export(fit.pdColG)
 export(get.pdColG)
-export(pdColG.mle)
 export(pdColG.summarize)
-export(simul.pdColG)
+export(pdRCON.fit)
+export(pdRCON.mle)
+export(pdRCON.simulate)
