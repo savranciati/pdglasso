@@ -12,20 +12,26 @@ setCompilerOptions(optimize=3)
 #' estimated concenration matrix and corresponding graph.
 #'
 #' @inheritParams admm.pdglasso
+#' @param n the sample size of the data used to compute the sample covariance matrix S.
 #' @param n.l1 the number of values in the grid of candidates for lambda_1.
 #' @param n.l2 the number of values in the grid of candidates for lambda_2.
 #' @param gamma the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
 #'
-#' @return a list.
+#' @return a list:
+#' * model, the final model;
+#' * pdColG, the associated coloured graph;
+#' * l1.path, a matrix containing the grid values for lambda_1 as well as quantities used in eBIC computation;
+#' * l2.path, a matrix containing the grid values for lambda_2 as well as quantities used in eBIC computation.
 #' @export
 #'
 #' @examples
-#' S <- cov(toy.data)
+#' S <- cov(toy_data$sample.data)
 #' fit.pdColG(S)
 fit.pdColG <- function(S,
+                       n,
                        n.l1        = 15,
                        n.l2        = 15,
-                       gamma       = 0.5,
+                       gamma.eBIC  = 0.5,
                        type        = c("vertex", "inside.block.edge", "across.block.edge"),
                        force.symm  = NULL,
                        X.init      = NULL,
@@ -37,8 +43,55 @@ fit.pdColG <- function(S,
                        eps.abs     = 1e-12,
                        eps.rel     = 1e-12,
                        verbose     = FALSE,
-                       print.type  = TRUE){
+                       print.type  = TRUE,
+                       ...){
 
+  ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
+  max.ls <- max.lams(S)
+
+  ## Prepare temp objects
+  eBIC.l1 <- eBIC.l2 <-  matrix(0,n.l1,6)
+
+  ### First grid search for lambda_1, with lambda_2=0
+  l1.vec <- exp(seq(log(min(abs(S))),log(max.ls["max.l1"]), length.out=n.l1-1))
+  l1.vec <- c(0, l1.vec)
+  for(i in 1:n.l1){
+    mod.out <- admm.pdglasso(S,
+                             lambda1=l1.vec[i],
+                             lambda2=0,
+                             print.type=FALSE,
+                             ...)
+    eBIC.l1[i,] <- compute.eBIC(S, n, mod.out, gamma.eBIC=gamma.eBIC)
+  }
+  best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
+
+  ### Second grid search for lambda_2, with lambda_1=best.l1
+  l2.vec <- exp(seq(log(min(abs(S))),log(max.ls["max.l2"]), length.out=n.l1-1))
+  l2.vec <- c(0, l2.vec)
+  for(i in 1:n.l2){
+    mod.out <- admm.pdglasso(S,
+                             lambda1=best.l1,
+                             lambda2=l2.vec[i],
+                             print.type=FALSE,
+                             ...)
+    eBIC.l2[i,] <- compute.eBIC(S, n, mod.out, gamma.eBIC=gamma.eBIC)
+  }
+  best.l2 <- l2.vec[which.min(eBIC.l2[,1])]
+
+  ## Fit final model
+  mod.out <- admm.pdglasso(S,
+                      lambda1=best.l1,
+                      lambda2=best.l2)
+
+  G <- get.pdColG(mod.out)
+
+  l1.path=cbind(l1.vec,eBIC.l1)
+  l2.path=cbind(l2.vec,eBIC.l2)
+
+  return(list(model=mod.out,
+              pdColG=G,
+              l1.path=l1.path,
+              l2.path=l2.path))
 
 }
 
@@ -104,7 +157,7 @@ fit.pdColG <- function(S,
 #'
 #' @examples
 #'
-#' S <- cov(toy.data)
+#' S <- cov(toy_data$sample.data)
 #' admm.pdglasso(S)
 admm.pdglasso <- function(S,
                      lambda1     = 1,

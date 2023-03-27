@@ -14,7 +14,7 @@
 #'
 #' @examples
 #'
-#' S <- cov(toy.data)
+#' S <- cov(toy_data)
 #' mod.out <- admm.pdglasso(S)
 #' get.pdColG(mod.out)
 get.pdColG <- function(admm.out,
@@ -124,40 +124,6 @@ get.pdColG <- function(admm.out,
     cat("\n\n")
   }
   return(out)
-}
-
-## Extracts the LL block from a matrix
-LL.block <- function(X, new.val=NULL){
-  p   <- dim(X)[1]
-  q   <- p/2
-  if(is.null(new.val)){
-    return(X[1:q,1:q])
-  }else{
-    X[1:q,1:q] <- new.val
-    return(X)
-  }
-}
-## Extracts the RR block from a matrix
-RR.block <- function(X, new.val=NULL){
-  p   <- dim(X)[1]
-  q   <- p/2
-  if(is.null(new.val)){
-    return(X[(q+1):p,(q+1):p])
-  }else{
-    X[(q+1):p,(q+1):p] <- new.val
-    return(X)
-  }
-}
-## Extracts an LR block from a matrix
-across.block <- function(X, new.val=NULL){
-  p   <- dim(X)[1]
-  q   <- p/2
-  if(is.null(new.val)){
-    return(X[1:q,(q+1):p])
-  }else{
-    X[1:q,(q+1):p] <- new.val
-    return(X)
-  }
 }
 
 

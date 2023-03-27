@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' #
-#'
+#' pdColG.summarize(toy_data$pdColG)
 pdColG.summarize <- function(pdColG, print.summary=TRUE){
   X <- G.split(pdColG)
   G <- X$G
@@ -64,4 +64,52 @@ pdColG.summarize <- function(pdColG, print.summary=TRUE){
   inside   <- list(n.edges=n.inside.edges, n.UNcol.symm.edges=n.UNcol.symm.inside.edges, n.col.edges=n.col.inside.edges)
   across   <- list(n.edges=n.across.edges, n.UNcol.symm.edges=n.UNcol.symm.across.edges, n.col.edges=n.col.across.edges)
   return(list(overall=overall, vertices=vertices, inside=inside, across=across))
+}
+
+
+
+## Extracts the LL block from a matrix
+LL.block <- function(X, new.val=NULL){
+  p   <- dim(X)[1]
+  q   <- p/2
+  if(is.null(new.val)){
+    return(X[1:q,1:q])
+  }else{
+    X[1:q,1:q] <- new.val
+    return(X)
+  }
+}
+## Extracts the RR block from a matrix
+RR.block <- function(X, new.val=NULL){
+  p   <- dim(X)[1]
+  q   <- p/2
+  if(is.null(new.val)){
+    return(X[(q+1):p,(q+1):p])
+  }else{
+    X[(q+1):p,(q+1):p] <- new.val
+    return(X)
+  }
+}
+## Extracts an LR block from a matrix
+across.block <- function(X, new.val=NULL){
+  p   <- dim(X)[1]
+  q   <- p/2
+  if(is.null(new.val)){
+    return(X[1:q,(q+1):p])
+  }else{
+    X[1:q,(q+1):p] <- new.val
+    return(X)
+  }
+}
+
+## Computes maximum theoretical values for lambda_1 and lambda_2
+max.lams <- function(S){
+  max.l1 <- max(abs(S))
+  diff.inside <- abs(LL.block(S)-RR.block(S))
+  diff.diag <- diag(diff.inside)/2
+  diag(diff.inside) <- 0
+  diff.across <- abs(across.block(S)-t(across.block(S)))
+  diag(diff.across) <- 0
+  max.l2 <- max(max(diff.inside),max(diff.diag),max(diff.across))
+  return(c(max.l1,max.l2))
 }
