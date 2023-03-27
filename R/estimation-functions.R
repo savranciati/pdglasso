@@ -26,7 +26,7 @@ setCompilerOptions(optimize=3)
 #'
 #' @examples
 #' S <- cov(toy_data$sample.data)
-#' fit.pdColG(S)
+#' fit.pdColG(S,n=60)
 fit.pdColG <- function(S,
                        n,
                        n.l1        = 15,
@@ -53,7 +53,7 @@ fit.pdColG <- function(S,
   eBIC.l1 <- eBIC.l2 <-  matrix(0,n.l1,3)
 
   ### First grid search for lambda_1, with lambda_2=0
-  l1.vec <- exp(seq(log(min(abs(S))),log(max.ls["max.l1"]), length.out=n.l1-1))
+  l1.vec <- exp(seq(log(min(abs(S))),log(max.ls[1]), length.out=n.l1-1))
   l1.vec <- c(0, l1.vec)
   for(i in 1:n.l1){
     mod.out <- admm.pdglasso(S,
@@ -66,7 +66,7 @@ fit.pdColG <- function(S,
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
 
   ### Second grid search for lambda_2, with lambda_1=best.l1
-  l2.vec <- exp(seq(log(min(abs(S))),log(max.ls["max.l2"]), length.out=n.l1-1))
+  l2.vec <- exp(seq(log(min(abs(S))),log(max.ls[2]), length.out=n.l1-1))
   l2.vec <- c(0, l2.vec)
   for(i in 1:n.l2){
     mod.out <- admm.pdglasso(S,
