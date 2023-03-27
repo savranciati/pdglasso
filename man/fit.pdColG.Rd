@@ -35,6 +35,8 @@ fit.pdColG(
 
 \item{n.l2}{the number of values in the grid of candidates for lambda_2.}
 
+\item{gamma.eBIC}{the parameter for the eBIC computation. gamma=0 is equivalent to BIC.}
+
 \item{type}{A string or vector of strings for the type of equality
 constraints to be imposed; zero, one or more available options can be
 selected among: * "vertex", symmetries are imposed on the diagonal entries
@@ -78,8 +80,6 @@ running.}
 
 \item{print.type}{A boolean value; if \code{TRUE} the acronym used for the model -
 which penalties - is returned as printed output in the console.}
-
-\item{gamma}{the parameter for the eBIC computation. gamma=0 is equivalent to BIC.}
 }
 \value{
 a list:
@@ -100,5 +100,5 @@ estimated concenration matrix and corresponding graph.
 }
 \examples{
 S <- cov(toy_data$sample.data)
-fit.pdColG(S)
+fit.pdColG(S,n=60)
 }

@@ -15,7 +15,7 @@ setCompilerOptions(optimize=3)
 #' @param n the sample size of the data used to compute the sample covariance matrix S.
 #' @param n.l1 the number of values in the grid of candidates for lambda_1.
 #' @param n.l2 the number of values in the grid of candidates for lambda_2.
-#' @param gamma the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
+#' @param gamma.eBIC the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
 #'
 #' @return a list:
 #' * model, the final model;
@@ -61,7 +61,7 @@ fit.pdColG <- function(S,
                              lambda2=0,
                              print.type=FALSE,
                              ...)
-    eBIC.l1[i,] <- compute.eBIC(S, n, mod.out, gamma.eBIC=gamma.eBIC)
+    eBIC.l1[i,] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
   }
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
 
@@ -74,7 +74,7 @@ fit.pdColG <- function(S,
                              lambda2=l2.vec[i],
                              print.type=FALSE,
                              ...)
-    eBIC.l2[i,] <- compute.eBIC(S, n, mod.out, gamma.eBIC=gamma.eBIC)
+    eBIC.l2[i,] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
   }
   best.l2 <- l2.vec[which.min(eBIC.l2[,1])]
 
@@ -87,8 +87,8 @@ fit.pdColG <- function(S,
 
   l1.path=cbind(l1.vec,eBIC.l1)
   l2.path=cbind(l2.vec,eBIC.l2)
-  names(l1.path) <- c("lambda1.grid", "BIC     ","  log-Likelihood  ","DF (estimated.)")
-  names(l2.path) <- c("lambda2.grid", "BIC     ","  log-Likelihood  ","DF (estimated.)")
+  colnames(l1.path) <- c("lambda1.grid", "BIC     ","  log-Likelihood  ","DF (estimated.)")
+  colnames(l2.path) <- c("lambda2.grid", "BIC     ","  log-Likelihood  ","DF (estimated.)")
 
   return(list(model=mod.out,
               pdColG=G,
@@ -423,9 +423,8 @@ pdColG.mle <- function(S, pdColG){
 #' @param S
 #' @param mod
 #' @param n
-#' @param gamma
+#' @param gamma.eBIC
 #' @param max_iter
-#' @param verbose
 #'
 #' @return
 #' @export
@@ -434,7 +433,7 @@ pdColG.mle <- function(S, pdColG){
 compute.eBIC <- function(S,mod,n,
                          gamma.eBIC=0.5){
   G <- get.pdColG(mod)
-  K <- pdColG.mle(S,G)
+  K <- pdColG.mle(S,G$g)
   S <- S*(n-1)/n
   p <- dim(S)[1]
   dof <- G$dof

@@ -14,7 +14,7 @@
 #'
 #' @examples
 #'
-#' S <- cov(toy_data)
+#' S <- cov(toy_data$sample.data)
 #' mod.out <- admm.pdglasso(S)
 #' get.pdColG(mod.out)
 get.pdColG <- function(admm.out,
@@ -23,8 +23,8 @@ get.pdColG <- function(admm.out,
                       verbose=FALSE){
   # Prepare output object
   out <- list()
-  # Store passed acronims used
-  acronims <- admm.out$acronims$acronim.of.type
+  # Store passed acronyms used
+  acronyms <- admm.out$acronyms$acronym.of.type
   # Store passed estimated concentration matrix
   X <- admm.out$X
   p <- dim(X)[1]
@@ -49,7 +49,7 @@ get.pdColG <- function(admm.out,
   mat_sym <- matrix(0,p,p)
 
   ### between symmetries (LL, RR)
-  if(grepl("V",acronims,fixed=T)){
+  if(grepl("V",acronyms,fixed=T)){
     # computes the vertices differences (in absolute values)
     # | diag(LL)-diag(RR) |
     diff_vertex  <- abs(diag(X)[1:q]-diag(X)[(q+1):p])
@@ -59,7 +59,7 @@ get.pdColG <- function(admm.out,
   }
 
   ### between symmetries (LL, RR)  TOGLIERE LA DIAGONALE DAL BLOCCO I
-  if(grepl("I",acronims,fixed=T)){
+  if(grepl("I",acronyms,fixed=T)){
     # checks if there is at least one edge at each (LL_ij, RR_ij)
     block_inside <- pmax(LL.block(mat_graph), RR.block(mat_graph))
     # computes the inside differences (in absolute values)
@@ -78,7 +78,7 @@ get.pdColG <- function(admm.out,
   }
 
   ### across symmetries (LR, RL)
-  if(grepl("A",acronims,fixed=T)){
+  if(grepl("A",acronyms,fixed=T)){
 
     # checks if there is at least one edge at each (LR_ij, RL_ij)
     block_across <- pmax(across.block(mat_graph), t(across.block(mat_graph)))
