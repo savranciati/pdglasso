@@ -39,6 +39,7 @@ fit.pdColG <- function(S,
                        verbose     = FALSE,
                        print.type  = TRUE){
 
+
 }
 
 

@@ -19,3 +19,5 @@ LazyData: true
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 Url: https://github.com/savranciati/pdglasso
+Depends: 
+    R (>= 2.10)
