@@ -9,7 +9,7 @@ compute.eBIC(S, mod, n, gamma.eBIC = 0.5)
 \arguments{
 \item{S}{A \eqn{p \times p} covariance (or correlation) matrix.}
 
-\item{mod}{A list, the output object of a call to \code{\link[=admm.pdglasso]{admm.pdglasso()}}}
+\item{mod}{A list, the output object of a call to \code{\link{admm.pdglasso}}}
 
 \item{n}{the sample size of the data used to compute the sample covariance matrix S.}
 

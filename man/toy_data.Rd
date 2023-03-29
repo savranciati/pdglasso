@@ -3,7 +3,7 @@
 \docType{data}
 \name{toy_data}
 \alias{toy_data}
-\title{Toy dataset generated through \code{\link[=simul.pdColG]{simul.pdColG()}} function}
+\title{Toy dataset generated through \code{\link{simul.pdColG}} function}
 \format{
 \subsection{\code{toy_data}}{
 
@@ -19,7 +19,7 @@ A list containing three elements:
 toy_data
 }
 \description{
-Data simulated by using the function \link{simul.pdColG} with the following arguments:
+Data simulated by using the function \code{\link{simul.pdColG}} with the following arguments:
 \itemize{
 \item \code{p <- 20}
 \item \code{q <- p/2}

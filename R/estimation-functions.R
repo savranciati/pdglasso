@@ -515,7 +515,7 @@ make.acronyms <- function(type, force.symm, print.type=TRUE){
 #' @param q p/2
 #' @param acr.type type of acronym.
 #'
-#' @return
+#' @return .
 #' @noRd
 #'
 get.n.row.F <- function(q, acr.type){
@@ -538,7 +538,7 @@ get.n.row.F <- function(q, acr.type){
 #' @param p number of rows/columns of S
 #' @param acr.type type of acronym
 #'
-#' @return
+#' @return .
 #' @noRd
 #'
 F.by.vec <- function(v, p, acr.type){
@@ -574,7 +574,7 @@ F.by.vec <- function(v, p, acr.type){
 #' @param p number of rows/columns of S
 #' @param acr.type type of acronym
 #'
-#' @return
+#' @return .
 #' @noRd
 #'
 tF.by.vec <- function(v, p, acr.type){
@@ -630,7 +630,7 @@ tF.by.vec <- function(v, p, acr.type){
 #' @param acr.type type of acronym
 #' @param acr.force type of acronym for forced symmetries
 #'
-#' @return
+#' @return .
 #' @noRd
 #'
 lambda2.force.symm <- function(p, lambda2, acr.type, acr.force){

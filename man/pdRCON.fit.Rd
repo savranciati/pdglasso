@@ -91,7 +91,7 @@ a list:
 }
 }
 \description{
-Performs a sequence of calls to \code{\link[=admm.pdglasso]{admm.pdglasso()}} providing two grids of
+Performs a sequence of calls to \code{\link{admm.pdglasso}} providing two grids of
 values for lambda_1 and lambda_2. First, a grid search conditional on
 lambda_2=0 is run to select the best lambda_1 value among the candidates
 (according to eBIC); conditional on the best lambda_1, a similar search is
