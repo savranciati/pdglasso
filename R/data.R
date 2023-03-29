@@ -1,6 +1,6 @@
-#' Toy dataset generated through [simul.pdColG()] function
+#' Toy dataset generated through [`simul.pdColG`] function
 #'
-#' Data simulated by using the function [simul.pdColG] with the following arguments:
+#' Data simulated by using the function [`simul.pdColG`] with the following arguments:
 #' * `p <- 20`
 #' * `q <- p/2`
 #' * `dens=0.3, type=c("v","i","a"), force=NULL`

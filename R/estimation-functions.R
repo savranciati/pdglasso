@@ -4,7 +4,7 @@ setCompilerOptions(optimize=3)
 #' Fit and select a coloured graphical model for paired data according to eBIC
 #' criterion.
 #'
-#' Performs a sequence of calls to [admm.pdglasso()] providing two grids of
+#' Performs a sequence of calls to [`admm.pdglasso`] providing two grids of
 #' values for lambda_1 and lambda_2. First, a grid search conditional on
 #' lambda_2=0 is run to select the best lambda_1 value among the candidates
 #' (according to eBIC); conditional on the best lambda_1, a similar search is
@@ -277,9 +277,9 @@ admm.pdglasso_C<-cmpfun(admm.pdglasso)
 
 #
 
-#' Inner ADMM loop called by the main function [admm.pdglasso()].
+#' Inner ADMM loop called by the main function [`admm.pdglasso`].
 #'
-#' This inner ADMM loop is called by the outer loop (and main function) [admm.pdglasso()].
+#' This inner ADMM loop is called by the outer loop (and main function) [`admm.pdglasso`].
 #' It inherits most of the parameters, together with the two quantities X and U which are
 #' related to the steps of the ADMM.
 #'
@@ -423,7 +423,7 @@ pdRCON.mle <- function(S, pdColG){
 #' of model selection.
 #'
 #' @param S A \eqn{p \times p} covariance (or correlation) matrix.
-#' @param mod A list, the output object of a call to [admm.pdglasso()]
+#' @param mod A list, the output object of a call to [`admm.pdglasso`]
 #' @param n the sample size of the data used to compute the sample covariance matrix S.
 #' @param gamma.eBIC a parameter needed to compute the eBIC; ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC.
 #'
@@ -510,10 +510,14 @@ make.acronyms <- function(type, force.symm, print.type=TRUE){
   return(list(acronym.of.type=acr.type$acronym, acronym.of.force=acr.force$acronym))
 }
 
-
-
-# Computes the number of constraints, i.e. number of rows of the matrix F
-#
+#' Computes the number of constraints, i.e. number of rows of the matrix F
+#'
+#' @param q p/2
+#' @param acr.type type of acronym.
+#'
+#' @return
+#' @noRd
+#'
 get.n.row.F <- function(q, acr.type){
   dim.hs <- q*(q-1)/2
   switch(acr.type,
@@ -526,8 +530,17 @@ get.n.row.F <- function(q, acr.type){
          VIA = q+2*dim.hs)
 }
 
-# # Computes F%*%v
-#
+
+
+#' Computes F%*%v
+#'
+#' @param v a vector
+#' @param p number of rows/columns of S
+#' @param acr.type type of acronym
+#'
+#' @return
+#' @noRd
+#'
 F.by.vec <- function(v, p, acr.type){
   q <- p/2
   dim.hs <- q*(q-1)/2
@@ -555,9 +568,15 @@ F.by.vec <- function(v, p, acr.type){
 }
 
 
-# Computes t(F)%*%v
-#
-
+#' Computes t(F)%*%v
+#'
+#' @param v a vector
+#' @param p number of rows/columns of S
+#' @param acr.type type of acronym
+#'
+#' @return
+#' @noRd
+#'
 tF.by.vec <- function(v, p, acr.type){
   q <- p/2
   dim.hs <- q*(q-1)/2
@@ -604,8 +623,16 @@ tF.by.vec <- function(v, p, acr.type){
                })
 }
 
-# Imposes lambda values such that symmetry is forced
-
+#' Imposes lambda values such that symmetry is forced
+#'
+#' @param p .
+#' @param lambda2 .
+#' @param acr.type type of acronym
+#' @param acr.force type of acronym for forced symmetries
+#'
+#' @return
+#' @noRd
+#'
 lambda2.force.symm <- function(p, lambda2, acr.type, acr.force){
   acronym <- paste("t", acr.type, "_f", acr.force, sep="")
   q       <- p/2
