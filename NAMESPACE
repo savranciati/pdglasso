@@ -2,7 +2,7 @@
 
 export(admm.pdglasso)
 export(compute.eBIC)
-export(get.pdColG)
+export(pdColG.get)
 export(pdColG.summarize)
 export(pdRCON.fit)
 export(pdRCON.mle)

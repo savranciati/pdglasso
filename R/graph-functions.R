@@ -5,7 +5,7 @@
 #' @param admm.out An object of list type, that is the output of a call to the [`admm-pdglasso`] function.
 #' @param th1 (optional) A scalar, the threshold to identify edges in the graph; it must be non-negative.
 #' @param th2 (optional) A scalar, the threshold to identify coloured edges in the graph; it must be non-negative.
-#' @param verbose (optional) if `TRUE` provides summary statistics of the graph.
+#' @param print.summary (optional) if `TRUE` provides summary statistics of the graph.
 #'
 #' @return a list, containing:
 #' * g, the graph in matrix form.
@@ -16,11 +16,11 @@
 #'
 #' S <- cov(toy_data$sample.data)
 #' mod.out <- admm.pdglasso(S)
-#' get.pdColG(mod.out)
-get.pdColG <- function(admm.out,
+#' pdColG.get(mod.out)
+pdColG.get <- function(admm.out,
                       th1=NULL,
                       th2=NULL,
-                      verbose=FALSE){
+                      print.summary=FALSE){
   # Prepare output object
   out <- list()
   # Store passed acronyms used
@@ -119,8 +119,8 @@ get.pdColG <- function(admm.out,
   out <- list()
   out$g   <- mat_graph+mat_sym
   out$dof <- dof
-  if(verbose){
-    #graph.stats(G.split(out$g))
+  if(print.summary){
+    pdColG.summarize(out$g)
     cat("\n\n")
   }
   return(out)

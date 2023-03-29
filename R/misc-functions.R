@@ -1,12 +1,21 @@
-### Half-vectorization operator,  without the diagonal
-# input is a symmetric matrix M
+#' Half-vectorization operator,  without the diagonal
+#'
+#' @param a symmetric matrix M
+#'
+#' @return x
+#' @noRd
+#'
 half.vec <- function(M){
   return(M[upper.tri(M, diag=FALSE)])
 }
 
-### Inverse of Half-vectorization operator, without the diagonal
-# input is an m vector; returns a triangular (upper) matrix
-# for the strict==T option, the diagonal is filled with zero
+#' Inverse of Half-vectorization operator, without the diagonal
+#'
+#' @param m a vector
+#'
+#' @return a triangular (upper) matrix
+#' @noRd
+#'
 inv_half.vec<- function(m){
   mat.dim <- (1+(1+8*length(m))^0.5)/2
   M <- matrix(0, mat.dim, mat.dim)
@@ -14,10 +23,15 @@ inv_half.vec<- function(m){
   return(M)
 }
 
-# Transforms a symmetric matrix into a vector applying the
-# v() operator defined in Section ??? of [2]. This function
-# is called by admm.inner()
 #
+#' Transforms a symmetric matrix into a vector applying the
+# v() operator
+#'
+#' @param M a matrix
+#'
+#' @return a vector
+#' @noRd
+#'
 mat2vec <- function(M){
   p  <- dim(M)[1]
   q  <- p/2
@@ -31,9 +45,13 @@ mat2vec <- function(M){
   )
 }
 
-# Inverse operation with respect to mat2vec().
-# This function is called by admm.inner()
-#
+#' Inverse operation with respect to mat2vec().
+#'
+#' @param m a vector
+#'
+#' @return a matrix
+#' @noRd
+#'
 vec2mat <- function(m){
   p <- (-1+sqrt(1+8*length(m)))/2
   q <- p/2
@@ -58,8 +76,14 @@ vec2mat <- function(m){
   return(M)
 }
 
-
-## Extracts the LL block from a matrix
+#' Extracts the LL block from a matrix
+#'
+#' @param X a matrix
+#' @param new.val optional
+#'
+#' @return a matrix
+#' @noRd
+#'
 LL.block <- function(X, new.val=NULL){
   p   <- dim(X)[1]
   q   <- p/2
@@ -70,7 +94,15 @@ LL.block <- function(X, new.val=NULL){
     return(X)
   }
 }
-## Extracts the RR block from a matrix
+
+#' Extracts the RR block from a matrix
+#'
+#' @param X a matrix
+#' @param new.val optional
+#'
+#' @return a matrix
+#' @noRd
+#'
 RR.block <- function(X, new.val=NULL){
   p   <- dim(X)[1]
   q   <- p/2
@@ -81,7 +113,15 @@ RR.block <- function(X, new.val=NULL){
     return(X)
   }
 }
-## Extracts an LR block from a matrix
+
+#' Extracts the LR block from a matrix
+#'
+#' @param X a matrix
+#' @param new.val optional
+#'
+#' @return a matrix
+#' @noRd
+#'
 across.block <- function(X, new.val=NULL){
   p   <- dim(X)[1]
   q   <- p/2
@@ -93,7 +133,13 @@ across.block <- function(X, new.val=NULL){
   }
 }
 
-## Computes maximum theoretical values for lambda_1 and lambda_2
+#' Computes maximum theoretical values for lambda_1 and lambda_2
+#'
+#' @param S a covariance matrix.
+#'
+#' @return a vector of two elements.
+#' @noRd
+#'
 max.lams <- function(S){
   max.l1 <- max(abs(S))
   diff.inside <- abs(LL.block(S)-RR.block(S))

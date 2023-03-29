@@ -1,6 +1,6 @@
 Package: pdglasso
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Symmetric Graphical Lasso for Paired Data within a Coloured Graphical Model framework
 Version: 0.1.0
 Authors@R: c(
     person("Saverio", "Ranciati",
@@ -9,10 +9,9 @@ Authors@R: c(
     comment = c(ORCID = "0000-0001-7880-9465")),
     person("Alberto", "Roverato",
     email = "alberto.roverato@unipd.it",
-    role = c("aut"),
+    role = c("aut","cre"),
     comment = c(ORCID = "0000-0001-7984-3593")))
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: This package implements a symmetric graphical lasso procedure to solve a penalized inference problem of analyzing paired data under the class of coloured graphical models. In particular, it deals with RCON models, where constraints are put on the concentration matrix. Estimation is performed through the alternating directions method of multipliers.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
