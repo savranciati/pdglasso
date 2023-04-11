@@ -1,17 +1,17 @@
 Package: pdglasso
 Type: Package
-Title: Symmetric Graphical Lasso for Paired Data within a Coloured Graphical Model framework
+Title: Graphical Lasso for Coloured Gaussian Graphical Models for Paired Data
 Version: 0.1.0
 Authors@R: c(
     person("Saverio", "Ranciati",
     email = "saverio.ranciati2@unibo.it",
-    role = c("aut","cre"),
+    role = c("aut"),
     comment = c(ORCID = "0000-0001-7880-9465")),
     person("Alberto", "Roverato",
     email = "alberto.roverato@unipd.it",
     role = c("aut","cre"),
     comment = c(ORCID = "0000-0001-7984-3593")))
-Description: This package implements a symmetric graphical lasso procedure to solve a penalized inference problem of analyzing paired data under the class of coloured graphical models. In particular, it deals with RCON models, where constraints are put on the concentration matrix. Estimation is performed through the alternating directions method of multipliers.
+Description: This package deals with RCON models for paired data and implements an Alternating Directions Method of Multipliers (ADMM) algorithm to solve a penalized likelihood method. Also functions for the computation of maximum likelihood estimates and for the generation of simulated pdRCON models and data are provided.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
