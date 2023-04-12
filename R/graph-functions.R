@@ -127,19 +127,32 @@ pdColG.get <- function(admm.out,
 }
 
 
-#' Summary statistics for coloured graphs for paired data
+#' Structural properties of a coloured graphs for paired data
 #'
-#' This function
+#' This function returns some summary statistics relative to the structural properties of a
+#' coloured graph for paired data \eqn{\mathcal{G}}. We refer to  [`pdglasso`] both for the description of the
+#' matrix encoding a coloured graph for paired and details on how the structural quantities are defined and computed.
 #'
-#' @param pdColG a coloured graph for paired data.
-#' @param print.summary logical  (default `TRUE`) indicating whether a summary should be printed.
+#' @param pdColG a matrix representing coloured graph for paired data \eqn{\mathcal{G}}.
+#' @param print.summary a logical  (default `TRUE`) indicating whether a summary should be printed.
 #'
-#' @return a list
+#' @return
+#'
+#' An invisible list with the following components:
+#'
+#' * `overall` a list with the number of vertices and edges of  \eqn{\mathcal{G}}.
+#' * `vertex`  a list with the number of coloured vertices of  \eqn{\mathcal{G}}.
+#' * `inside`  a list with the number of inside block edges, the number of uncolored symmetric and coloured inside block edges of \eqn{\mathcal{G}}.
+#' * `across`  a list with the number of across block edges, the number of uncolored symmetric and coloured across block edges of \eqn{\mathcal{G}}.
+#'
+#' If `print.summary=TRUE` some summary statistics are also printed on the screen.
+#'
 #' @export
 #'
 #' @examples
 #' #
 #' pdColG.summarize(toy_data$pdColG)
+#'
 pdColG.summarize <- function(pdColG, print.summary=TRUE){
   X <- G.split(pdColG)
   G <- X$G
@@ -189,10 +202,10 @@ pdColG.summarize <- function(pdColG, print.summary=TRUE){
     cat("number of coloured  (symmetric) edges: ", n.col.across.edges, " \n \n", sep="")
   }
   overall <- list(n.vertices=p, n.edges=n.edges)
-  vertices <- list(n.col.vertices=n.col.vertices)
+  vertex <- list(n.col.vertices=n.col.vertices)
   inside   <- list(n.edges=n.inside.edges, n.UNcol.symm.edges=n.UNcol.symm.inside.edges, n.col.edges=n.col.inside.edges)
   across   <- list(n.edges=n.across.edges, n.UNcol.symm.edges=n.UNcol.symm.across.edges, n.col.edges=n.col.across.edges)
-  return(invisible(list(overall=overall, vertices=vertices, inside=inside, across=across)))
+  return(invisible(list(overall=overall, vertex=vertex, inside=inside, across=across)))
 }
 
 

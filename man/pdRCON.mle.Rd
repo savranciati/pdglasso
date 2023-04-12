@@ -4,7 +4,7 @@
 \alias{pdRCON.mle}
 \title{Maximum likelihood estimate}
 \usage{
-pdRCON.mle(S, pdColG)
+pdRCON.mle(S, pdColG, verbose = TRUE)
 }
 \arguments{
 \item{S}{a sample variance and covariance matrix.}

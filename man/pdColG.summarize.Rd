@@ -2,22 +2,33 @@
 % Please edit documentation in R/graph-functions.R
 \name{pdColG.summarize}
 \alias{pdColG.summarize}
-\title{Summary statistics for coloured graphs for paired data}
+\title{Structural properties of a coloured graphs for paired data}
 \usage{
 pdColG.summarize(pdColG, print.summary = TRUE)
 }
 \arguments{
-\item{pdColG}{a coloured graph for paired data.}
+\item{pdColG}{a matrix representing coloured graph for paired data \eqn{\mathcal{G}}.}
 
-\item{print.summary}{logical  (default \code{TRUE}) indicating whether a summary should be printed.}
+\item{print.summary}{a logical  (default \code{TRUE}) indicating whether a summary should be printed.}
 }
 \value{
-a list
+An invisible list with the following components:
+\itemize{
+\item \code{overall} a list with the number of vertices and edges of  \eqn{\mathcal{G}}.
+\item \code{vertex}  a list with the number of coloured vertices of  \eqn{\mathcal{G}}.
+\item \code{inside}  a list with the number of inside block edges, the number of uncolored symmetric and coloured inside block edges of \eqn{\mathcal{G}}.
+\item \code{across}  a list with the number of across block edges, the number of uncolored symmetric and coloured across block edges of \eqn{\mathcal{G}}.
+}
+
+If \code{print.summary=TRUE} some summary statistics are also printed on the screen.
 }
 \description{
-This function
+This function returns some summary statistics relative to the structural properties of a
+coloured graph for paired data \eqn{\mathcal{G}}. We refer to  \code{\link{pdglasso}} both for the description of the
+matrix encoding a coloured graph for paired and details on how the structural quantities are defined and computed.
 }
 \examples{
 #
 pdColG.summarize(toy_data$pdColG)
+
 }

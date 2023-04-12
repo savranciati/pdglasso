@@ -1,28 +1,113 @@
 require(MASS)
 
 
-#' Title
+#' Random simulation of pdRCON models
 #'
-#' @param p number of variables.
+#' Randomly generates a coloured graph for paired data \eqn{\mathcal{G}}, a
+#' concentration matrix \eqn{K} adapted to \eqn{\mathcal{G}} and a random sample
+#' from a multivariate normal distribution with zero mean vector and covariance
+#' matrix \eqn{\Sigma=K^{-1}}.
+#'
+#'
+#' @param p an even integer, that is the number of vertices of the generated
+#'   coloured graph for paired data `pdColG`.
 #' @param concent.mat a logical (default `TRUE`) indicating whether a
-#'   concentration matrix should be generated.
-#' @param sample a logical (default `TRUE`) indicating whether a sample form a
-#'   normal distribution with zero mean vector and the generated concentration
-#'   matrix should be generated.
-#' @param Sigma x
-#' @param sample.size sample size with default value equal to \eqn{3p}.
-#' @param type x
-#' @param force.symm x
-#' @param dens x
-#' @param dens.vertex x
-#' @param dens.inside x
-#' @param dens.across x
+#'   concentration matrix `K` adapted to `pdColG` should be generated.
+#' @param sample a logical (default `TRUE`) indicating whether a sample from a
+#'   normal distribution with zero mean vector and concentration matrix `K`
+#'   should be generated.
+#' @param Sigma a \eqn{p\times p} positive definite matrix. This the matrix
+#'   argument of the [`rWishart`] function, which is used as starting point in
+#'   the random generation of the concentration matrix, as described in the
+#'   details section below. The default `NULL` is equivalent to the identity
+#'   matrix `Sigma=diag(p)`.
+#' @param sample.size size of the randomly generated sample. The default `NULL`
+#'   is equivalent to `sample.size=3*p`.
+#' @param type,force.symm two subvectors of `c("vertex", "inside.block.edge", "across.block.edge")` which
+#' identify the pdRCON (sub)model of interest; see [`pdglasso`] for details.
+#' @param dens,dens.vertex,dens.inside,dens.across four values between zero and
+#'   one used to specify the sparsity degree of the generated graph, as
+#'   described in the details section below. The default `dens.vertex=NULL` is
+#'   equivalent to `dens.vertex=dens`, and similarly for `dens.inside` and
+#'   `dens.across`.
 #'
-#' @return this function
-#' @export
+#' @details
+#'
+#'
+#'
+#'   **Details on the sparsity degree of the generated graph**
+#'
+#'   The argument `dens.vertex` specifies the proportion of coloured vertices
+#'   among the \eqn{p} vertices. This is used if the string "vertex" is a
+#'   component of `type` but not of `force.symm`. The string "vertex" not being
+#'   a component of `type` is equivalent to `dens.vertex=0` whereas the string
+#'   "vertex" being a component of both `type` and `force.symm` is equivalent to
+#'   `dens.vertex=1`.
+#'
+#'   The argument `dens.inside` specifies the proportion of coloured symmetric
+#'   inside block edges among the \eqn{q(q-1)/2}, with \eqn{q=p/2}, inside block
+#'   edges. This is used if the string "inside.block.edge" is a component of
+#'   `type`, otherwise it is equivalent to `dens.inside=0`. The overall density
+#'   of inside block edges is obtained by the sum of the densities of coloured
+#'   and uncoloured inside block edges. This is  a value between `dens.inside`
+#'   and `dens.inside+dens`. Furthermore, it is exactly equal to `dens` if
+#'   "inside.block.edge" is not a component of `type` and to `dens.inside` if
+#'   "inside.block.edge" is a component of both `type` and `force.symm`.
+#'
+#'   The argument `dens.across` specifies the proportion of coloured symmetric
+#'   across block edges among the potentially coloured \eqn{q(q-1)/2} across
+#'   block edges. This is used if the string "across.block.edge" is a component
+#'   of `type`, otherwise it is equivalent to `dens.across=0`. The overall
+#'   density of across block edges is obtained by the sum of the densities of
+#'   coloured and uncoloured across block edges. This is  a value between
+#'   `dens.across` and `dens.across+dens`. Furthermore, it is exactly equal  to
+#'   `dens` if "across.block.edge" is not a component of `type`.
+#'
+#'   The argument `dens` specifies the density of uncoloured edges. Note that
+#'   the algorithm generates uncoloured edges first, which may be overwritten by
+#'   coloured edges. For this reason the actual density of uncoloured edges is
+#'   typically smaller than `dens`.
+#'
+#'   **Details on the generating process of the concentration matrix**
+#'
+#'   The concentration matrix is obtained by first generating a random Wishart
+#'   matrix with matrix parameter `Sigma` and \eqn{p} degrees of freedom, which
+#'   represents an initial unconstrained covariance matrix. This is inverted and
+#'   adapted to a suitable coloured graph for paired data with sparsity degree
+#'   according to the  `dens.xxx` arguments.
+#'
+#'
+#' @return A list containing the following components:
+#'
+#' * `pdColG` the randomly generated coloured graph for paired data on \eqn{p} vertices; see [`pdglasso`] for details.
+#'
+#' * `K` the randomly generated concentration matrix adapted to `pdColG`.
+#'
+#' * `sample.data` the randomly generated sample form a multivariate normal distribution
+#'   with mean vector zero and concentration matrix `K`.
+#'
+#'   Note that the variable in \eqn{L} are are named `L1,...,Lq` and variables
+#'   in \eqn{R} are are named `R1,...,Rq` where  `Li` is homologous to  `Ri` for
+#'   every i=1,...,q.
+#'
+#'
 #'
 #' @examples
-#' #
+#'
+#' # generates a pdRCON model on 10 variables in the form of a pdColG matrix
+#'
+#' set.seed(123)
+#' pdRCON.model <- pdRCON.simulate(10, concent=FALSE, sample=FALSE, dens=0.25)$pdColG
+#'
+#' # generates a pdRCON model on 20 variables, a concentration matrix
+#' # for this model and a sample of size 50
+#' # all vertices are coloured and no coloured across block edge is allowed
+#'
+#' set.seed(123)
+#' GenMod <- pdRCON.simulate(20, type=c("v", "i"), force.symm=c("v"), sample.size=50, dens=0.20)
+#'
+#' @export
+#'
 pdRCON.simulate <- function(p,
                             concent.mat = TRUE,
                             sample = TRUE,
@@ -44,21 +129,20 @@ pdRCON.simulate <- function(p,
     S.inv <- NULL
   }
   PDCG <- make.pdColG(p = p, K = S.inv, type = type, force.symm = force.symm, dens = dens,
-                   dens.vertex = dens.vertex, dens.inside = dens.vertex, dens.across = dens.vertex)
+                      dens.vertex = dens.vertex, dens.inside = dens.vertex, dens.across = dens.vertex)
   if(concent.mat){
-    K <- pdColG.mle(S, PDCG)
-    LR.lab <- c(paste("L", 1:(p/2), sep=""), paste("R", 1:(p/2), sep=""))
-    dimnames(K) <- list(LR.lab, LR.lab)
+    K <- pdRCON.mle(S, PDCG, verbose = FALSE)
+    dimnames(K) <- dimnames(PDCG)
     if(sample){
       if (is.null(sample.size)) sample.size <- 3*p
       sample.data <- MASS::mvrnorm(n = sample.size, mu=rep(0, p), Sigma=solve(K))
-      colnames(sample.data) <- LR.lab
+      colnames(sample.data) <- rownames(K)
       sample.data <- as.data.frame(sample.data)
     }else{
       sample.data <- NULL
     }
   }else{
-    if(sample)warning("concent.mat=FALSE no data are generated")
+    if(sample) warning("A random sample cannot be generated because concent.mat=FALSE")
     K <- NULL
     sample.data <- NULL
   }
@@ -66,28 +150,35 @@ pdRCON.simulate <- function(p,
 }
 
 
-#' Title
+#' Random generation of a pdColG matrix
 #'
-#' @param p x
-#' @param K x
-#' @param type x
-#' @param force.symm x
-#' @param dens x
-#' @param dens.vertex x
-#' @param dens.inside x
-#' @param dens.across x
+#' @param K the inverse of a variance matrix
+#' @param p,type,force.symm,dens,dens.vertex,dens.inside,dens.across the same as
+#'   in [`pdRCON.simulate`]
 #'
-#' @return this function
+#' @details
+#'
+#' This function is called by [`pdRCON.simulate`]
+#'
+#' @return this function returns a `pdColG` matrix, see [`pdglasso`] for
+#'   details. If a matrix `K` is passed then this function produced a pdColG
+#'   graph that tries to mimic the "zero" structure of `K` in the sense that
+#'   missing edges correspond to the smallest entries of `K`. Similarly the
+#'   symmetric structure is somehow read from `K`. See [`symm.structure.gen`]
+#'   for details.
+#'
+#'   If `K=NULL` then the pdColG is generated randomly.
+#'
 #' @noRd
 #'
 make.pdColG <- function(p=NULL,
-                     K=NULL,
-                     type = c("vertex", "inside.block.edge", "across.block.edge"),
-                     force.symm=NULL,
-                     dens=0.1,
-                     dens.vertex=NULL,
-                     dens.inside=NULL,
-                     dens.across=NULL){
+                        K=NULL,
+                        type = c("vertex", "inside.block.edge", "across.block.edge"),
+                        force.symm=NULL,
+                        dens=0.1,
+                        dens.vertex=NULL,
+                        dens.inside=NULL,
+                        dens.across=NULL){
 
   # initialization and checks
   if(is.null(dens.vertex)) dens.vertex <- dens
@@ -193,15 +284,17 @@ make.pdColG <- function(p=NULL,
     }
     if(any(acr.force=="V")){
       diag(G.sym) <- 1
-   }
+    }
   }
   PDCG <- G.merge(list(G = G, G.sym = G.sym, G.across = G.across))
+  LR.lab <- c(paste("L", 1:(p/2), sep=""), paste("R", 1:(p/2), sep=""))
+  dimnames(PDCG) <- list(LR.lab, LR.lab)
   return(PDCG)
 }
 
 
 
-# This function is called by generate.pdColG()
+# This function is called by [`make.pdColG`]
 # Generates a symmetric structure
 #
 # A,B  = two (concentration) matrices with same dimension
@@ -218,14 +311,34 @@ make.pdColG <- function(p=NULL,
 #
 
 
-#' Title
+#' Generate a symmetric structure
 #'
-#' @param A x
-#' @param B x
-#' @param p x
-#' @param dens x
+#' @param A,B two (concentration) matrices with same dimension
+#' @param p number of variables
+#' @param dens density of the symmetric structure
 #'
-#' @return this function
+#' @details
+#'
+#' This function is called by [`make.pdColG`]
+#'
+#'
+#' @return
+#'
+#' This function returns a binary (0/1) upper triangular matrix with ones
+#' correspond to nonzero symmetries obtained as follows:
+#'
+#' If `A` and  `B` are given then `p=nrow(A)`. The entries (i.e. concentrations)
+#' in A are paired with those of B and the average is computed. The largest
+#' abs(averaged.value) pairs are eligible for symmetry
+#'
+#' dens = between 0 and 1 is the density of the resulting symmetry. In the
+#' resulting graph computed as the total number of edges with symmetry (i.e. the
+#' number of pairs multiplied by 2) divided by the total number of edges that is
+#' q(q-1)/2 + q(q-1)/2
+#'
+#' if `A` and  `B` are `NULL` then the 0/1 structure is generated randomly and
+#' `p` gives the number of vertices.
+#'
 #' @noRd
 #'
 symm.structure.gen <- function(A=NULL, B=NULL, p=NULL, dens){

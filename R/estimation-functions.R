@@ -397,7 +397,7 @@ admm.inner_C<-cmpfun(admm.inner)
 #' @examples
 #' #
 #'
-pdRCON.mle <- function(S, pdColG){
+pdRCON.mle <- function(S, pdColG, verbose = TRUE){
 
   # make vector lambda1
   lambda1 <- (mat2vec(pdColG)==0)
@@ -411,11 +411,10 @@ pdRCON.mle <- function(S, pdColG){
   lambda2[lambda2] <- Inf
 
   # run SGL algorithm
-  K.hat <- admm.pdglasso(S, lambda1 = lambda1, lambda2 = lambda2, print.type=FALSE)$X
+  K.hat <- admm.pdglasso(S, lambda1 = lambda1, lambda2 = lambda2, print.type=FALSE, verbose=verbose)$X
 
   return(K.hat)
 }
-
 
 #' Compute the extended Bayesian Information Criterion (eBIC) for a given model.
 #'
