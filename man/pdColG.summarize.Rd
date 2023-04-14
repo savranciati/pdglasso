@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph-functions.R
 \name{pdColG.summarize}
 \alias{pdColG.summarize}
-\title{Structural properties of a coloured graphs for paired data}
+\title{Structural properties of a coloured graph for paired data}
 \usage{
 pdColG.summarize(pdColG, print.summary = TRUE)
 }

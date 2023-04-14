@@ -2,8 +2,7 @@
 % Please edit documentation in R/estimation-functions.R
 \name{admm.pdglasso}
 \alias{admm.pdglasso}
-\title{Estimate a concentration matrix under the pdColG model using (adaptive) ADMM
-graphical lasso algorithm.}
+\title{ADMM graphical lasso algorithm for coloured GGMs for paired data.}
 \usage{
 admm.pdglasso(
   S,
@@ -24,62 +23,52 @@ admm.pdglasso(
 )
 }
 \arguments{
-\item{S}{A \eqn{p \times p} covariance (or correlation) matrix.}
+\item{S}{a \eqn{p \times p} covariance (or correlation) matrix.}
 
-\item{lambda1}{A non-negative scalar (or vector) penalty that encourages
+\item{lambda1}{a non-negative scalar (or vector) penalty that encourages
 sparsity in the concentration matrix. If a vector is provided, it should
 match the appropriate length, i.e.}
 
-\item{lambda2}{A non-negative scalar (or vector) penalty that encourages
+\item{lambda2}{a non-negative scalar (or vector) penalty that encourages
 equality constraints in the concentration matrix. If a vector is provided,
 it should match the appropriate length, i.e.}
 
-\item{type}{A string or vector of strings for the type of equality
-constraints to be imposed; zero, one or more available options can be
-selected among: * "vertex", symmetries are imposed on the diagonal entries
-of the concentration matrix. * "inside.block.edge", symmetries are imposed
-between elements of the LL and RR block the concentration matrix. *
-"across.block.edge", symmetries are imposed between elements of the LR and
-RL block the concentration matrix. Shortened forms are accepted too, i.e.
-"V" or "vert" for "vertex".}
-
-\item{force.symm}{A string or vector of strings to impose forced symmetry on
-the corresponding block of the concentration matrix. Same options as
-"type".}
+\item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which
+identify the pdRCON (sub)model of interest; see \code{\link{pdglasso}} for details.}
 
 \item{X.init}{(optional) A \eqn{p \times p} initial guess for the
 concentration matrix and/or starting solution for the ADMM algorithm.}
 
-\item{rho1}{A scalar; tuning parameter of the ADMM algorithm to be used for
+\item{rho1}{a scalar; tuning parameter of the ADMM algorithm to be used for
 the outer loop. It must be strictly positive.}
 
-\item{rho2}{A scalar; tuning parameter of the ADMM algorithm to be used for
+\item{rho2}{a scalar; tuning parameter of the ADMM algorithm to be used for
 the inner loop. It must be strictly positive.}
 
-\item{varying.rho1}{A boolean value; if \code{TRUE} the parameter rho1 is updated
+\item{varying.rho1}{a logical; if \code{TRUE} the parameter rho1 is updated
 iteratively to speed-up convergence.}
 
-\item{varying.rho2}{A boolean value; if \code{TRUE} the parameter rho2 is updated
+\item{varying.rho2}{a logical; if \code{TRUE} the parameter rho2 is updated
 iteratively to speed-up convergence.}
 
-\item{max_iter}{An integer; maximum number of iterations to be run in case
+\item{max_iter}{an integer; maximum number of iterations to be run in case
 the algorithm does not converge.}
 
-\item{eps.abs}{A scalar; the absolute precision required for the computation
+\item{eps.abs}{a scalar; the absolute precision required for the computation
 of primal and dual residuals of the ADMM algorithm.}
 
-\item{eps.rel}{A scalar; the relative precision required for the computation
+\item{eps.rel}{a scalar; the relative precision required for the computation
 of primal and dual residuals of the ADMM algorithm.}
 
-\item{verbose}{A boolean value; if \code{TRUE} the progress (and internal
+\item{verbose}{a logical; if \code{TRUE} the progress (and internal
 convergence of inner loop) is shown in the console while the algorithm is
 running.}
 
-\item{print.type}{A boolean value; if \code{TRUE} the acronym used for the model -
+\item{print.type}{a logical; if \code{TRUE} the acronym used for the model -
 which penalties - is returned as printed output in the console.}
 }
 \value{
-A list, whose element are:
+A list containing the following components:
 \itemize{
 \item \code{X}, the estimated concentration matrix
 under the pdglasso model; the model is identified by the values of lambda1
@@ -91,7 +80,7 @@ passed to the function at the call, as well as convergence information.
 }
 }
 \description{
-By providing a covariance matrix S and values for lambda_1 and lambda_2, this
+By providing a covariance matrix \code{S} and values for \code{lambda1} and \code{lambda2}, this
 function estimates a concentration matrix X under the coloured graphical
 model for paired data, using the (adaptive) ADMM algorithm. The output is the
 matrix and a list of internal parameters used by the function, together with

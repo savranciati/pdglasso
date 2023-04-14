@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimation-functions.R
 \name{pdRCON.fit}
 \alias{pdRCON.fit}
-\title{Fit and select a coloured graphical model for paired data according to eBIC
+\title{Fit and select a coloured GGM for paired data according to eBIC
 criterion.}
 \usage{
 pdRCON.fit(
@@ -26,76 +26,66 @@ pdRCON.fit(
 )
 }
 \arguments{
-\item{S}{A \eqn{p \times p} covariance (or correlation) matrix.}
+\item{S}{a \eqn{p \times p} covariance (or correlation) matrix.}
 
 \item{n}{the sample size of the data used to compute the sample covariance matrix S.}
 
-\item{n.l1}{the number of values in the grid of candidates for lambda_1.}
+\item{n.l1}{the number of values in the grid of candidates for \code{lambda1}.}
 
-\item{n.l2}{the number of values in the grid of candidates for lambda_2.}
+\item{n.l2}{the number of values in the grid of candidates for \code{lambda2}.}
 
 \item{gamma.eBIC}{the parameter for the eBIC computation. gamma=0 is equivalent to BIC.}
 
-\item{type}{A string or vector of strings for the type of equality
-constraints to be imposed; zero, one or more available options can be
-selected among: * "vertex", symmetries are imposed on the diagonal entries
-of the concentration matrix. * "inside.block.edge", symmetries are imposed
-between elements of the LL and RR block the concentration matrix. *
-"across.block.edge", symmetries are imposed between elements of the LR and
-RL block the concentration matrix. Shortened forms are accepted too, i.e.
-"V" or "vert" for "vertex".}
-
-\item{force.symm}{A string or vector of strings to impose forced symmetry on
-the corresponding block of the concentration matrix. Same options as
-"type".}
+\item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which
+identify the pdRCON (sub)model of interest; see \code{\link{pdglasso}} for details.}
 
 \item{X.init}{(optional) A \eqn{p \times p} initial guess for the
 concentration matrix and/or starting solution for the ADMM algorithm.}
 
-\item{rho1}{A scalar; tuning parameter of the ADMM algorithm to be used for
+\item{rho1}{a scalar; tuning parameter of the ADMM algorithm to be used for
 the outer loop. It must be strictly positive.}
 
-\item{rho2}{A scalar; tuning parameter of the ADMM algorithm to be used for
+\item{rho2}{a scalar; tuning parameter of the ADMM algorithm to be used for
 the inner loop. It must be strictly positive.}
 
-\item{varying.rho1}{A boolean value; if \code{TRUE} the parameter rho1 is updated
+\item{varying.rho1}{a logical; if \code{TRUE} the parameter rho1 is updated
 iteratively to speed-up convergence.}
 
-\item{varying.rho2}{A boolean value; if \code{TRUE} the parameter rho2 is updated
+\item{varying.rho2}{a logical; if \code{TRUE} the parameter rho2 is updated
 iteratively to speed-up convergence.}
 
-\item{max_iter}{An integer; maximum number of iterations to be run in case
+\item{max_iter}{an integer; maximum number of iterations to be run in case
 the algorithm does not converge.}
 
-\item{eps.abs}{A scalar; the absolute precision required for the computation
+\item{eps.abs}{a scalar; the absolute precision required for the computation
 of primal and dual residuals of the ADMM algorithm.}
 
-\item{eps.rel}{A scalar; the relative precision required for the computation
+\item{eps.rel}{a scalar; the relative precision required for the computation
 of primal and dual residuals of the ADMM algorithm.}
 
-\item{verbose}{A boolean value; if \code{TRUE} the progress (and internal
+\item{verbose}{a logical; if \code{TRUE} the progress (and internal
 convergence of inner loop) is shown in the console while the algorithm is
 running.}
 
-\item{print.type}{A boolean value; if \code{TRUE} the acronym used for the model -
+\item{print.type}{a logical; if \code{TRUE} the acronym used for the model -
 which penalties - is returned as printed output in the console.}
 }
 \value{
-a list:
+A list containing the following elements:
 \itemize{
 \item model, the final model;
 \item pdColG, the associated coloured graph;
-\item best.lambdas, the selected values of lambda_1 and lambda_2 according to eBIC criterion,
-\item l1.path, a matrix containing the grid values for lambda_1 as well as quantities used in eBIC computation;
-\item l2.path, a matrix containing the grid values for lambda_2 as well as quantities used in eBIC computation.
+\item best.lambdas, the selected values of \code{lambda1} and \code{lambda2} according to eBIC criterion,
+\item l1.path, a matrix containing the grid values for \code{lambda1} as well as quantities used in eBIC computation;
+\item l2.path, a matrix containing the grid values for \code{lambda2} as well as quantities used in eBIC computation.
 }
 }
 \description{
 Performs a sequence of calls to \code{\link{admm.pdglasso}} providing two grids of
-values for lambda_1 and lambda_2. First, a grid search conditional on
-lambda_2=0 is run to select the best lambda_1 value among the candidates
-(according to eBIC); conditional on the best lambda_1, a similar search is
-performed for lambda_2. The output is the select model, given by the
+values for \code{lambda1} and \code{lambda2}. First, a grid search conditional on
+\code{lambda2}=0 is run to select the best \code{lambda1} value among the candidates
+(according to eBIC); conditional on the best \code{lambda1}, a similar search is
+performed for \code{lambda2}. The output is the select model, given by the
 estimated concenration matrix and corresponding graph.
 }
 \examples{

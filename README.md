@@ -1,4 +1,4 @@
-## Symmetric Graphical Lasso for Paired Data
+## Graphical Lasso for Coloured Gaussian Graphical Models for Paired Data
 
 How to install the package:
 
@@ -7,6 +7,8 @@ library(devtools)
 install_github("savranciati/pdglasso", build_vignettes=FALSE)
 library(pdglasso)
 ```
+
+## ---
 
 An RCON model for paired data (pdRCON model) is a coloured Gaussian Graphical Model (GGM) where the $p$ variables are partitioned into a Left block $L$ and a right block $R$. Every variable in the left block has an homologous variable in the right block and certain types of equality *R*estrictions on the entries of the *CON*centration matrix $K$ are allowed. Every pdRCON model is uniquely represented by a Coloured Graph for Paired Data (pdColG) implemented in the form of a $p\times p$ symmetric matrix, where every entry is one of the values 0, 1 or 2, as follows: 
 
@@ -24,6 +26,11 @@ The functions of this package make it possible to specify different types of pdR
 
 * if *type* contains the string "inside.block.edge" then coloured inside block edge symmetries are allowed and, if in addition also *force.symm* contains the string "inside.block.edge", then only coloured edges are allowed inside blocks. 
 
-* if *type* contains the string "across.block.edge" then coloured across block edge symmetries are allowed and, if in addition also *force.symm* contains the string "across.block.edge", then only coloured edges are allowed across blocks, with the exception of edges joining across block homologuos variables.  
+* if *type* contains the string "across.block.edge" then coloured across block edge symmetries are allowed and, if in addition also *force.symm* contains the string "across.block.edge", then only coloured edges are allowed across blocks, with the exception of edges joining across block homologuos variables.
+
+For the in-package documentation please check:
+```{r message = FALSE, warning = FALSE}
+help("pdglasso-package")
+```
 
 ## Examples

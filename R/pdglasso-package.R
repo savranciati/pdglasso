@@ -1,5 +1,3 @@
-
-
 #' @details
 #'
 #' An RCON model for paired data (pdRCON model) is a coloured Gaussian Graphical
@@ -8,7 +6,7 @@
 #' every variable in the left block has an homologous variable in the right
 #' block and certain types of equality `R`estrictions on the entries of the
 #' `CON`centration matrix \eqn{K} are allowed. A pdRCON model is represented by
-#' a Coloured Graph for Paired Data (pdCOLG) with a vertex for every variable
+#' a Coloured Graph for Paired Data (pdColG) with a vertex for every variable
 #' and where every vertex and edge is either *coloured* or *uncoloured*. More
 #' details on the equality constraints of pdRCON models as of submodels of
 #' interest are given in the following.
@@ -100,12 +98,17 @@
 #'   edges and either 1 or 2 for present edges, where the value 2 is used to
 #'   encode coloured edges.
 #'
+#' @references Ranciati, S., Roverato, A., Luati, A. (2021). Fused graphical lasso for brain networks with symmetries. *Journal of the Royal Statistical Society Series C: Applied Statistics*, *70*(5), 1299-1322. \url{https://doi.org/10.1111/rssc.12514}
+#' @references Højsgaard, S., Lauritzen, S. L. (2008). Graphical Gaussian models with edge and vertex symmetries. *Journal of the Royal Statistical Society Series B: Statistical Methodology*, *70*(5), 1005-1027 \url{https://doi.org/10.1111/j.1467-9868.2008.00666.x}
+#'
 #' @docType package
-#' @name pdglasso
+#' @name pdglasso-package
 #'
 # @keywords internal
+#' @aliases pdglasso-package NULL
 "_PACKAGE"
 
 ## usethis namespace: start
 #' @importFrom MASS mvrnorm
 ## usethis namespace: end
+NULL

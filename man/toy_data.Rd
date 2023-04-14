@@ -19,11 +19,7 @@ A list containing three elements:
 toy_data
 }
 \description{
-Data simulated by using the function \code{\link{simul.pdColG}} with the following arguments:
-\itemize{
-\item \code{p <- 20}
-\item \code{q <- p/2}
-\item \verb{dens=0.3, type=c("v","i","a"), force=NULL}
-}
+Data simulated by the function \code{\link{simul.pdColG}} with a call:
+\verb{toy_data <- pdRCON.simulate(20, type=c("v", "i","a), force.symm=NULL, dens=0.3)}
 }
 \keyword{datasets}

@@ -1,28 +1,28 @@
 require(compiler)
 setCompilerOptions(optimize=3)
 
-#' Fit and select a coloured graphical model for paired data according to eBIC
+#' Fit and select a coloured GGM for paired data according to eBIC
 #' criterion.
 #'
 #' Performs a sequence of calls to [`admm.pdglasso`] providing two grids of
-#' values for lambda_1 and lambda_2. First, a grid search conditional on
-#' lambda_2=0 is run to select the best lambda_1 value among the candidates
-#' (according to eBIC); conditional on the best lambda_1, a similar search is
-#' performed for lambda_2. The output is the select model, given by the
+#' values for `lambda1` and `lambda2`. First, a grid search conditional on
+#' `lambda2`=0 is run to select the best `lambda1` value among the candidates
+#' (according to eBIC); conditional on the best `lambda1`, a similar search is
+#' performed for `lambda2`. The output is the select model, given by the
 #' estimated concenration matrix and corresponding graph.
 #'
 #' @inheritParams admm.pdglasso
 #' @param n the sample size of the data used to compute the sample covariance matrix S.
-#' @param n.l1 the number of values in the grid of candidates for lambda_1.
-#' @param n.l2 the number of values in the grid of candidates for lambda_2.
+#' @param n.l1 the number of values in the grid of candidates for `lambda1`.
+#' @param n.l2 the number of values in the grid of candidates for `lambda2`.
 #' @param gamma.eBIC the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
 #'
-#' @return a list:
+#' @return A list containing the following elements:
 #' * model, the final model;
 #' * pdColG, the associated coloured graph;
-#' * best.lambdas, the selected values of lambda_1 and lambda_2 according to eBIC criterion,
-#' * l1.path, a matrix containing the grid values for lambda_1 as well as quantities used in eBIC computation;
-#' * l2.path, a matrix containing the grid values for lambda_2 as well as quantities used in eBIC computation.
+#' * best.lambdas, the selected values of `lambda1` and `lambda2` according to eBIC criterion,
+#' * l1.path, a matrix containing the grid values for `lambda1` as well as quantities used in eBIC computation;
+#' * l2.path, a matrix containing the grid values for `lambda2` as well as quantities used in eBIC computation.
 #' @export
 #'
 #' @examples
@@ -97,56 +97,46 @@ pdRCON.fit <- function(S,
 }
 
 
-#' Estimate a concentration matrix under the pdColG model using (adaptive) ADMM
-#' graphical lasso algorithm.
+#' ADMM graphical lasso algorithm for coloured GGMs for paired data.
 #'
-#' By providing a covariance matrix S and values for lambda_1 and lambda_2, this
+#' By providing a covariance matrix `S` and values for `lambda1` and `lambda2`, this
 #' function estimates a concentration matrix X under the coloured graphical
 #' model for paired data, using the (adaptive) ADMM algorithm. The output is the
 #' matrix and a list of internal parameters used by the function, together with
 #' the specific call in terms of symmetries and penalties required by the user.
 #'
-#' @param S A \eqn{p \times p} covariance (or correlation) matrix.
-#' @param lambda1 A non-negative scalar (or vector) penalty that encourages
+#' @param S a \eqn{p \times p} covariance (or correlation) matrix.
+#' @param lambda1 a non-negative scalar (or vector) penalty that encourages
 #'   sparsity in the concentration matrix. If a vector is provided, it should
 #'   match the appropriate length, i.e.
-#' @param lambda2 A non-negative scalar (or vector) penalty that encourages
+#' @param lambda2 a non-negative scalar (or vector) penalty that encourages
 #'   equality constraints in the concentration matrix. If a vector is provided,
 #'   it should match the appropriate length, i.e.
-#' @param type A string or vector of strings for the type of equality
-#'   constraints to be imposed; zero, one or more available options can be
-#'   selected among: * "vertex", symmetries are imposed on the diagonal entries
-#'   of the concentration matrix. * "inside.block.edge", symmetries are imposed
-#'   between elements of the LL and RR block the concentration matrix. *
-#'   "across.block.edge", symmetries are imposed between elements of the LR and
-#'   RL block the concentration matrix. Shortened forms are accepted too, i.e.
-#'   "V" or "vert" for "vertex".
-#' @param force.symm  A string or vector of strings to impose forced symmetry on
-#'   the corresponding block of the concentration matrix. Same options as
-#'   "type".
+#' @param type,force.symm two subvectors of `c("vertex", "inside.block.edge", "across.block.edge")` which
+#' identify the pdRCON (sub)model of interest; see [`pdglasso`] for details.
 #' @param X.init (optional) A \eqn{p \times p} initial guess for the
 #'   concentration matrix and/or starting solution for the ADMM algorithm.
-#' @param rho1 A scalar; tuning parameter of the ADMM algorithm to be used for
+#' @param rho1 a scalar; tuning parameter of the ADMM algorithm to be used for
 #'   the outer loop. It must be strictly positive.
-#' @param rho2 A scalar; tuning parameter of the ADMM algorithm to be used for
+#' @param rho2 a scalar; tuning parameter of the ADMM algorithm to be used for
 #'   the inner loop. It must be strictly positive.
-#' @param varying.rho1 A boolean value; if `TRUE` the parameter rho1 is updated
+#' @param varying.rho1 a logical; if `TRUE` the parameter rho1 is updated
 #'   iteratively to speed-up convergence.
-#' @param varying.rho2 A boolean value; if `TRUE` the parameter rho2 is updated
+#' @param varying.rho2 a logical; if `TRUE` the parameter rho2 is updated
 #'   iteratively to speed-up convergence.
-#' @param max_iter An integer; maximum number of iterations to be run in case
+#' @param max_iter an integer; maximum number of iterations to be run in case
 #'   the algorithm does not converge.
-#' @param eps.abs A scalar; the absolute precision required for the computation
+#' @param eps.abs a scalar; the absolute precision required for the computation
 #'   of primal and dual residuals of the ADMM algorithm.
-#' @param eps.rel A scalar; the relative precision required for the computation
+#' @param eps.rel a scalar; the relative precision required for the computation
 #'   of primal and dual residuals of the ADMM algorithm.
-#' @param verbose A boolean value; if `TRUE` the progress (and internal
+#' @param verbose a logical; if `TRUE` the progress (and internal
 #'   convergence of inner loop) is shown in the console while the algorithm is
 #'   running.
-#' @param print.type A boolean value; if `TRUE` the acronym used for the model -
+#' @param print.type a logical; if `TRUE` the acronym used for the model -
 #'   which penalties - is returned as printed output in the console.
 #'
-#' @return A list, whose element are:
+#' @return A list containing the following components:
 #' * `X`, the estimated concentration matrix
 #'   under the pdglasso model; the model is identified by the values of lambda1
 #'   and lambda 2, together with the type of penalization imposed.
@@ -416,17 +406,17 @@ pdRCON.mle <- function(S, pdColG, verbose = TRUE){
   return(K.hat)
 }
 
-#' Compute the extended Bayesian Information Criterion (eBIC) for a given model.
+#' Compute the extended Bayesian Information Criterion (eBIC).
 #'
 #' The function computes the value of the eBIC for a given model and gamma value, for the purpose
 #' of model selection.
 #'
-#' @param S A \eqn{p \times p} covariance (or correlation) matrix.
-#' @param mod A list, the output object of a call to [`admm.pdglasso`]
+#' @param S a \eqn{p \times p} covariance (or correlation) matrix.
+#' @param mod a list, the output object of a call to [`admm.pdglasso`]
 #' @param n the sample size of the data used to compute the sample covariance matrix S.
 #' @param gamma.eBIC a parameter needed to compute the eBIC; ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC.
 #'
-#' @return a vector containing three elements:
+#' @return A vector containing three elements:
 #' * the value of the eBIC,
 #' * the log-likelihood,
 #' * and the estimated number of degrees of freedom.
@@ -438,7 +428,7 @@ pdRCON.mle <- function(S, pdColG, verbose = TRUE){
 #' compute.eBIC(S,mod,n=60,gamma.eBIC=0.5)
 compute.eBIC <- function(S,mod,n,
                          gamma.eBIC=0.5){
-  G <- get.pdColG(mod)
+  G <- pdColG.get(mod)
   K <- pdRCON.mle(S,G$g)
   S <- S*(n-1)/n
   p <- dim(S)[1]
@@ -503,7 +493,7 @@ make.acronyms <- function(type, force.symm, print.type=TRUE){
   }
   if(is.null(force.symm)) acr.force <- list("acronym"=NULL, "choice.print"="NONE")
   if(print.type){
-    cat("\nCall:\nColoured graph for paired data with:\nallowed type of coloured symmetry = ",  acr.type$choice.print, "\n", sep="")
+    cat("\nCall:\nColoured GGM for paired data with:\nallowed types of coloured symmetry = ",  acr.type$choice.print, "\n", sep="")
     cat("forced coloured symmetry = ",  acr.force$choice.print, "\n\n", sep="")
   }
   return(list(acronym.of.type=acr.type$acronym, acronym.of.force=acr.force$acronym))

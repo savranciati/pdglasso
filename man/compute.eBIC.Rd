@@ -2,21 +2,21 @@
 % Please edit documentation in R/estimation-functions.R
 \name{compute.eBIC}
 \alias{compute.eBIC}
-\title{Compute the extended Bayesian Information Criterion (eBIC) for a given model.}
+\title{Compute the extended Bayesian Information Criterion (eBIC).}
 \usage{
 compute.eBIC(S, mod, n, gamma.eBIC = 0.5)
 }
 \arguments{
-\item{S}{A \eqn{p \times p} covariance (or correlation) matrix.}
+\item{S}{a \eqn{p \times p} covariance (or correlation) matrix.}
 
-\item{mod}{A list, the output object of a call to \code{\link{admm.pdglasso}}}
+\item{mod}{a list, the output object of a call to \code{\link{admm.pdglasso}}}
 
 \item{n}{the sample size of the data used to compute the sample covariance matrix S.}
 
 \item{gamma.eBIC}{a parameter needed to compute the eBIC; ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC.}
 }
 \value{
-a vector containing three elements:
+A vector containing three elements:
 \itemize{
 \item the value of the eBIC,
 \item the log-likelihood,

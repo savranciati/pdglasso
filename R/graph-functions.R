@@ -127,7 +127,7 @@ pdColG.get <- function(admm.out,
 }
 
 
-#' Structural properties of a coloured graphs for paired data
+#' Structural properties of a coloured graph for paired data
 #'
 #' This function returns some summary statistics relative to the structural properties of a
 #' coloured graph for paired data \eqn{\mathcal{G}}. We refer to  [`pdglasso`] both for the description of the
