@@ -195,7 +195,7 @@ admm.pdglasso <- function(S,
   #
   # Outer ADMM
   #
-  for (k in 1:max_iter) {
+  for (k in 1:max_iter){
     #
     # Update X
     #
@@ -233,7 +233,7 @@ admm.pdglasso <- function(S,
     # Check convergence
     #
     if(r.kk<eps.pri & s.kk<eps.dual){
-      cat("\nConverged:\niteration number: ",k,"\nr.kk=",r.kk, "\ns.kk=", s.kk, "\nrho1= ", rho1, "\n")
+      #cat("\nConverged:\niteration number: ",k,"\nr.kk=",r.kk, "\ns.kk=", s.kk, "\nrho1= ", rho1, "\n")
       break
     }
     #
@@ -255,6 +255,7 @@ admm.pdglasso <- function(S,
     }
 
   }
+  if(k==max_iter) warning(paste("Convergence not achieved; iterations performed: ",max_iter,".", sep=""))
   time.diff <- Sys.time()-time.start
   internal.par <- list(execution.time=time.diff, res.primal=r.kk, res.dual=s.kk,
                        lambda1 = lambda1, lambda2=unique(lambda2), n.iter=k,
