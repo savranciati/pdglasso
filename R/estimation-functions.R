@@ -1,6 +1,3 @@
-require(compiler)
-setCompilerOptions(optimize=3)
-
 #' Fit and select a coloured GGM for paired data according to eBIC
 #' criterion.
 #'
@@ -207,7 +204,7 @@ admm.pdglasso <- function(S,
     #
     # Update Z - inner ADMM
     #
-    Z <- admm.inner_C(X=X, U=U, rho1=rho1, lambda1=lambda1, lambda2=lambda2, rho2=rho2,
+    Z <- admm.inner(X=X, U=U, rho1=rho1, lambda1=lambda1, lambda2=lambda2, rho2=rho2,
                        verbose_int=verbose, varying.rho2=varying.rho2, n.row.F=n.row.F,
                        acr.type=acr.type, eps.abs=eps.abs, eps.rel=eps.rel)
     #
@@ -264,7 +261,6 @@ admm.pdglasso <- function(S,
   acronyms=list(acronym.of.type=acr.type, acronym.of.force=acr.force)
   return(list(X=X, acronyms=acronyms, internal.par=internal.par))
 }
-admm.pdglasso_C<-cmpfun(admm.pdglasso)
 
 #
 
@@ -370,8 +366,6 @@ admm.inner <- function(X,
   #
   return(vec2mat(z.temp))
 }
-admm.inner_C<-cmpfun(admm.inner)
-
 
 
 #' Maximum likelihood estimate
