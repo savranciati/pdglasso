@@ -479,7 +479,7 @@ pdRCON.mle <- function(S, pdColG, verbose = FALSE){
 #' K.hat <- pdRCON.mle(S, toy_data$pdColG)
 #' is.pdRCON.mle(K.hat, toy_data$pdColG, S)
 #'
-#'
+#' @keywords internal
 is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
   S.mle <- solve(K.mle)
   G <- pdColG

@@ -52,5 +52,5 @@ S <- var(toy_data$sample.data)
 K.hat <- pdRCON.mle(S, toy_data$pdColG)
 is.pdRCON.mle(K.hat, toy_data$pdColG, S)
 
-
 }
+\keyword{internal}
