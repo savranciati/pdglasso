@@ -7,7 +7,7 @@
 pdColG.summarize(pdColG, print.summary = TRUE)
 }
 \arguments{
-\item{pdColG}{a matrix representing coloured graph for paired data \eqn{\mathcal{G}}.}
+\item{pdColG}{a matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.}
 
 \item{print.summary}{a logical  (default \code{TRUE}) indicating whether a summary should be printed.}
 }
@@ -20,11 +20,11 @@ An invisible list with the following components:
 \item \code{across}  a list with the number of across block edges, the number of uncolored symmetric and coloured across block edges of \eqn{\mathcal{G}}.
 }
 
-If \code{print.summary=TRUE} some summary statistics are also printed on the screen.
+If \code{print.summary=TRUE} some summary statistics are also printed on the console
 }
 \description{
 This function returns some summary statistics relative to the structural properties of a
-coloured graph for paired data \eqn{\mathcal{G}}. We refer to  \code{\link{pdglasso}} both for the description of the
+coloured graph for paired data \eqn{\mathcal{G}}. We refer to  \code{\link{pdglasso-package}} both for the description of the
 matrix encoding a coloured graph for paired and details on how the structural quantities are defined and computed.
 }
 \examples{

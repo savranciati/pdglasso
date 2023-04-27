@@ -24,7 +24,7 @@ require(MASS)
 #' @param sample.size size of the randomly generated sample. The default `NULL`
 #'   is equivalent to `sample.size=3*p`.
 #' @param type,force.symm two subvectors of `c("vertex", "inside.block.edge", "across.block.edge")` which
-#' identify the pdRCON (sub)model of interest; see [`pdglasso`] for details.
+#' identify the pdRCON submodel class of interest; see [`pdglasso-package`] for details.
 #' @param dens,dens.vertex,dens.inside,dens.across four values between zero and
 #'   one used to specify the sparsity degree of the generated graph, as
 #'   described in the details section below. The default `dens.vertex=NULL` is
@@ -77,18 +77,20 @@ require(MASS)
 #'   according to the  `dens.xxx` arguments.
 #'
 #'
-#' @return A list containing the following components:
+#' @return A list with the following components:
 #'
-#' * `pdColG` the randomly generated coloured graph for paired data on \eqn{p} vertices; see [`pdglasso`] for details.
+#'  * `pdColG` a randomly generated a matrix representing a coloured graph for
+#'  paired data on \eqn{p} vertices; see [`pdglasso-package`] for details.
 #'
-#' * `K` the randomly generated concentration matrix adapted to `pdColG`.
+#' * `K` a randomly generated concentration matrix adapted to `pdColG`.
 #'
-#' * `sample.data` the randomly generated sample form a multivariate normal distribution
+#' * `sample.data` a randomly generated sample form a multivariate normal distribution
 #'   with mean vector zero and concentration matrix `K`.
 #'
-#'   Note that the variable in \eqn{L} are are named `L1,...,Lq` and variables
-#'   in \eqn{R} are are named `R1,...,Rq` where  `Li` is homologous to  `Ri` for
-#'   every i=1,...,q.
+#'
+#' Note that the variable in \eqn{L} are are named `L1,...,Lq` and variables in
+#' \eqn{R} are are named `R1,...,Rq` where  `Li` is homologous to  `Ri` for
+#' every i=1,...,q.
 #'
 #'
 #'
@@ -160,7 +162,7 @@ pdRCON.simulate <- function(p,
 #'
 #' This function is called by [`pdRCON.simulate`]
 #'
-#' @return this function returns a `pdColG` matrix, see [`pdglasso`] for
+#' @return this function returns a `pdColG` matrix, see [`pdglasso-package`] for
 #'   details. If a matrix `K` is passed then this function produced a pdColG
 #'   graph that tries to mimic the "zero" structure of `K` in the sense that
 #'   missing edges correspond to the smallest entries of `K`. Similarly the

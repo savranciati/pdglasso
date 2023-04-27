@@ -16,14 +16,16 @@ pdColG.get(admm.out, th1 = NULL, th2 = NULL, print.summary = FALSE)
 \item{print.summary}{(optional) if \code{TRUE} provides summary statistics of the graph.}
 }
 \value{
-a list, containing:
+a list with the following components:
 \itemize{
-\item g, the graph in matrix form.
-\item dof, the degrees of freedom corresponding to the graph build under the pdglasso model provided.
+\item \code{pdColG} a matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.
+\item \code{dof} the degrees of freedom of the pdRCON model represented by \code{pdColg}.
 }
 }
 \description{
-Description here.
+This function returns a Coloured Graph for Paired Data (pdColG) from the
+output of a call to \code{\link{admm.pdglasso}}. We refer to \code{\link{pdglasso-package}} both for the description of the matrix
+encoding a coloured graph for paired and the available submodel classes.
 }
 \examples{
 

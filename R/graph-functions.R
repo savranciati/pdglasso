@@ -1,15 +1,19 @@
 #' Build a graph from the output of a call to [`admm.pdglasso`].
 #'
-#' Description here.
+#' This function returns a Coloured Graph for Paired Data (pdColG) from the
+#' output of a call to [`admm.pdglasso`]. We refer to [`pdglasso-package`] both for the description of the matrix
+#' encoding a coloured graph for paired and the available submodel classes.
 #'
 #' @param admm.out An object of list type, that is the output of a call to the [`admm-pdglasso`] function.
 #' @param th1 (optional) A scalar, the threshold to identify edges in the graph; it must be non-negative.
 #' @param th2 (optional) A scalar, the threshold to identify coloured edges in the graph; it must be non-negative.
 #' @param print.summary (optional) if `TRUE` provides summary statistics of the graph.
 #'
-#' @return a list, containing:
-#' * g, the graph in matrix form.
-#' * dof, the degrees of freedom corresponding to the graph build under the pdglasso model provided.
+#' @return a list with the following components:
+#'
+#' * `pdColG` a matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.
+#'
+#' * `dof` the degrees of freedom of the pdRCON model represented by `pdColg`.
 #' @export
 #'
 #' @examples
@@ -117,10 +121,11 @@ pdColG.get <- function(admm.out,
   dof <- tot.dof - nsym_offdiag - nsym_diag
   #
   out <- list()
-  out$g   <- mat_graph+mat_sym
+  out$pdColG   <- mat_graph+mat_sym
+  dimnames(out$pdColG) <- dimnames(admm.out$X)
   out$dof <- dof
   if(print.summary){
-    pdColG.summarize(out$g)
+    pdColG.summarize(out$pdColG)
     cat("\n\n")
   }
   return(out)
@@ -130,10 +135,10 @@ pdColG.get <- function(admm.out,
 #' Structural properties of a coloured graph for paired data
 #'
 #' This function returns some summary statistics relative to the structural properties of a
-#' coloured graph for paired data \eqn{\mathcal{G}}. We refer to  [`pdglasso`] both for the description of the
+#' coloured graph for paired data \eqn{\mathcal{G}}. We refer to  [`pdglasso-package`] both for the description of the
 #' matrix encoding a coloured graph for paired and details on how the structural quantities are defined and computed.
 #'
-#' @param pdColG a matrix representing coloured graph for paired data \eqn{\mathcal{G}}.
+#' @param pdColG a matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.
 #' @param print.summary a logical  (default `TRUE`) indicating whether a summary should be printed.
 #'
 #' @return
@@ -141,11 +146,14 @@ pdColG.get <- function(admm.out,
 #' An invisible list with the following components:
 #'
 #' * `overall` a list with the number of vertices and edges of  \eqn{\mathcal{G}}.
+#'
 #' * `vertex`  a list with the number of coloured vertices of  \eqn{\mathcal{G}}.
+#'
 #' * `inside`  a list with the number of inside block edges, the number of uncolored symmetric and coloured inside block edges of \eqn{\mathcal{G}}.
+#'
 #' * `across`  a list with the number of across block edges, the number of uncolored symmetric and coloured across block edges of \eqn{\mathcal{G}}.
 #'
-#' If `print.summary=TRUE` some summary statistics are also printed on the screen.
+#' If `print.summary=TRUE` some summary statistics are also printed on the console
 #'
 #' @export
 #'

@@ -23,20 +23,19 @@ admm.pdglasso(
 )
 }
 \arguments{
-\item{S}{a \eqn{p \times p} covariance (or correlation) matrix.}
+\item{S}{a sample covariance (or correlation) matrix with the block structure
+described in \code{\link{pdglasso-package}}.}
 
 \item{lambda1}{a non-negative scalar (or vector) penalty that encourages
-sparsity in the concentration matrix. If a vector is provided, it should
-match the appropriate length, i.e.}
+sparsity in the concentration matrix.}
 
 \item{lambda2}{a non-negative scalar (or vector) penalty that encourages
-equality constraints in the concentration matrix. If a vector is provided,
-it should match the appropriate length, i.e.}
+equality constraints in the concentration matrix.}
 
-\item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which
-identify the pdRCON (sub)model of interest; see \code{\link{pdglasso}} for details.}
+\item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which identify the pdRCON submodel class of interest; see
+\code{\link{pdglasso-package}} for details.}
 
-\item{X.init}{(optional) A \eqn{p \times p} initial guess for the
+\item{X.init}{(optional) a \eqn{p \times p} initial guess for the
 concentration matrix and/or starting solution for the ADMM algorithm.}
 
 \item{rho1}{a scalar; tuning parameter of the ADMM algorithm to be used for
@@ -60,31 +59,31 @@ of primal and dual residuals of the ADMM algorithm.}
 \item{eps.rel}{a scalar; the relative precision required for the computation
 of primal and dual residuals of the ADMM algorithm.}
 
-\item{verbose}{a logical; if \code{TRUE} the progress (and internal
-convergence of inner loop) is shown in the console while the algorithm is
-running.}
+\item{verbose}{a logical; if \code{TRUE} the progress (and internal convergence of
+inner loop) is shown in the console while the algorithm is running.}
 
-\item{print.type}{a logical; if \code{TRUE} the acronym used for the model -
-which penalties - is returned as printed output in the console.}
+\item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
+specified by the arguments \code{type} and \code{force.symm} - is returned as printed
+output in the console.}
 }
 \value{
-A list containing the following components:
+A list with the following components:
 \itemize{
-\item \code{X}, the estimated concentration matrix
-under the pdglasso model; the model is identified by the values of lambda1
-and lambda 2, together with the type of penalization imposed.
-\item \code{acronyms}, a vector of strings for the type of penalties and forced symmetries imposed
-when calling the function.
-\item \code{internal.par}, a list of internal parameters
-passed to the function at the call, as well as convergence information.
+\item \code{X} the estimated concentration matrix under the pdRCON submodel class
+considered and the values of \code{lambda1} and \code{lambda2}.
+\item \code{acronyms} a vector of strings identifying the pdRCON submodel class
+considered as identified  by the arguments \code{type} and \code{force.symm}.
+\item \code{internal.par} a list of internal parameters passed to the function at the
+call, as well as convergence information.
 }
 }
 \description{
-By providing a covariance matrix \code{S} and values for \code{lambda1} and \code{lambda2}, this
-function estimates a concentration matrix X under the coloured graphical
-model for paired data, using the (adaptive) ADMM algorithm. The output is the
-matrix and a list of internal parameters used by the function, together with
-the specific call in terms of symmetries and penalties required by the user.
+By providing a covariance matrix \code{S} and values for \code{lambda1} and \code{lambda2},
+this function estimates a concentration matrix X within the family of pdRCON
+submodel class identified by the arguments \code{type} and \code{force.symm}, using an
+(adaptive) ADMM algorithm. The output is the matrix and a list of internal
+parameters used by the function, together with the specific call with the
+relevant pdRCON submodel class.
 }
 \examples{
 

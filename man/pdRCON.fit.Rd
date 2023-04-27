@@ -26,7 +26,8 @@ pdRCON.fit(
 )
 }
 \arguments{
-\item{S}{a \eqn{p \times p} covariance (or correlation) matrix.}
+\item{S}{a sample covariance (or correlation) matrix with the block structure
+described in \code{\link{pdglasso-package}}.}
 
 \item{n}{the sample size of the data used to compute the sample covariance matrix S.}
 
@@ -36,10 +37,10 @@ pdRCON.fit(
 
 \item{gamma.eBIC}{the parameter for the eBIC computation. gamma=0 is equivalent to BIC.}
 
-\item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which
-identify the pdRCON (sub)model of interest; see \code{\link{pdglasso}} for details.}
+\item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which identify the pdRCON submodel class of interest; see
+\code{\link{pdglasso-package}} for details.}
 
-\item{X.init}{(optional) A \eqn{p \times p} initial guess for the
+\item{X.init}{(optional) a \eqn{p \times p} initial guess for the
 concentration matrix and/or starting solution for the ADMM algorithm.}
 
 \item{rho1}{a scalar; tuning parameter of the ADMM algorithm to be used for
@@ -63,21 +64,21 @@ of primal and dual residuals of the ADMM algorithm.}
 \item{eps.rel}{a scalar; the relative precision required for the computation
 of primal and dual residuals of the ADMM algorithm.}
 
-\item{verbose}{a logical; if \code{TRUE} the progress (and internal
-convergence of inner loop) is shown in the console while the algorithm is
-running.}
+\item{verbose}{a logical; if \code{TRUE} the progress (and internal convergence of
+inner loop) is shown in the console while the algorithm is running.}
 
-\item{print.type}{a logical; if \code{TRUE} the acronym used for the model -
-which penalties - is returned as printed output in the console.}
+\item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
+specified by the arguments \code{type} and \code{force.symm} - is returned as printed
+output in the console.}
 }
 \value{
-A list containing the following elements:
+A list with the following components:
 \itemize{
-\item model, the final model;
-\item pdColG, the associated coloured graph;
-\item best.lambdas, the selected values of \code{lambda1} and \code{lambda2} according to eBIC criterion,
-\item l1.path, a matrix containing the grid values for \code{lambda1} as well as quantities used in eBIC computation;
-\item l2.path, a matrix containing the grid values for \code{lambda2} as well as quantities used in eBIC computation.
+\item \code{model} the final model.
+\item \code{pdColG} the associated coloured graph.
+\item \code{best.lambdas} the selected values of \code{lambda1} and \code{lambda2} according to eBIC criterion.
+\item \code{l1.path} a matrix containing the grid values for \code{lambda1} as well as quantities used in eBIC computation.
+\item \code{l2.path} a matrix containing the grid values for \code{lambda2} as well as quantities used in eBIC computation.
 }
 }
 \description{

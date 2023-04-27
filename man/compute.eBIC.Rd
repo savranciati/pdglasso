@@ -7,13 +7,13 @@
 compute.eBIC(S, mod, n, gamma.eBIC = 0.5)
 }
 \arguments{
-\item{S}{a \eqn{p \times p} covariance (or correlation) matrix.}
+\item{S}{a sample covariance (or correlation) matrix with the block structure described in \code{\link{pdglasso-package}}.}
 
 \item{mod}{a list, the output object of a call to \code{\link{admm.pdglasso}}}
 
 \item{n}{the sample size of the data used to compute the sample covariance matrix S.}
 
-\item{gamma.eBIC}{a parameter needed to compute the eBIC; ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC.}
+\item{gamma.eBIC}{a parameter governing the magnitude of the penalization term inside the criterion; it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, and 0.5 being the suggested default value.}
 }
 \value{
 A vector containing three elements:
@@ -25,10 +25,13 @@ A vector containing three elements:
 }
 \description{
 The function computes the value of the eBIC for a given model and gamma value, for the purpose
-of model selection.
+of model selection (see Eq.1 of Feygel & Drton, 2010).
 }
 \examples{
 S <- cov(toy_data$sample.data)
 mod <- admm.pdglasso(S, lambda1=1, lambda2=0.5)
 compute.eBIC(S,mod,n=60,gamma.eBIC=0.5)
+}
+\references{
+Foygel, R., Drton, M. (2010). Extended Bayesian information criteria for Gaussian graphical models. \emph{Advances in neural information processing systems}, 23. \url{https://proceedings.neurips.cc/paper/2010/file/072b030ba126b2f4b2374f342be9ed44-Paper.pdf}
 }

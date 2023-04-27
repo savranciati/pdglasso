@@ -2,23 +2,35 @@
 % Please edit documentation in R/estimation-functions.R
 \name{pdRCON.mle}
 \alias{pdRCON.mle}
-\title{Maximum likelihood estimate}
+\title{Maximum likelihood estimation}
 \usage{
-pdRCON.mle(S, pdColG, verbose = TRUE)
+pdRCON.mle(S, pdColG, verbose = FALSE)
 }
 \arguments{
-\item{S}{a sample variance and covariance matrix.}
+\item{S}{a sample covariance matrix with the block structure described in \code{\link{pdglasso-package}}.}
 
-\item{pdColG}{a coloured graph for paired data.}
+\item{pdColG}{pdColG a matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.}
+
+\item{verbose}{a logical (defalut \code{FALSE}) that is passed to the function \code{\link{admm.pdglasso}}.}
 }
 \value{
-the m.l.e. of the concentration matrix \eqn{\Sigma^{-1}}.
+Either a matrix, that is the maximum likelihood estimate of
+\eqn{K=\Sigma^{-1}} under the pdRCON model represented by \code{pdColG}, or
+\code{NULL} if the maximum likelihood estimate does not exist.
 }
 \description{
-Computes the m.l.e. of the concentration matrix of a colured graphical model
-for paired data.
+Computes the maximum likelihood estimate of the concentration matrix of a pdRCON model.
+}
+\details{
+If the sample covariance matrix is not full-rank, then it is
+possible that the maximum likelihood estimate does not exist. The maximum
+likelihood estimate is computed by running the function \code{\link{admm.pdglasso}}
+with suitable penalties and, if it does not exist, then the ADMM algorithm
+fails to converge, a warning is produced and a \code{NULL} is returned.
 }
 \examples{
-#
+
+S <- var(toy_data$sample.data)
+K.hat <- pdRCON.mle(S, toy_data$pdColG)
 
 }

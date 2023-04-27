@@ -14,12 +14,15 @@
 #' @param n.l2 the number of values in the grid of candidates for `lambda2`.
 #' @param gamma.eBIC the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
 #'
-#' @return A list containing the following elements:
-#' * model, the final model;
-#' * pdColG, the associated coloured graph;
-#' * best.lambdas, the selected values of `lambda1` and `lambda2` according to eBIC criterion,
-#' * l1.path, a matrix containing the grid values for `lambda1` as well as quantities used in eBIC computation;
-#' * l2.path, a matrix containing the grid values for `lambda2` as well as quantities used in eBIC computation.
+#' @return A list with the following components:
+#'
+#' * `model` the final model.
+#'
+#' * `pdColG` the associated coloured graph.
+#'
+#' * `best.lambdas` the selected values of `lambda1` and `lambda2` according to eBIC criterion.
+#' * `l1.path` a matrix containing the grid values for `lambda1` as well as quantities used in eBIC computation.
+#' * `l2.path` a matrix containing the grid values for `lambda2` as well as quantities used in eBIC computation.
 #' @export
 #'
 #' @examples
@@ -78,7 +81,7 @@ pdRCON.fit <- function(S,
                       lambda1=best.l1,
                       lambda2=best.l2)
 
-  G <- get.pdColG(mod.out)
+  G <- pdColG.get(mod.out)
 
   l1.path=cbind(l1.vec,eBIC.l1)
   l2.path=cbind(l2.vec,eBIC.l2)
@@ -96,22 +99,23 @@ pdRCON.fit <- function(S,
 
 #' ADMM graphical lasso algorithm for coloured GGMs for paired data.
 #'
-#' By providing a covariance matrix `S` and values for `lambda1` and `lambda2`, this
-#' function estimates a concentration matrix X under the coloured graphical
-#' model for paired data, using the (adaptive) ADMM algorithm. The output is the
-#' matrix and a list of internal parameters used by the function, together with
-#' the specific call in terms of symmetries and penalties required by the user.
+#' By providing a covariance matrix `S` and values for `lambda1` and `lambda2`,
+#' this function estimates a concentration matrix X within the family of pdRCON
+#' submodel class identified by the arguments `type` and `force.symm`, using an
+#' (adaptive) ADMM algorithm. The output is the matrix and a list of internal
+#' parameters used by the function, together with the specific call with the
+#' relevant pdRCON submodel class.
 #'
-#' @param S a \eqn{p \times p} covariance (or correlation) matrix.
+#' @param S a sample covariance (or correlation) matrix with the block structure
+#'   described in [`pdglasso-package`].
 #' @param lambda1 a non-negative scalar (or vector) penalty that encourages
-#'   sparsity in the concentration matrix. If a vector is provided, it should
-#'   match the appropriate length, i.e.
+#'   sparsity in the concentration matrix.
 #' @param lambda2 a non-negative scalar (or vector) penalty that encourages
-#'   equality constraints in the concentration matrix. If a vector is provided,
-#'   it should match the appropriate length, i.e.
-#' @param type,force.symm two subvectors of `c("vertex", "inside.block.edge", "across.block.edge")` which
-#' identify the pdRCON (sub)model of interest; see [`pdglasso`] for details.
-#' @param X.init (optional) A \eqn{p \times p} initial guess for the
+#'   equality constraints in the concentration matrix.
+#' @param type,force.symm two subvectors of `c("vertex", "inside.block.edge",
+#'   "across.block.edge")` which identify the pdRCON submodel class of interest; see
+#'   [`pdglasso-package`] for details.
+#' @param X.init (optional) a \eqn{p \times p} initial guess for the
 #'   concentration matrix and/or starting solution for the ADMM algorithm.
 #' @param rho1 a scalar; tuning parameter of the ADMM algorithm to be used for
 #'   the outer loop. It must be strictly positive.
@@ -127,20 +131,23 @@ pdRCON.fit <- function(S,
 #'   of primal and dual residuals of the ADMM algorithm.
 #' @param eps.rel a scalar; the relative precision required for the computation
 #'   of primal and dual residuals of the ADMM algorithm.
-#' @param verbose a logical; if `TRUE` the progress (and internal
-#'   convergence of inner loop) is shown in the console while the algorithm is
-#'   running.
-#' @param print.type a logical; if `TRUE` the acronym used for the model -
-#'   which penalties - is returned as printed output in the console.
+#' @param verbose a logical; if `TRUE` the progress (and internal convergence of
+#'   inner loop) is shown in the console while the algorithm is running.
+#' @param print.type a logical; if `TRUE` the pdRCON submodel class considered, as
+#'   specified by the arguments `type` and `force.symm` - is returned as printed
+#'   output in the console.
 #'
-#' @return A list containing the following components:
-#' * `X`, the estimated concentration matrix
-#'   under the pdglasso model; the model is identified by the values of lambda1
-#'   and lambda 2, together with the type of penalization imposed.
-#' * `acronyms`, a vector of strings for the type of penalties and forced symmetries imposed
-#'   when calling the function.
-#' * `internal.par`, a list of internal parameters
-#'   passed to the function at the call, as well as convergence information.
+#' @return A list with the following components:
+#'
+#' * `X` the estimated concentration matrix under the pdRCON submodel class
+#'   considered and the values of `lambda1` and `lambda2`.
+#'
+#' * `acronyms` a vector of strings identifying the pdRCON submodel class
+#'  considered as identified  by the arguments `type` and `force.symm`.
+#'
+#' * `internal.par` a list of internal parameters passed to the function at the
+#' call, as well as convergence information.
+#'
 #' @export
 #'
 #' @examples
@@ -167,6 +174,7 @@ admm.pdglasso <- function(S,
   #
   # initializations
   #
+  converged <- TRUE
   out.make.a <- make.acronyms(type, force.symm, print.type=print.type)
   acr.type <- out.make.a$acronym.of.type
   acr.force <- out.make.a$acronym.of.force
@@ -252,16 +260,20 @@ admm.pdglasso <- function(S,
     }
 
   }
-  if(k==max_iter) warning(paste("Convergence not achieved; iterations performed: ",max_iter,".", sep=""))
+  if(k==max_iter){
+    converged <- FALSE
+    warning(paste("Convergence not achieved; iterations performed: ",max_iter,".", sep=""))
+  }
   time.diff <- Sys.time()-time.start
   internal.par <- list(execution.time=time.diff, res.primal=r.kk, res.dual=s.kk,
                        lambda1 = lambda1, lambda2=unique(lambda2), n.iter=k,
                        n.iter.rho1_update_last=n.iter.rho1_update_last, last.rho1=rho1,
-                       eps.primal=eps.pri, eps.dual=eps.dual, eps.abs=eps.abs, eps.rel=eps.rel)
+                       eps.primal=eps.pri, eps.dual=eps.dual, eps.abs=eps.abs, eps.rel=eps.rel,
+                       converged = converged)
   acronyms=list(acronym.of.type=acr.type, acronym.of.force=acr.force)
+  dimnames(X) <- dimnames(S)
   return(list(X=X, acronyms=acronyms, internal.par=internal.par))
 }
-
 #
 
 #' Inner ADMM loop called by the main function [`admm.pdglasso`].
@@ -362,33 +374,49 @@ admm.inner <- function(X,
   }
   z.temp <- sign(x)*pmax(abs(x)-lambda1/rho1,0)
   #
-  if(kk==max_iter_int) cat("\n Internal: not converged \n")
+  if(kk==max_iter_int){
+    warning(paste("Internal loop convergence not achieved; iterations performed: ",max_iter_int,".", sep=""))
+  }
   #
   return(vec2mat(z.temp))
 }
 
 
-#' Maximum likelihood estimate
+
+#' Maximum likelihood estimation
 #'
-#' Computes the m.l.e. of the concentration matrix of a colured graphical model
-#' for paired data.
 #'
-#' @param S a sample variance and covariance matrix.
-#' @param pdColG a coloured graph for paired data.
+#' Computes the maximum likelihood estimate of the concentration matrix of a pdRCON model.
 #'
-#' @return the m.l.e. of the concentration matrix \eqn{\Sigma^{-1}}.
+#'
+#' @param S a sample covariance matrix with the block structure described in [`pdglasso-package`].
+#' @param pdColG pdColG a matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.
+#' @param verbose a logical (defalut `FALSE`) that is passed to the function [`admm.pdglasso`].
+#'
+#' @return Either a matrix, that is the maximum likelihood estimate of
+#'   \eqn{K=\Sigma^{-1}} under the pdRCON model represented by `pdColG`, or
+#'   `NULL` if the maximum likelihood estimate does not exist.
+#'
+#' @details If the sample covariance matrix is not full-rank, then it is
+#'   possible that the maximum likelihood estimate does not exist. The maximum
+#'   likelihood estimate is computed by running the function [`admm.pdglasso`]
+#'   with suitable penalties and, if it does not exist, then the ADMM algorithm
+#'   fails to converge, a warning is produced and a `NULL` is returned.
+#'
 #' @export
 #'
 #' @examples
-#' #
 #'
-pdRCON.mle <- function(S, pdColG, verbose = TRUE){
+#' S <- var(toy_data$sample.data)
+#' K.hat <- pdRCON.mle(S, toy_data$pdColG)
+#'
+pdRCON.mle <- function(S, pdColG, verbose = FALSE){
 
   # make vector lambda1
   lambda1 <- (mat2vec(pdColG)==0)
   lambda1[lambda1] <- Inf
 
-  # make vector lambda 2
+  # make vector lambda2
   p <- nrow(pdColG)
   q <- p/2
   m2v <- c(diag(pdColG[1:q,1:q]), half.vec(pdColG[1:q,1:q]), half.vec(pdColG[1:q,(q+1):p]))
@@ -396,20 +424,150 @@ pdRCON.mle <- function(S, pdColG, verbose = TRUE){
   lambda2[lambda2] <- Inf
 
   # run SGL algorithm
-  K.hat <- admm.pdglasso(S, lambda1 = lambda1, lambda2 = lambda2, print.type=FALSE, verbose=verbose)$X
-
+  out.admm <- admm.pdglasso(S, lambda1 = lambda1, lambda2 = lambda2, print.type=FALSE, verbose=verbose)
+  K.hat <- NULL
+  if(out.admm$internal.par$converged) K.hat = out.admm$X
   return(K.hat)
+}
+
+
+
+#' Check if a concentration matrix satisfies the likelihood equations
+#'
+#' Checks if a matrix is the maximum likelihood estimate of the concentration
+#' matrix of a pdRCON model represented by the colored graph for paired data
+#' `pdColG`, computed from the covariance matrix `S`.
+#'
+#'
+#' @param K.mle candidate mle of \eqn{K} to be checked.
+#' @param pdColG matrix representing a colored graph for paired data;
+#' see [`pdglasso-package`] for details.
+#' @param S a sample covariance matrix with the block structure describe
+#' in [`pdglasso-package`].
+#' @param toll threshold to check whether a value is equal to zero.
+#' @param print.checks a logical (default `TRUE`).
+#'
+
+#' @return a logical equal to `TRUE` if `K.mle` satisfies the likelihood equations
+#' and `FALSE` otherwise. If `print.checks = TRUE` the values used for the
+#' checking are printed.
+#'
+#' @details
+#'
+#' In order to check if `K.mle` is the maximum likelihood estimate, computed
+#' from `S`, under the model represented by `pdColG` the following quantities
+#' are considered:
+#'
+#' * the values of `K.mle` that are expected to be zero;
+#'
+#' * the differences between the entries of `K.mle` which are expected to be equal;
+#'
+#' * the differences between the relevant sums of the entries of `solve(K.mle)`
+#'   and `S` which are expected to be equal, so as to satisfy the
+#'   likelihood equations.
+#'
+#' * all the absolute quantities of the previous three points are divided
+#'   by the \eqn{\ell_2} norm of the non-zero entries of `K.mle` so as to
+#'   obtain relative quantities.
+#'
+#'   Then if all the above quantities are smaller than `toll` the check is
+#'   considered successful and a `TRUE` is returned.
+#'
+#'
+#' @examples
+#' S <- var(toy_data$sample.data)
+#' K.hat <- pdRCON.mle(S, toy_data$pdColG)
+#' is.pdRCON.mle(K.hat, toy_data$pdColG, S)
+#'
+#'
+is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
+  S.mle <- solve(K.mle)
+  G <- pdColG
+  p <- dim(G)[1]
+  q <- p/2
+  l <- 1:q
+  r <- (q+1):p
+  #
+  nz.ms <- sqrt(mean(K.mle[G!=0]^2))
+  # missing edges
+  Bz <- (G==0)
+  #
+  # uncoloured vertices and edges
+  Bu <- (G==1)
+  #
+  # coloured vertices and inside block coloured edges
+  Bci <- (G[l,l]==2)
+  #
+  # across block coloured edges
+  Bca <- (G[l,r]==2)
+  #
+  # missing edges: check zero concentrations
+  if(any(Bz)){
+    am <- max(abs(K.mle[G==0]))
+  }else{
+    am <- 0
+  }
+  v  <- c()
+  sK <- c()
+  #
+  # coloured vertices and inside block coloured edges:
+  # check equality constraints in K.mle
+  # check likelihood equations in S.mle
+  if(any(Bci)){
+    sK[1] <- max(abs((K.mle[l,l]-K.mle[r,r])[Bci]))
+    v[1]  <- max(abs((S.mle[l,l]+S.mle[r,r]-S[l,l]-S[r,r])[Bci]))
+  }else{
+    sK[1] <- 0
+    v[1]  <- 0
+  }
+  ##
+  # across block coloured edges:
+  # check equality constraints in K.mle
+  # check likelihood equations in S.mle
+  if(any(Bca)){
+    sK[2] <- max(abs((K.mle[l,r]-K.mle[r,l])[Bca]))
+    v[2]  <- max(abs((S.mle[l,r]+S.mle[r,l]-S[l,r]-S[r,l])[Bca]))
+  }else{
+    sK[2] <- 0
+    v[2]  <- 0
+  }
+  #
+  # uncoloured vertices and edges: check likelihood equations
+  if(any(Bu)){
+    v[3] <- max(abs((S.mle-S)[G==1]))
+  }else{
+    v[3] <- 0
+  }
+  if(print.checks){
+    cat("\nABSOLUTE QUANTITIES:\n")
+    cat("Max zero concentration           : ", am, "\n")
+    cat("Max diff. of equal concentrations: ", max(sK), "\n")
+    cat("Max error in likelihood equations: ", max(v), "\n")
+    #
+    cat("\nRELATIVE QUANTITIES:\n")
+    cat("Max zero concentration           : ", am/nz.ms, "\n")
+    cat("Max diff. of equal concentrations: ", max(sK)/nz.ms, "\n")
+    cat("Max error in likelihood equations: ", max(v)/nz.ms, "\n\n")
+  }
+  max.all <- max(c(am, max(sK), max(v), am/nz.ms, max(sK)/nz.ms, max(v)/nz.ms))
+
+  if(max.all < toll){
+    check.result <- TRUE
+  }else{
+    check.result <- FALSE
+  }
+  return(check.result)
 }
 
 #' Compute the extended Bayesian Information Criterion (eBIC).
 #'
 #' The function computes the value of the eBIC for a given model and gamma value, for the purpose
-#' of model selection.
+#' of model selection (see Eq.1 of Feygel & Drton, 2010).
 #'
-#' @param S a \eqn{p \times p} covariance (or correlation) matrix.
+#' @param S a sample covariance (or correlation) matrix with the block structure described in [`pdglasso-package`].
 #' @param mod a list, the output object of a call to [`admm.pdglasso`]
 #' @param n the sample size of the data used to compute the sample covariance matrix S.
-#' @param gamma.eBIC a parameter needed to compute the eBIC; ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC.
+#' @param gamma.eBIC a parameter governing the magnitude of the penalization term inside the criterion; it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, and 0.5 being the suggested default value.
 #'
 #' @return A vector containing three elements:
 #' * the value of the eBIC,
@@ -417,6 +575,7 @@ pdRCON.mle <- function(S, pdColG, verbose = TRUE){
 #' * and the estimated number of degrees of freedom.
 #' @export
 #'
+#' @references Foygel, R., Drton, M. (2010). Extended Bayesian information criteria for Gaussian graphical models. *Advances in neural information processing systems*, 23. \url{https://proceedings.neurips.cc/paper/2010/file/072b030ba126b2f4b2374f342be9ed44-Paper.pdf}
 #' @examples
 #' S <- cov(toy_data$sample.data)
 #' mod <- admm.pdglasso(S, lambda1=1, lambda2=0.5)
@@ -434,10 +593,6 @@ compute.eBIC <- function(S,mod,n,
   names(out.vec) <- c("eBIC     ","  log-Likelihood  ","DF (estimated.)")
   return(out.vec)
 }
-
-
-
-
 
 
 ######### Secondary Functions

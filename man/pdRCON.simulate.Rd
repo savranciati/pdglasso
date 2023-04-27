@@ -39,7 +39,7 @@ matrix \code{Sigma=diag(p)}.}
 is equivalent to \code{sample.size=3*p}.}
 
 \item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which
-identify the pdRCON (sub)model of interest; see \code{\link{pdglasso}} for details.}
+identify the pdRCON submodel class of interest; see \code{\link{pdglasso-package}} for details.}
 
 \item{dens, dens.vertex, dens.inside, dens.across}{four values between zero and
 one used to specify the sparsity degree of the generated graph, as
@@ -48,17 +48,18 @@ equivalent to \code{dens.vertex=dens}, and similarly for \code{dens.inside} and
 \code{dens.across}.}
 }
 \value{
-A list containing the following components:
+A list with the following components:
 \itemize{
-\item \code{pdColG} the randomly generated coloured graph for paired data on \eqn{p} vertices; see \code{\link{pdglasso}} for details.
-\item \code{K} the randomly generated concentration matrix adapted to \code{pdColG}.
-\item \code{sample.data} the randomly generated sample form a multivariate normal distribution
+\item \code{pdColG} a randomly generated a matrix representing a coloured graph for
+paired data on \eqn{p} vertices; see \code{\link{pdglasso-package}} for details.
+\item \code{K} a randomly generated concentration matrix adapted to \code{pdColG}.
+\item \code{sample.data} a randomly generated sample form a multivariate normal distribution
 with mean vector zero and concentration matrix \code{K}.
-
-Note that the variable in \eqn{L} are are named \verb{L1,...,Lq} and variables
-in \eqn{R} are are named \verb{R1,...,Rq} where  \code{Li} is homologous to  \code{Ri} for
-every i=1,...,q.
 }
+
+Note that the variable in \eqn{L} are are named \verb{L1,...,Lq} and variables in
+\eqn{R} are are named \verb{R1,...,Rq} where  \code{Li} is homologous to  \code{Ri} for
+every i=1,...,q.
 }
 \description{
 Randomly generates a coloured graph for paired data \eqn{\mathcal{G}}, a
