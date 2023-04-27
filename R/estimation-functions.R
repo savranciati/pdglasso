@@ -583,13 +583,18 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 compute.eBIC <- function(S,mod,n,
                          gamma.eBIC=0.5){
   G <- pdColG.get(mod)
-  K <- pdRCON.mle(S,G$g)
-  S <- S*(n-1)/n
-  p <- dim(S)[1]
-  dof <- G$dof
-  log.lik <- log(det(K))-sum(S*K)
-  #### corrected with n/2 instead of 1/2 in front of the loglik, so -2*(n/2)*loglik=-n*loglik
-  out.vec <- c(-n*log.lik+log(n)*dof+4*dof*gamma.eBIC*log(p),log.lik,dof)
+  K <- pdRCON.mle(S,G$pdColG)
+  if(is.null(K)){
+  out.vec <- rep(NA,3)
+  }else{
+    S <- S*(n-1)/n
+    p <- dim(S)[1]
+    dof <- G$dof
+    log.lik <- log(det(K))-sum(S*K)
+    eBIC <- -n*log.lik+log(n)*dof+4*dof*gamma.eBIC*log(p)
+    #### corrected with n/2 instead of 1/2 in front of the loglik, so -2*(n/2)*loglik=-n*loglik
+    out.vec <- c(eBIC,log.lik,dof)
+  }
   names(out.vec) <- c("eBIC     ","  log-Likelihood  ","DF (estimated.)")
   return(out.vec)
 }
