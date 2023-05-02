@@ -47,10 +47,4 @@ Then if all the above quantities are smaller than \code{toll} the check is
 considered successful and a \code{TRUE} is returned.
 }
 }
-\examples{
-S <- var(toy_data$sample.data)
-K.hat <- pdRCON.mle(S, toy_data$pdColG)
-is.pdRCON.mle(K.hat, toy_data$pdColG, S)
-
-}
 \keyword{internal}

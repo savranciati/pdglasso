@@ -1,6 +1,6 @@
-#' Toy dataset generated through [`simul.pdColG`] function
+#' Toy dataset generated through [`pdRCON.simulate`] function
 #'
-#' Data simulated by the function [`simul.pdColG`] with a call:
+#' Data simulated by the function [`pdRCON.simulate`] with a call:
 #' `toy_data <- pdRCON.simulate(20, type=c("v", "i","a), force.symm=NULL, dens=0.3)`
 #'
 #' @format ## `toy_data`

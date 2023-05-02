@@ -3,7 +3,7 @@
 \docType{data}
 \name{toy_data}
 \alias{toy_data}
-\title{Toy dataset generated through \code{\link{simul.pdColG}} function}
+\title{Toy dataset generated through \code{\link{pdRCON.simulate}} function}
 \format{
 \subsection{\code{toy_data}}{
 
@@ -20,7 +20,7 @@ with zero mean vector and concentration matrix \code{K}.
 toy_data
 }
 \description{
-Data simulated by the function \code{\link{simul.pdColG}} with a call:
+Data simulated by the function \code{\link{pdRCON.simulate}} with a call:
 \verb{toy_data <- pdRCON.simulate(20, type=c("v", "i","a), force.symm=NULL, dens=0.3)}
 }
 \keyword{datasets}

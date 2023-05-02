@@ -472,14 +472,13 @@ pdRCON.mle <- function(S, pdColG, verbose = FALSE){
 #'
 #'   Then if all the above quantities are smaller than `toll` the check is
 #'   considered successful and a `TRUE` is returned.
-#'
-#'
-#' @examples
-#' S <- var(toy_data$sample.data)
-#' K.hat <- pdRCON.mle(S, toy_data$pdColG)
-#' is.pdRCON.mle(K.hat, toy_data$pdColG, S)
-#'
 #' @keywords internal
+#'
+## @examples
+## S <- var(toy_data$sample.data)
+## K.hat <- pdRCON.mle(S, toy_data$pdColG)
+## is.pdRCON.mle(K.hat, toy_data$pdColG, S)
+##
 is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
   S.mle <- solve(K.mle)
   G <- pdColG

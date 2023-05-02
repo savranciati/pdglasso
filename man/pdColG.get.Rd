@@ -7,7 +7,7 @@
 pdColG.get(admm.out, th1 = NULL, th2 = NULL, print.summary = FALSE)
 }
 \arguments{
-\item{admm.out}{An object of list type, that is the output of a call to the \code{\link{admm-pdglasso}} function.}
+\item{admm.out}{An object of list type, that is the output of a call to the \code{\link{admm.pdglasso}} function.}
 
 \item{th1}{(optional) A scalar, the threshold to identify edges in the graph; it must be non-negative.}
 

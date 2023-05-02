@@ -4,7 +4,7 @@
 #' output of a call to [`admm.pdglasso`]. We refer to [`pdglasso-package`] both for the description of the matrix
 #' encoding a coloured graph for paired and the available submodel classes.
 #'
-#' @param admm.out An object of list type, that is the output of a call to the [`admm-pdglasso`] function.
+#' @param admm.out An object of list type, that is the output of a call to the [`admm.pdglasso`] function.
 #' @param th1 (optional) A scalar, the threshold to identify edges in the graph; it must be non-negative.
 #' @param th2 (optional) A scalar, the threshold to identify coloured edges in the graph; it must be non-negative.
 #' @param print.summary (optional) if `TRUE` provides summary statistics of the graph.
