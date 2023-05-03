@@ -96,7 +96,15 @@ pdRCON.fit <- function(S,
   ## Fit final model
   mod.out <- admm.pdglasso(S,
                       lambda1=best.l1,
-                      lambda2=best.l2)
+                      lambda2=best.l2,
+                      type,
+                      force.symm,
+                      X.init,
+                      rho1, rho2,
+                      varying.rho1, varying.rho2,
+                      max_iter,eps.abs,
+                      eps.rel,
+                      verbose)
 
   G <- pdColG.get(mod.out)
 
