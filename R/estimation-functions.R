@@ -50,7 +50,8 @@ pdRCON.fit <- function(S,
   max.ls <- max.lams(S)
 
   ## Prepare temp objects
-  eBIC.l1 <- eBIC.l2 <-  matrix(0,n.l1,3)
+  eBIC.l1 <-  matrix(0,n.l1,3)
+  eBIC.l2 <-  matrix(0,n.l2,3)
 
   ### First grid search for lambda_1, with lambda_2=0
   l1.vec <- exp(seq(log(min(abs(S))),log(max.ls[1]), length.out=n.l1-1))
@@ -59,6 +60,14 @@ pdRCON.fit <- function(S,
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
                              lambda2=0,
+                             type,
+                             force.symm,
+                             X.init,
+                             rho1, rho2,
+                             varying.rho1, varying.rho2,
+                             max_iter,eps.abs,
+                             eps.rel,
+                             verbose,
                              print.type=FALSE)
     eBIC.l1[i,] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
   }
@@ -71,6 +80,14 @@ pdRCON.fit <- function(S,
     mod.out <- admm.pdglasso(S,
                              lambda1=best.l1,
                              lambda2=l2.vec[i],
+                             type,
+                             force.symm,
+                             X.init,
+                             rho1, rho2,
+                             varying.rho1, varying.rho2,
+                             max_iter,eps.abs,
+                             eps.rel,
+                             verbose,
                              print.type=FALSE)
     eBIC.l2[i,] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
   }
