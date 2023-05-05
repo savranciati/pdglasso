@@ -54,8 +54,7 @@ pdRCON.fit <- function(S,
   eBIC.l2 <-  matrix(0,n.l2,3)
 
   ### First grid search for lambda_1, with lambda_2=0
-  l1.vec <- exp(seq(log(min(abs(S))),log(max.ls[1]), length.out=n.l1-1))
-  l1.vec <- c(0, l1.vec)
+  l1.vec <- exp(seq(log(min(abs(S))),log(max.ls[1]), length.out=n.l1))
   for(i in 1:n.l1){
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
