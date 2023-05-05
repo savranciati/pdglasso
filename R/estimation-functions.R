@@ -30,8 +30,8 @@
 #' pdRCON.fit(S,n=60)
 pdRCON.fit <- function(S,
                        n,
-                       n.l1        = 15,
-                       n.l2        = 15,
+                       n.l1        = 10,
+                       n.l2        = 10,
                        gamma.eBIC  = 0.5,
                        type        = c("vertex", "inside.block.edge", "across.block.edge"),
                        force.symm  = NULL,
@@ -40,21 +40,24 @@ pdRCON.fit <- function(S,
                        rho2        = 1,
                        varying.rho1= TRUE,
                        varying.rho2= TRUE,
-                       max_iter    = 1000,
-                       eps.abs     = 1e-12,
-                       eps.rel     = 1e-12,
+                       max_iter    = 500,
+                       eps.abs     = 1e-08,
+                       eps.rel     = 1e-08,
                        verbose     = FALSE,
                        print.type  = TRUE){
 
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
   max.ls <- max.lams(S)
+  min.ls <- log(min(abs(S)))
+  if(!is.numeric(min.ls)) min.ls <- log(min(abs(S))+1)
+
 
   ## Prepare temp objects
   eBIC.l1 <-  matrix(0,n.l1,3)
   eBIC.l2 <-  matrix(0,n.l2,3)
 
   ### First grid search for lambda_1, with lambda_2=0
-  l1.vec <- exp(seq(log(min(abs(S))),log(max.ls[1]), length.out=n.l1))
+  l1.vec <- exp(seq(min.ls,log(max.ls[1]), length.out=n.l1))
   for(i in 1:n.l1){
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
@@ -73,7 +76,7 @@ pdRCON.fit <- function(S,
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
 
   ### Second grid search for lambda_2, with lambda_1=best.l1
-  l2.vec <- exp(seq(log(min(abs(S))),log(max.ls[2]), length.out=n.l2-1))
+  l2.vec <- exp(seq(min.ls,log(max.ls[2]), length.out=n.l2-1))
   l2.vec <- c(0, l2.vec)
   for(i in 1:n.l2){
     mod.out <- admm.pdglasso(S,
