@@ -60,6 +60,7 @@ pdRCON.fit <- function(S,
   ### First grid search for lambda_1, with lambda_2=0
   l1.vec <- exp(seq(min.ls,max.ls[1], length.out=n.l1))
   for(i in 1:n.l1){
+    if(progress==TRUE) cat("Searching over lambda1 grid; value n. ",i," of ",n.l1, ".\n")
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
                              lambda2=0,
@@ -70,9 +71,10 @@ pdRCON.fit <- function(S,
                              varying.rho1, varying.rho2,
                              max_iter,eps.abs,
                              eps.rel,
-                             verbose,
+                             progress=TRUE,
+                             verbose=FALSE,
                              print.type=FALSE)
-    eBIC.l1[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
+    eBIC.l1[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC, max_iter=max_iter)
     eBIC.l1[i,4] <- mod.out$internal.par$converged+0
   }
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
@@ -81,6 +83,7 @@ pdRCON.fit <- function(S,
   l2.vec <- exp(seq(min.ls,max.ls[2], length.out=n.l2-1))
   l2.vec <- c(0, l2.vec)
   for(i in 1:n.l2){
+    if(progress==TRUE) cat("Searching over lambda2 grid; value n. ",i," of ",n.l1, ".\n")
     mod.out <- admm.pdglasso(S,
                              lambda1=best.l1,
                              lambda2=l2.vec[i],
@@ -93,7 +96,7 @@ pdRCON.fit <- function(S,
                              eps.rel,
                              verbose,
                              print.type=FALSE)
-    eBIC.l2[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
+    eBIC.l2[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC, max_iter=max_iter)
     eBIC.l2[i,4] <- mod.out$internal.par$converged+0
   }
   best.l2 <- l2.vec[which.min(eBIC.l2[,1])]
@@ -102,14 +105,16 @@ pdRCON.fit <- function(S,
   mod.out <- admm.pdglasso(S,
                       lambda1=best.l1,
                       lambda2=best.l2,
-                      type,
-                      force.symm,
-                      X.init,
-                      rho1, rho2,
-                      varying.rho1, varying.rho2,
-                      max_iter,eps.abs,
-                      eps.rel,
-                      verbose)
+                      type=type,
+                      force.symm=force.symm,
+                      X.init=X.init,
+                      rho1=rho1, rho2=rho2,
+                      varying.rho1=varying.rho1,
+                      varying.rho2=varying.rho2,
+                      max_iter=max_iter,
+                      eps.abs=eps.abs,
+                      eps.rel=eps.rel,
+                      verbose=verbose)
 
   G <- pdColG.get(mod.out)
 
@@ -600,7 +605,9 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 #' @param mod a list, the output object of a call to [`admm.pdglasso`]
 #' @param n the sample size of the data used to compute the sample covariance matrix S.
 #' @param gamma.eBIC a parameter governing the magnitude of the penalization term inside the criterion; it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, and 0.5 being the suggested default value.
-#'
+#' @param max_iter an integer; maximum number of iterations to be run in case
+#'   the algorithm does not converge; passed to [`pdRCON.mle`].
+
 #' @return A vector containing three elements:
 #' * the value of the eBIC,
 #' * the log-likelihood,
@@ -613,9 +620,10 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 #' mod <- admm.pdglasso(S, lambda1=1, lambda2=0.5)
 #' compute.eBIC(S,mod,n=60,gamma.eBIC=0.5)
 compute.eBIC <- function(S,mod,n,
-                         gamma.eBIC=0.5){
+                         gamma.eBIC=0.5,
+                         max_iter=1000){
   G <- pdColG.get(mod)
-  K <- pdRCON.mle(S,G$pdColG)
+  K <- pdRCON.mle(S,G$pdColG, max_iter=max_iter)
   if(is.null(K)){
   out.vec <- rep(NA,3)
   }else{
