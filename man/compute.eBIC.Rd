@@ -4,7 +4,7 @@
 \alias{compute.eBIC}
 \title{Compute the extended Bayesian Information Criterion (eBIC).}
 \usage{
-compute.eBIC(S, mod, n, gamma.eBIC = 0.5)
+compute.eBIC(S, mod, n, gamma.eBIC = 0.5, max_iter = 1000)
 }
 \arguments{
 \item{S}{a sample covariance (or correlation) matrix with the block structure described in \code{\link{pdglasso-package}}.}
@@ -14,6 +14,9 @@ compute.eBIC(S, mod, n, gamma.eBIC = 0.5)
 \item{n}{the sample size of the data used to compute the sample covariance matrix S.}
 
 \item{gamma.eBIC}{a parameter governing the magnitude of the penalization term inside the criterion; it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, and 0.5 being the suggested default value.}
+
+\item{max_iter}{an integer; maximum number of iterations to be run in case
+the algorithm does not converge; passed to \code{\link{pdRCON.mle}}.}
 }
 \value{
 A vector containing three elements:
