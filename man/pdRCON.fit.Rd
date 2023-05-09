@@ -8,8 +8,8 @@ criterion.}
 pdRCON.fit(
   S,
   n,
-  n.l1 = 15,
-  n.l2 = 15,
+  n.l1 = 10,
+  n.l2 = 10,
   gamma.eBIC = 0.5,
   type = c("vertex", "inside.block.edge", "across.block.edge"),
   force.symm = NULL,
@@ -18,9 +18,9 @@ pdRCON.fit(
   rho2 = 1,
   varying.rho1 = TRUE,
   varying.rho2 = TRUE,
-  max_iter = 1000,
-  eps.abs = 1e-12,
-  eps.rel = 1e-12,
+  max_iter = 500,
+  eps.abs = 1e-08,
+  eps.rel = 1e-08,
   verbose = FALSE,
   print.type = TRUE
 )
