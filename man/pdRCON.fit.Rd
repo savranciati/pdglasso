@@ -79,6 +79,7 @@ A list with the following components:
 \item \code{best.lambdas} the selected values of \code{lambda1} and \code{lambda2} according to eBIC criterion.
 \item \code{l1.path} a matrix containing the grid values for \code{lambda1} as well as quantities used in eBIC computation.
 \item \code{l2.path} a matrix containing the grid values for \code{lambda2} as well as quantities used in eBIC computation.
+\item \code{time.exec} total execution time for the called function.
 }
 }
 \description{

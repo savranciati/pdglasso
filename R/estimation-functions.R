@@ -23,6 +23,7 @@
 #' * `best.lambdas` the selected values of `lambda1` and `lambda2` according to eBIC criterion.
 #' * `l1.path` a matrix containing the grid values for `lambda1` as well as quantities used in eBIC computation.
 #' * `l2.path` a matrix containing the grid values for `lambda2` as well as quantities used in eBIC computation.
+#' * `time.exec` total execution time for the called function.
 #' @export
 #'
 #' @examples
@@ -45,7 +46,7 @@ pdRCON.fit <- function(S,
                        eps.rel     = 1e-08,
                        verbose     = FALSE,
                        print.type  = TRUE){
-
+  start.time <- Sys.time()
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
   max.ls <- log(max.lams(S))
   min.ls <- log(min(abs(S)))
@@ -53,8 +54,8 @@ pdRCON.fit <- function(S,
 
 
   ## Prepare temp objects
-  eBIC.l1 <-  matrix(0,n.l1,3)
-  eBIC.l2 <-  matrix(0,n.l2,3)
+  eBIC.l1 <-  matrix(0,n.l1,4)
+  eBIC.l2 <-  matrix(0,n.l2,4)
 
   ### First grid search for lambda_1, with lambda_2=0
   l1.vec <- exp(seq(min.ls,max.ls[1], length.out=n.l1))
@@ -71,7 +72,8 @@ pdRCON.fit <- function(S,
                              eps.rel,
                              verbose,
                              print.type=FALSE)
-    eBIC.l1[i,] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
+    eBIC.l1[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
+    eBIC.l1[i,4] <- mod.out$internal.par$converged+0
   }
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
 
@@ -91,7 +93,8 @@ pdRCON.fit <- function(S,
                              eps.rel,
                              verbose,
                              print.type=FALSE)
-    eBIC.l2[i,] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
+    eBIC.l2[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC)
+    eBIC.l2[i,4] <- mod.out$internal.par$converged+0
   }
   best.l2 <- l2.vec[which.min(eBIC.l2[,1])]
 
@@ -112,14 +115,15 @@ pdRCON.fit <- function(S,
 
   l1.path=cbind(l1.vec,eBIC.l1)
   l2.path=cbind(l2.vec,eBIC.l2)
-  colnames(l1.path) <- c("lambda1.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)")
-  colnames(l2.path) <- c("lambda2.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)")
-
+  colnames(l1.path) <- c("lambda1.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged")
+  colnames(l2.path) <- c("lambda2.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged")
+  time.exec <- Sys.time()-start.time
   return(list(model=mod.out,
               pdColG=G,
               best.lambdas=c(best.l1,best.l2),
               l1.path=l1.path,
-              l2.path=l2.path))
+              l2.path=l2.path,
+              time.exec=time.exec))
 
 }
 
@@ -418,6 +422,8 @@ admm.inner <- function(X,
 #'
 #' @param S a sample covariance matrix with the block structure described in [`pdglasso-package`].
 #' @param pdColG pdColG a matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.
+#' @param max_iter an integer; maximum number of iterations to be run in case
+#'   the algorithm does not converge.
 #' @param verbose a logical (defalut `FALSE`) that is passed to the function [`admm.pdglasso`].
 #'
 #' @return Either a matrix, that is the maximum likelihood estimate of
@@ -437,7 +443,7 @@ admm.inner <- function(X,
 #' S <- var(toy_data$sample.data)
 #' K.hat <- pdRCON.mle(S, toy_data$pdColG)
 #'
-pdRCON.mle <- function(S, pdColG, verbose = FALSE){
+pdRCON.mle <- function(S, pdColG, max_iter=1000, verbose = FALSE){
 
   # make vector lambda1
   lambda1 <- (mat2vec(pdColG)==0)
@@ -451,7 +457,7 @@ pdRCON.mle <- function(S, pdColG, verbose = FALSE){
   lambda2[lambda2] <- Inf
 
   # run SGL algorithm
-  out.admm <- admm.pdglasso(S, lambda1 = lambda1, lambda2 = lambda2, print.type=FALSE, verbose=verbose)
+  out.admm <- admm.pdglasso(S, lambda1 = lambda1, lambda2 = lambda2, max_iter=max_iter, print.type=FALSE, verbose=verbose)
   K.hat <- NULL
   if(out.admm$internal.par$converged) K.hat = out.admm$X
   return(K.hat)

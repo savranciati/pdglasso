@@ -4,12 +4,15 @@
 \alias{pdRCON.mle}
 \title{Maximum likelihood estimation}
 \usage{
-pdRCON.mle(S, pdColG, verbose = FALSE)
+pdRCON.mle(S, pdColG, max_iter = 1000, verbose = FALSE)
 }
 \arguments{
 \item{S}{a sample covariance matrix with the block structure described in \code{\link{pdglasso-package}}.}
 
 \item{pdColG}{pdColG a matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.}
+
+\item{max_iter}{an integer; maximum number of iterations to be run in case
+the algorithm does not converge.}
 
 \item{verbose}{a logical (defalut \code{FALSE}) that is passed to the function \code{\link{admm.pdglasso}}.}
 }
