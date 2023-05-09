@@ -13,6 +13,7 @@
 #' @param n.l1 the number of values in the grid of candidates for `lambda1`.
 #' @param n.l2 the number of values in the grid of candidates for `lambda2`.
 #' @param gamma.eBIC the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
+#' @param progress a logical value; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`
 #'
 #' @return A list with the following components:
 #'
@@ -45,6 +46,7 @@ pdRCON.fit <- function(S,
                        eps.abs     = 1e-08,
                        eps.rel     = 1e-08,
                        verbose     = FALSE,
+                       progress    = TRUE,
                        print.type  = TRUE){
   start.time <- Sys.time()
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
@@ -60,18 +62,19 @@ pdRCON.fit <- function(S,
   ### First grid search for lambda_1, with lambda_2=0
   l1.vec <- exp(seq(min.ls,max.ls[1], length.out=n.l1))
   for(i in 1:n.l1){
-    if(progress==TRUE) cat("Searching over lambda1 grid; value n. ",i," of ",n.l1, ".\n")
+    if(progress==TRUE) cat("Searching over lambda1 grid (",i,"/",n.l1,").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
                              lambda2=0,
-                             type,
-                             force.symm,
-                             X.init,
-                             rho1, rho2,
-                             varying.rho1, varying.rho2,
-                             max_iter,eps.abs,
-                             eps.rel,
-                             progress=TRUE,
+                             type=NULL,
+                             force.symm=NULL,
+                             X.init=X.init,
+                             rho1=rho1, rho2=rho2,
+                             varying.rho1=varying.rho1,
+                             varying.rho2=varying.rho2,
+                             max_iter=max_iter,
+                             eps.abs=eps.abs,
+                             eps.rel=eps.rel,
                              verbose=FALSE,
                              print.type=FALSE)
     eBIC.l1[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC, max_iter=max_iter)
@@ -80,21 +83,23 @@ pdRCON.fit <- function(S,
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
 
   ### Second grid search for lambda_2, with lambda_1=best.l1
-  l2.vec <- exp(seq(min.ls,max.ls[2], length.out=n.l2-1))
+  l2.vec <- exp(seq(min.ls,max.ls[2], length.out=n.l2))
   l2.vec <- c(0, l2.vec)
   for(i in 1:n.l2){
-    if(progress==TRUE) cat("Searching over lambda2 grid; value n. ",i," of ",n.l1, ".\n")
+    if(progress==TRUE) cat("Searching over lambda2 grid (",i,"/",n.l1,").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=best.l1,
                              lambda2=l2.vec[i],
-                             type,
-                             force.symm,
-                             X.init,
-                             rho1, rho2,
-                             varying.rho1, varying.rho2,
-                             max_iter,eps.abs,
-                             eps.rel,
-                             verbose,
+                             type=type,
+                             force.symm=force.symm,
+                             X.init=X.init,
+                             rho1=rho1, rho2=rho2,
+                             varying.rho1=varying.rho1,
+                             varying.rho2=varying.rho2,
+                             max_iter=max_iter,
+                             eps.abs=eps.abs,
+                             eps.rel=eps.rel,
+                             verbose=FALSE,
                              print.type=FALSE)
     eBIC.l2[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC, max_iter=max_iter)
     eBIC.l2[i,4] <- mod.out$internal.par$converged+0
