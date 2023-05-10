@@ -22,6 +22,7 @@ pdRCON.fit(
   eps.abs = 1e-08,
   eps.rel = 1e-08,
   verbose = FALSE,
+  progress = TRUE,
   print.type = TRUE
 )
 }
@@ -66,6 +67,8 @@ of primal and dual residuals of the ADMM algorithm.}
 
 \item{verbose}{a logical; if \code{TRUE} the progress (and internal convergence of
 inner loop) is shown in the console while the algorithm is running.}
+
+\item{progress}{a logical value; if \code{TRUE} provides a visual update in the console about the grid search over \code{lambda1} and \code{lambda2}}
 
 \item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
 specified by the arguments \code{type} and \code{force.symm} - is returned as printed

@@ -50,8 +50,8 @@ pdRCON.fit <- function(S,
                        print.type  = TRUE){
   start.time <- Sys.time()
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
-  max.ls <- log(max.lams(S))
   min.ls <- log(min(abs(S)))
+  max.ls <- log(max.lams(S))
   if(!is.numeric(min.ls)) min.ls <- log(eps.abs)
 
 
@@ -69,7 +69,8 @@ pdRCON.fit <- function(S,
                              type=type,
                              force.symm=NULL,
                              X.init=X.init,
-                             rho1=rho1, rho2=rho2,
+                             rho1=rho1,
+                             rho2=rho2,
                              varying.rho1=varying.rho1,
                              varying.rho2=varying.rho2,
                              max_iter=max_iter,
@@ -77,23 +78,28 @@ pdRCON.fit <- function(S,
                              eps.rel=eps.rel,
                              verbose=FALSE,
                              print.type=FALSE)
-    eBIC.l1[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC, max_iter=max_iter)
+    eBIC.l1[i,1:3] <- compute.eBIC(S=S,
+                                   mod=mod.out,
+                                   n=n,
+                                   gamma.eBIC=gamma.eBIC,
+                                   max_iter=max_iter)
     eBIC.l1[i,4] <- mod.out$internal.par$converged+0
   }
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
 
   ### Second grid search for lambda_2, with lambda_1=best.l1
-  l2.vec <- exp(seq(min.ls,max.ls[2], length.out=n.l2))
+  l2.vec <- exp(seq(min.ls,max.ls[2], length.out=n.l2-1))
   l2.vec <- c(0, l2.vec)
   for(i in 1:n.l2){
-    if(progress==TRUE) cat("Searching over lambda2 grid (",i,"/",n.l1,").\n", sep="")
+    if(progress==TRUE) cat("Searching over lambda2 grid (",i,"/",n.l2,").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=best.l1,
                              lambda2=l2.vec[i],
                              type=type,
                              force.symm=force.symm,
                              X.init=X.init,
-                             rho1=rho1, rho2=rho2,
+                             rho1=rho1,
+                             rho2=rho2,
                              varying.rho1=varying.rho1,
                              varying.rho2=varying.rho2,
                              max_iter=max_iter,
@@ -101,7 +107,11 @@ pdRCON.fit <- function(S,
                              eps.rel=eps.rel,
                              verbose=FALSE,
                              print.type=FALSE)
-    eBIC.l2[i,1:3] <- compute.eBIC(S, mod.out, n, gamma.eBIC=gamma.eBIC, max_iter=max_iter)
+    eBIC.l2[i,1:3] <- compute.eBIC(S=S,
+                                   mod=mod.out,
+                                   n=n,
+                                   gamma.eBIC=gamma.eBIC,
+                                   max_iter=max_iter)
     eBIC.l2[i,4] <- mod.out$internal.par$converged+0
   }
   best.l2 <- l2.vec[which.min(eBIC.l2[,1])]
@@ -113,13 +123,15 @@ pdRCON.fit <- function(S,
                       type=type,
                       force.symm=force.symm,
                       X.init=X.init,
-                      rho1=rho1, rho2=rho2,
+                      rho1=rho1,
+                      rho2=rho2,
                       varying.rho1=varying.rho1,
                       varying.rho2=varying.rho2,
                       max_iter=max_iter,
                       eps.abs=eps.abs,
                       eps.rel=eps.rel,
-                      verbose=verbose)
+                      verbose=verbose,
+                      print.type=print.type)
 
   G <- pdColG.get(mod.out)
 
