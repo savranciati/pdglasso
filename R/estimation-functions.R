@@ -52,7 +52,7 @@ pdRCON.fit <- function(S,
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
   min.ls <- log(min(abs(S)))
   max.ls <- log(max.lams(S))
-  if(!is.numeric(min.ls)) min.ls <- log(eps.abs)
+  if(!is.finite(min.ls)) min.ls <- log(eps.abs)
 
 
   ## Prepare temp objects
@@ -86,6 +86,7 @@ pdRCON.fit <- function(S,
     eBIC.l1[i,4] <- mod.out$internal.par$converged+0
   }
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
+  if(length(best.l1)==0) stop("Grid search of lambda1 failed!")
 
   ### Second grid search for lambda_2, with lambda_1=best.l1
   l2.vec <- exp(seq(min.ls,max.ls[2], length.out=n.l2-1))
@@ -115,6 +116,7 @@ pdRCON.fit <- function(S,
     eBIC.l2[i,4] <- mod.out$internal.par$converged+0
   }
   best.l2 <- l2.vec[which.min(eBIC.l2[,1])]
+  if(length(best.l2)==0) stop("Grid search of lambda2 failed!")
 
   ## Fit final model
   mod.out <- admm.pdglasso(S,
