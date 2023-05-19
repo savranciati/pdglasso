@@ -78,12 +78,15 @@ output in the console.}
 A list with the following components:
 \itemize{
 \item \code{model} the final model.
-\item \code{pdColG} the associated coloured graph.
 \item \code{best.lambdas} the selected values of \code{lambda1} and \code{lambda2} according to eBIC criterion.
 \item \code{l1.path} a matrix containing the grid values for \code{lambda1} as well as quantities used in eBIC computation.
 \item \code{l2.path} a matrix containing the grid values for \code{lambda2} as well as quantities used in eBIC computation.
 \item \code{time.exec} total execution time for the called function.
 }
+
+A warning is produced if at least one run of the algorithm for the grid
+searches has resulted in non-convergence (status can be checked by inspecting
+\code{l1.path} and \code{l2.path}).
 }
 \description{
 Performs a sequence of calls to \code{\link{admm.pdglasso}} providing two grids of
@@ -91,7 +94,9 @@ values for \code{lambda1} and \code{lambda2}. First, a grid search conditional o
 \code{lambda2}=0 is run to select the best \code{lambda1} value among the candidates
 (according to eBIC); conditional on the best \code{lambda1}, a similar search is
 performed for \code{lambda2}. The output is the select model, given by the
-estimated concenration matrix and corresponding graph.
+estimated concenration matrix.
+The user may call \code{\link{pdColG.get}} to obtain the corresponding Coloured Graph
+for Paired Data (pdColG) from the selected model.
 }
 \examples{
 S <- cov(toy_data$sample.data)

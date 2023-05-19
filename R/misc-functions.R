@@ -141,7 +141,7 @@ across.block <- function(X, new.val=NULL){
 #' @noRd
 #'
 max.lams <- function(S){
-  max.l1 <- max(abs(S))
+  max.l1 <- max(abs(S[upper.tri(S, diag=FALSE)]))
   diff.inside <- abs(LL.block(S)-RR.block(S))
   diff.diag <- diag(diff.inside)/2
   diag(diff.inside) <- 0

@@ -34,8 +34,8 @@ pdColG.get <- function(admm.out,
   p <- dim(X)[1]
   q <- p/2
 
-  if(is.null(th1)) th1 <- admm.out$internal.par$eps.rel
-  if(is.null(th2)) th2 <- admm.out$internal.par$eps.rel
+  if(is.null(th1)) th1 <- admm.out$internal.par$eps.rel*10
+  if(is.null(th2)) th2 <- admm.out$internal.par$eps.rel*10
 
   # prepare matrix of edges (non-zero elements)
   # empty except diagonal

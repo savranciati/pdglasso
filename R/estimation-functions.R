@@ -6,7 +6,9 @@
 #' `lambda2`=0 is run to select the best `lambda1` value among the candidates
 #' (according to eBIC); conditional on the best `lambda1`, a similar search is
 #' performed for `lambda2`. The output is the select model, given by the
-#' estimated concenration matrix and corresponding graph.
+#' estimated concenration matrix.
+#' The user may call [`pdColG.get`] to obtain the corresponding Coloured Graph
+#' for Paired Data (pdColG) from the selected model.
 #'
 #' @inheritParams admm.pdglasso
 #' @param n the sample size of the data used to compute the sample covariance matrix S.
@@ -19,12 +21,14 @@
 #'
 #' * `model` the final model.
 #'
-#' * `pdColG` the associated coloured graph.
-#'
 #' * `best.lambdas` the selected values of `lambda1` and `lambda2` according to eBIC criterion.
 #' * `l1.path` a matrix containing the grid values for `lambda1` as well as quantities used in eBIC computation.
 #' * `l2.path` a matrix containing the grid values for `lambda2` as well as quantities used in eBIC computation.
 #' * `time.exec` total execution time for the called function.
+#'
+#' A warning is produced if at least one run of the algorithm for the grid
+#' searches has resulted in non-convergence (status can be checked by inspecting
+#' `l1.path` and `l2.path`).
 #' @export
 #'
 #' @examples
@@ -67,7 +71,7 @@ pdRCON.fit <- function(S,
                              lambda1=l1.vec[i],
                              lambda2=0,
                              type=type,
-                             force.symm=NULL,
+                             force.symm=force.symm,
                              X.init=X.init,
                              rho1=rho1,
                              rho2=rho2,
@@ -135,20 +139,102 @@ pdRCON.fit <- function(S,
                       verbose=verbose,
                       print.type=print.type)
 
-  G <- pdColG.get(mod.out)
-
   l1.path=cbind(l1.vec,eBIC.l1)
   l2.path=cbind(l2.vec,eBIC.l2)
-  colnames(l1.path) <- c("lambda1.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged")
-  colnames(l2.path) <- c("lambda2.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged")
+  colnames(l1.path) <- c("lambda1.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged (1=TRUE)")
+  colnames(l2.path) <- c("lambda2.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged (1=TRUE)")
+  if(any(c(l1.path[,5],l2.path[,5])==0, na.rm=TRUE)) warning("Convergence not achieved for one or more values of lambda1 or lambda2.\n Check $l1.path and $l2.path from the output list.")
+
   time.exec <- Sys.time()-start.time
   return(list(model=mod.out,
-              pdColG=G,
               best.lambdas=c(best.l1,best.l2),
               l1.path=l1.path,
               l2.path=l2.path,
               time.exec=time.exec))
 
+}
+
+
+#' Check orders of magnitude of entries of the estimated concentration matrix X under the pdRCON submodel class considered.
+#'
+#' This function produces different plots of values of X in log10 scale,
+#' depending on the submodel class identified by the acronym stored in the input
+#' object `mod.out`. The user might want to call this function to identify
+#' what values to pass as arguments `th1` and `th2` to a call to the function
+#' [`pdColGet`].
+#'
+#' @param mod.out An object of list type, that is the output of a call to the [`admm.pdglasso`] function. This can also be the output of a call to [`pdRCON.fit`].
+#'
+#' @return Depending on the acronym stored inside the input object, one or more plots depicting:
+#'
+#' * off-diagonal elements,
+#' * vertices,
+#' * inside block,
+#' * across block.
+#'
+#' @export
+#'
+#' @examples
+#'
+#' S <- cov(toy_data$sample.data)
+#' mod.out <- pdRCON.fit(S,n=60)
+#' pdRCON.check(mod.out)
+pdRCON.check <- function(mod.out){
+  acronyms <- mod.out$acronyms$acronym.of.type
+  th.rel <- log10(mod.out$internal.par$eps.rel)
+  th.primal <- log10(mod.out$internal.par$eps.primal)
+  th.dual <- log10(mod.out$internal.par$eps.dual)
+  p <- ncol(mod.out$X)
+  q <- p/2
+
+  # Prepare canvas
+  def.pars <- par(no.readonly = TRUE)
+  par(mfrow = c(3, 2))
+  par(mar = c(2, 2, 1.5, 1))
+  #
+  # off-diagonal
+  off.d <- mod.out$X[upper.tri(mod.out$X, diag=FALSE)]
+  off.d <- log10(abs(off.d))
+  plot(off.d, ylim=c(min(off.d), 0))
+  title(main="Off-diagonal")
+  abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
+  #
+  # vertices
+  if(grepl("V",acronyms,fixed=T)){
+    vertx <- diag(mod.out$X[1:q, 1:q]-mod.out$X[(q+1):p,(q+1):p])
+    vertx <- log10(abs(vertx))
+    plot(vertx, ylim=c(min(off.d), 0))
+    title(main="Vertices")
+    abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
+  }
+  #
+  # inside edges
+  if(grepl("I",acronyms,fixed=T)){
+    inside.edges <- LL.block(mod.out$X)-RR.block(mod.out$X)
+    inside.edges <- inside.edges[upper.tri(inside.edges, diag=FALSE)]
+    inside.edges <- log10(abs(inside.edges))
+    plot(inside.edges, ylim=c(min(off.d), 0))
+    title(main="Inside")
+    abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
+  }
+  #
+  # across edges
+  if(grepl("A",acronyms,fixed=T)){
+    across.edges <- across.block(mod.out$X)-t(across.block(mod.out$X))
+    across.edges <- across.edges[upper.tri(across.edges, diag=FALSE)]
+    across.edges <- log10(abs(across.edges))
+    plot(across.edges, ylim=c(min(off.d), 0))
+    title(main="Across")
+    abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
+  }
+  plot(1, type = "n", axes=FALSE, xlab="", ylab="")
+  legend(x = "top",inset = 0,
+         legend = c("Rel. Eps.", "Primal Res.", "Dual Res."),
+         col=c("red", "green", "blue"), lty=2, lwd=1.5, cex=0.8, horiz = TRUE)
+
+  # Reset canvas
+  on.exit(par(def.pars))
+  #
 }
 
 
@@ -317,14 +403,14 @@ admm.pdglasso <- function(S,
   }
   if(k==max_iter){
     converged <- FALSE
-    warning(paste("Convergence not achieved; iterations performed: ",max_iter,".", sep=""))
+    #warning(paste("Convergence not achieved; iterations performed: ",max_iter,".", sep=""))
   }
   time.diff <- Sys.time()-time.start
   internal.par <- list(execution.time=time.diff, res.primal=r.kk, res.dual=s.kk,
                        lambda1 = lambda1, lambda2=unique(lambda2), n.iter=k,
                        n.iter.rho1_update_last=n.iter.rho1_update_last, last.rho1=rho1,
                        eps.primal=eps.pri, eps.dual=eps.dual, eps.abs=eps.abs, eps.rel=eps.rel,
-                       converged = converged)
+                       max_iter = max_iter, converged = converged)
   acronyms=list(acronym.of.type=acr.type, acronym.of.force=acr.force)
   dimnames(X) <- dimnames(S)
   return(list(X=X, acronyms=acronyms, internal.par=internal.par))
