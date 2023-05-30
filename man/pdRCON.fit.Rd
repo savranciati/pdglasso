@@ -18,7 +18,7 @@ pdRCON.fit(
   rho2 = 1,
   varying.rho1 = TRUE,
   varying.rho2 = TRUE,
-  max_iter = 500,
+  max_iter = 5000,
   eps.abs = 1e-08,
   eps.rel = 1e-08,
   verbose = FALSE,

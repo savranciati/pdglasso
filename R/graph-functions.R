@@ -34,8 +34,8 @@ pdColG.get <- function(admm.out,
   p <- dim(X)[1]
   q <- p/2
 
-  if(is.null(th1)) th1 <- admm.out$internal.par$eps.rel*10
-  if(is.null(th2)) th2 <- admm.out$internal.par$eps.rel*10
+  if(is.null(th1)) th1 <- admm.out$internal.par$eps.rel*100
+  if(is.null(th2)) th2 <- admm.out$internal.par$eps.rel*100
 
   # prepare matrix of edges (non-zero elements)
   # empty except diagonal
@@ -57,7 +57,11 @@ pdColG.get <- function(admm.out,
     # computes the vertices differences (in absolute values)
     # | diag(LL)-diag(RR) |
     diff_vertex  <- abs(diag(X)[1:q]-diag(X)[(q+1):p])
-    temp_vertex <- (!(diff_vertex>th2))+0
+    # create temporary (1:q) half-diag where all vertex values are equal
+    temp_vertex <- rep(1,q)
+    # any | LL_ii - RR_i'i' | > th2 is too large and
+    # thus LL_ii != RR_i'i'
+    temp_vertex[diff_vertex>th2] <- 0
     temp_vertex <- c(temp_vertex,temp_vertex)
     diag(mat_sym) <- temp_vertex
   }

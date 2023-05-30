@@ -15,9 +15,9 @@ admm.pdglasso(
   rho2 = 1,
   varying.rho1 = TRUE,
   varying.rho2 = TRUE,
-  max_iter = 1000,
-  eps.abs = 1e-12,
-  eps.rel = 1e-12,
+  max_iter = 5000,
+  eps.abs = 1e-06,
+  eps.rel = 1e-06,
   verbose = FALSE,
   print.type = TRUE
 )

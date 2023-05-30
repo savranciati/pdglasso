@@ -4,7 +4,7 @@
 \alias{compute.eBIC}
 \title{Compute the extended Bayesian Information Criterion (eBIC).}
 \usage{
-compute.eBIC(S, mod, n, gamma.eBIC = 0.5, max_iter = 1000)
+compute.eBIC(S, mod, n, gamma.eBIC = 0.5, max_iter = 5000)
 }
 \arguments{
 \item{S}{a sample covariance (or correlation) matrix with the block structure described in \code{\link{pdglasso-package}}.}

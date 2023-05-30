@@ -46,7 +46,7 @@ pdRCON.fit <- function(S,
                        rho2        = 1,
                        varying.rho1= TRUE,
                        varying.rho2= TRUE,
-                       max_iter    = 500,
+                       max_iter    = 5000,
                        eps.abs     = 1e-08,
                        eps.rel     = 1e-08,
                        verbose     = FALSE,
@@ -54,17 +54,17 @@ pdRCON.fit <- function(S,
                        print.type  = TRUE){
   start.time <- Sys.time()
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
-  min.ls <- log(min(abs(S)))
+  # min.ls <- log(min(abs(S)))
   max.ls <- log(max.lams(S))
-  if(!is.finite(min.ls)) min.ls <- log(eps.abs)
-
+  min.ls <- max.ls/c(n.l1,n.l2)
 
   ## Prepare temp objects
   eBIC.l1 <-  matrix(0,n.l1,4)
   eBIC.l2 <-  matrix(0,n.l2,4)
 
   ### First grid search for lambda_1, with lambda_2=0
-  l1.vec <- exp(seq(min.ls,max.ls[1], length.out=n.l1))
+  l1.vec <- exp(seq(min.ls[1],max.ls[1], length.out=n.l1))
+  l1.vec <- sort(l1.vec, decreasing=TRUE)
   for(i in 1:n.l1){
     if(progress==TRUE) cat("Searching over lambda1 grid (",i,"/",n.l1,").\n", sep="")
     mod.out <- admm.pdglasso(S,
@@ -88,13 +88,16 @@ pdRCON.fit <- function(S,
                                    gamma.eBIC=gamma.eBIC,
                                    max_iter=max_iter)
     eBIC.l1[i,4] <- mod.out$internal.par$converged+0
+    if(eBIC.l1[i,4]==0) cat("Convergence not achieved for this value of lambda1! \n")
   }
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
   if(length(best.l1)==0) stop("Grid search of lambda1 failed!")
 
+  if(progress==TRUE) cat("--- \n", sep="")
+
   ### Second grid search for lambda_2, with lambda_1=best.l1
-  l2.vec <- exp(seq(min.ls,max.ls[2], length.out=n.l2-1))
-  l2.vec <- c(0, l2.vec)
+  l2.vec <- exp(seq(min.ls[2],max.ls[2], length.out=n.l2))
+  l2.vec <- sort(l2.vec, decreasing=TRUE)
   for(i in 1:n.l2){
     if(progress==TRUE) cat("Searching over lambda2 grid (",i,"/",n.l2,").\n", sep="")
     mod.out <- admm.pdglasso(S,
@@ -118,7 +121,12 @@ pdRCON.fit <- function(S,
                                    gamma.eBIC=gamma.eBIC,
                                    max_iter=max_iter)
     eBIC.l2[i,4] <- mod.out$internal.par$converged+0
+    if(eBIC.l2[i,4]==0) cat("Convergence not achieved for this value of lambda2! \n")
   }
+  ### adding eBIC value/results and l2 value to path
+  ### already estimated from the first grid.search where lam2=0
+  eBIC.l2 <- rbind(eBIC.l2, eBIC.l1[which.min(eBIC.l1[,1]),])
+  l2.vec <- c(l2.vec,0)
   best.l2 <- l2.vec[which.min(eBIC.l2[,1])]
   if(length(best.l2)==0) stop("Grid search of lambda2 failed!")
 
@@ -143,7 +151,6 @@ pdRCON.fit <- function(S,
   l2.path=cbind(l2.vec,eBIC.l2)
   colnames(l1.path) <- c("lambda1.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged (1=TRUE)")
   colnames(l2.path) <- c("lambda2.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged (1=TRUE)")
-  if(any(c(l1.path[,5],l2.path[,5])==0, na.rm=TRUE)) warning("Convergence not achieved for one or more values of lambda1 or lambda2.\n Check $l1.path and $l2.path from the output list.")
 
   time.exec <- Sys.time()-start.time
   return(list(model=mod.out,
@@ -196,7 +203,7 @@ pdRCON.check <- function(mod.out){
   off.d <- mod.out$X[upper.tri(mod.out$X, diag=FALSE)]
   off.d <- log10(abs(off.d))
   plot(off.d, ylim=c(min(off.d), 0))
-  title(main="Off-diagonal")
+  title(main="Off-diagonal elements")
   abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
   #
   # vertices
@@ -204,7 +211,7 @@ pdRCON.check <- function(mod.out){
     vertx <- diag(mod.out$X[1:q, 1:q]-mod.out$X[(q+1):p,(q+1):p])
     vertx <- log10(abs(vertx))
     plot(vertx, ylim=c(min(off.d), 0))
-    title(main="Vertices")
+    title(main="Diff. of 'Vertices' elements")
     abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
   }
   #
@@ -214,7 +221,7 @@ pdRCON.check <- function(mod.out){
     inside.edges <- inside.edges[upper.tri(inside.edges, diag=FALSE)]
     inside.edges <- log10(abs(inside.edges))
     plot(inside.edges, ylim=c(min(off.d), 0))
-    title(main="Inside")
+    title(main="Diff. of 'Inside' elements")
     abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
   }
   #
@@ -224,7 +231,7 @@ pdRCON.check <- function(mod.out){
     across.edges <- across.edges[upper.tri(across.edges, diag=FALSE)]
     across.edges <- log10(abs(across.edges))
     plot(across.edges, ylim=c(min(off.d), 0))
-    title(main="Across")
+    title(main="Diff. of 'Across' elements")
     abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
   }
   plot(1, type = "n", axes=FALSE, xlab="", ylab="")
@@ -305,9 +312,9 @@ admm.pdglasso <- function(S,
                      rho2        = 1,
                      varying.rho1= TRUE,
                      varying.rho2= TRUE,
-                     max_iter    = 1000,
-                     eps.abs     = 1e-12,
-                     eps.rel     = 1e-12,
+                     max_iter    = 5000,
+                     eps.abs     = 1e-6,
+                     eps.rel     = 1e-6,
                      verbose     = FALSE,
                      print.type  = TRUE) {
   #
@@ -441,7 +448,7 @@ admm.inner <- function(X,
                         lambda2,
                         rho2        = 1,
                         varying.rho2= TRUE,
-                        max_iter_int= 1000,
+                        max_iter_int= 5000,
                         eps.abs   = 1e-12,
                         eps.rel   = 1e-8,
                         verbose_int = FALSE,
@@ -532,9 +539,7 @@ admm.inner <- function(X,
 #'
 #' @param S a sample covariance matrix with the block structure described in [`pdglasso-package`].
 #' @param pdColG pdColG a matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.
-#' @param max_iter an integer; maximum number of iterations to be run in case
-#'   the algorithm does not converge.
-#' @param verbose a logical (defalut `FALSE`) that is passed to the function [`admm.pdglasso`].
+#' @inheritParams admm.pdglasso
 #'
 #' @return Either a matrix, that is the maximum likelihood estimate of
 #'   \eqn{K=\Sigma^{-1}} under the pdRCON model represented by `pdColG`, or
@@ -553,8 +558,11 @@ admm.inner <- function(X,
 #' S <- var(toy_data$sample.data)
 #' K.hat <- pdRCON.mle(S, toy_data$pdColG)
 #'
-pdRCON.mle <- function(S, pdColG, max_iter=1000, verbose = FALSE){
-
+pdRCON.mle <- function(S, pdColG,
+                       eps.rel=1e-6,
+                       eps.abs=1e-6,
+                       max_iter=5000,
+                       verbose=FALSE){
   # make vector lambda1
   lambda1 <- (mat2vec(pdColG)==0)
   lambda1[lambda1] <- Inf
@@ -567,7 +575,13 @@ pdRCON.mle <- function(S, pdColG, max_iter=1000, verbose = FALSE){
   lambda2[lambda2] <- Inf
 
   # run SGL algorithm
-  out.admm <- admm.pdglasso(S, lambda1 = lambda1, lambda2 = lambda2, max_iter=max_iter, print.type=FALSE, verbose=verbose)
+  out.admm <- admm.pdglasso(S, lambda1 = lambda1,
+                            lambda2 = lambda2,
+                            type=c("V","I","A"),
+                            eps.rel = eps.rel,
+                            eps.abs = eps.abs,
+                            max_iter= max_iter,
+                            print.type=FALSE)
   K.hat <- NULL
   if(out.admm$internal.par$converged) K.hat = out.admm$X
   return(K.hat)
@@ -726,9 +740,13 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 #' compute.eBIC(S,mod,n=60,gamma.eBIC=0.5)
 compute.eBIC <- function(S,mod,n,
                          gamma.eBIC=0.5,
-                         max_iter=1000){
+                         max_iter=5000){
   G <- pdColG.get(mod)
-  K <- pdRCON.mle(S,G$pdColG, max_iter=max_iter)
+  K <- pdRCON.mle(S,
+                  pdColG = G$pdColG,
+                  eps.rel = mod$internal.par$eps.rel,
+                  eps.abs = mod$internal.par$eps.abs,
+                  max_iter = mod$internal.par$max_iter)
   if(is.null(K)){
   out.vec <- rep(NA,3)
   }else{
