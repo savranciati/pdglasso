@@ -1,5 +1,7 @@
 ## Graphical Lasso for Coloured Gaussian Graphical Models for Paired Data
 
+**THIS PACKAGE IS STILL A WORK IN PROGRESS. FILES AND FUNCTIONS ARE NOT FINAL.**
+
 How to install the package:
 
 ```{r message = FALSE, warning = FALSE}
