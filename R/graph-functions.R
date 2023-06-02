@@ -52,20 +52,6 @@ pdColG.get <- function(admm.out,
   # empty be default = no symmetric concentrations
   mat_sym <- matrix(0,p,p)
 
-  ### between symmetries (LL, RR)
-  if(grepl("V",acronyms,fixed=T)){
-    # computes the vertices differences (in absolute values)
-    # | diag(LL)-diag(RR) |
-    diff_vertex  <- abs(diag(X)[1:q]-diag(X)[(q+1):p])
-    # create temporary (1:q) half-diag where all vertex values are equal
-    temp_vertex <- rep(1,q)
-    # any | LL_ii - RR_i'i' | > th2 is too large and
-    # thus LL_ii != RR_i'i'
-    temp_vertex[diff_vertex>th2] <- 0
-    temp_vertex <- c(temp_vertex,temp_vertex)
-    diag(mat_sym) <- temp_vertex
-  }
-
   ### between symmetries (LL, RR)  TOGLIERE LA DIAGONALE DAL BLOCCO I
   if(grepl("I",acronyms,fixed=T)){
     # checks if there is at least one edge at each (LL_ij, RR_ij)
@@ -109,6 +95,21 @@ pdColG.get <- function(admm.out,
     # update mat_sym with information on equal across concentrations
     mat_sym <- across.block(mat_sym,temp_across)
     mat_sym <- pmax(mat_sym, t(mat_sym))
+  }
+
+
+  ### between symmetries (LL, RR)
+  if(grepl("V",acronyms,fixed=T)){
+    # computes the vertices differences (in absolute values)
+    # | diag(LL)-diag(RR) |
+    diff_vertex  <- abs(diag(X)[1:q]-diag(X)[(q+1):p])
+    # create temporary (1:q) half-diag where all vertex values are equal
+    temp_vertex <- rep(1,q)
+    # any | LL_ii - RR_i'i' | > th2 is too large and
+    # thus LL_ii != RR_i'i'
+    temp_vertex[diff_vertex>th2] <- 0
+    temp_vertex <- c(temp_vertex,temp_vertex)
+    diag(mat_sym) <- temp_vertex
   }
 
 

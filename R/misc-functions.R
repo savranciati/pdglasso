@@ -142,11 +142,8 @@ across.block <- function(X, new.val=NULL){
 #'
 max.lams <- function(S){
   max.l1 <- max(abs(S[upper.tri(S, diag=FALSE)]))
-  diff.inside <- abs(LL.block(S)-RR.block(S))
-  diff.diag <- diag(diff.inside)/2
-  diag(diff.inside) <- 0
-  diff.across <- abs(across.block(S)-t(across.block(S)))
-  diag(diff.across) <- 0
-  max.l2 <- max(max(diff.inside),max(diff.diag),max(diff.across))
+  diff.inside <- abs(LL.block(S)-RR.block(S))/2
+  diff.across <- abs(across.block(S)-t(across.block(S)))/2
+  max.l2 <- max(max(diff.inside),max(diff.across))
   return(c(max.l1,max.l2))
 }
