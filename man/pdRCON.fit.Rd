@@ -8,8 +8,7 @@ criterion.}
 pdRCON.fit(
   S,
   n,
-  n.l1 = 10,
-  n.l2 = 10,
+  lams = NULL,
   gamma.eBIC = 0.5,
   type = c("vertex", "inside.block.edge", "across.block.edge"),
   force.symm = NULL,
@@ -32,9 +31,11 @@ described in \code{\link{pdglasso-package}}.}
 
 \item{n}{the sample size of the data used to compute the sample covariance matrix S.}
 
-\item{n.l1}{the number of values in the grid of candidates for \code{lambda1}.}
-
-\item{n.l2}{the number of values in the grid of candidates for \code{lambda2}.}
+\item{lams}{a 2x3 matrix; first row refers to \code{lambda1} and second row to
+\code{lambda2}; for each row, values are (i) minimum value for the grid; (ii)
+maximum value for the grid; (iii) number of points in the grid; if \code{NULL}
+defaulta values are used, i.e. from max.lams to max.lams/10, and 10 grid
+points.}
 
 \item{gamma.eBIC}{the parameter for the eBIC computation. gamma=0 is equivalent to BIC.}
 
@@ -78,6 +79,7 @@ output in the console.}
 A list with the following components:
 \itemize{
 \item \code{model} the final model.
+\item \code{lambda.grid} the grid of values used for \code{lambda1} and \code{lambda2.}
 \item \code{best.lambdas} the selected values of \code{lambda1} and \code{lambda2} according to eBIC criterion.
 \item \code{l1.path} a matrix containing the grid values for \code{lambda1} as well as quantities used in eBIC computation.
 \item \code{l2.path} a matrix containing the grid values for \code{lambda2} as well as quantities used in eBIC computation.

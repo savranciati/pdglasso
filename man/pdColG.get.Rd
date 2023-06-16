@@ -19,7 +19,7 @@ pdColG.get(admm.out, th1 = NULL, th2 = NULL, print.summary = FALSE)
 a list with the following components:
 \itemize{
 \item \code{pdColG} a matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.
-\item \code{dof} the degrees of freedom of the pdRCON model represented by \code{pdColg}.
+\item \code{n.par} the number of parameters of the pdRCON model represented by \code{pdColg}.
 }
 }
 \description{

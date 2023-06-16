@@ -133,13 +133,20 @@ across.block <- function(X, new.val=NULL){
   }
 }
 
-#' Computes maximum theoretical values for lambda_1 and lambda_2
+#' Compute maximum theoretical values for `lambda1` and `lambda2`.
+#'
+#' Computes the maximum values for `lambda1` and `lambda2` such that:
+#' - if max of `lambda1` is used, the estimated concentration matrix will be diagonal;
+#' - if max of `lambda2` is used, the estimated concentration matrix will be fully symmetric.
 #'
 #' @param S a covariance matrix.
 #'
 #' @return a vector of two elements.
-#' @noRd
 #'
+#' @export
+#' @examples
+#' S <- cov(toy_data$sample.data$)
+#' max.lams(S)
 max.lams <- function(S){
   max.l1 <- max(abs(S[upper.tri(S, diag=FALSE)]))
   diff.inside <- abs(LL.block(S)-RR.block(S))/2

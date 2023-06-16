@@ -13,7 +13,7 @@
 #'
 #' * `pdColG` a matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.
 #'
-#' * `dof` the degrees of freedom of the pdRCON model represented by `pdColg`.
+#' * `n.par` the number of parameters of the pdRCON model represented by `pdColg`.
 #' @export
 #'
 #' @examples
@@ -123,12 +123,12 @@ pdColG.get <- function(admm.out,
                    sum(across.block(mat_sym)[upper.tri(across.block(mat_sym),diag=F)])
   # number of pairs of symmetric diagonal concentrations
   nsym_diag <- sum(diag(mat_sym))/2
-  dof <- tot.dof - nsym_offdiag - nsym_diag
+  n.par <- tot.dof - nsym_offdiag - nsym_diag
   #
   out <- list()
   out$pdColG   <- mat_graph+mat_sym
   dimnames(out$pdColG) <- dimnames(admm.out$X)
-  out$dof <- dof
+  out$n.par <- n.par
   if(print.summary){
     pdColG.summarize(out$pdColG)
     cat("\n\n")

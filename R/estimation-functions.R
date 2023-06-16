@@ -12,15 +12,18 @@
 #'
 #' @inheritParams admm.pdglasso
 #' @param n the sample size of the data used to compute the sample covariance matrix S.
-#' @param n.l1 the number of values in the grid of candidates for `lambda1`.
-#' @param n.l2 the number of values in the grid of candidates for `lambda2`.
+#' @param lams a 2x3 matrix; first row refers to `lambda1` and second row to
+#'   `lambda2`; for each row, values are (i) minimum value for the grid; (ii)
+#'   maximum value for the grid; (iii) number of points in the grid; if `NULL`
+#'   defaulta values are used, i.e. from max.lams to max.lams/10, and 10 grid
+#'   points.
 #' @param gamma.eBIC the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
 #' @param progress a logical value; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`
 #'
 #' @return A list with the following components:
 #'
 #' * `model` the final model.
-#'
+#' * `lambda.grid` the grid of values used for `lambda1` and `lambda2.`
 #' * `best.lambdas` the selected values of `lambda1` and `lambda2` according to eBIC criterion.
 #' * `l1.path` a matrix containing the grid values for `lambda1` as well as quantities used in eBIC computation.
 #' * `l2.path` a matrix containing the grid values for `lambda2` as well as quantities used in eBIC computation.
@@ -36,8 +39,7 @@
 #' pdRCON.fit(S,n=60)
 pdRCON.fit <- function(S,
                        n,
-                       n.l1        = 10,
-                       n.l2        = 10,
+                       lams        = NULL,
                        gamma.eBIC  = 0.5,
                        type        = c("vertex", "inside.block.edge", "across.block.edge"),
                        force.symm  = NULL,
@@ -54,18 +56,25 @@ pdRCON.fit <- function(S,
                        print.type  = TRUE){
   start.time <- Sys.time()
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
-  # min.ls <- log(min(abs(S)))
-  max.ls <- log(max.lams(S))
-  min.ls <- max.ls/c(n.l1,n.l2)
+
+  if(is.null(lams)){
+    lams <- matrix(0,2,3)
+    lams[,2] <- max.lams(S)
+    lams[,1] <- lams[,2]/10
+    lams[,3] <- c(10,10)
+  }
+  rownames(lams) <- c("l1","l2")
+  colnames(lams) <- c("min","max","n.pts")
 
   ## Prepare temp objects
-  eBIC.l1 <-  matrix(0,n.l1,4)
-  eBIC.l2 <-  matrix(0,n.l2,4)
+  eBIC.l1 <-  matrix(0,lams[1,3],4)
+  eBIC.l2 <-  matrix(0,lams[2,3],4)
 
   ### First grid search for lambda_1, with lambda_2=0
-  l1.vec <- exp(seq(min.ls[1],max.ls[1], length.out=n.l1))
+  # l1.vec <- exp(seq(min.ls[1],max.ls[1], length.out=n.l1))
+  l1.vec <- seq(lams[1,1], lams[1,2], length.out=lams[1,3])
   l1.vec <- sort(l1.vec, decreasing=TRUE)
-  for(i in 1:n.l1){
+  for(i in 1:lams[1,3]){
     if(progress==TRUE) cat("Searching over lambda1 grid (",i,"/",n.l1,").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
@@ -96,9 +105,9 @@ pdRCON.fit <- function(S,
   if(progress==TRUE) cat("--- \n", sep="")
 
   ### Second grid search for lambda_2, with lambda_1=best.l1
-  l2.vec <- exp(seq(min.ls[2],max.ls[2], length.out=n.l2))
+  l2.vec <- seq(lams[2,1],lams[2,2], length.out=lams[2,3])
   l2.vec <- sort(l2.vec, decreasing=TRUE)
-  for(i in 1:n.l2){
+  for(i in 1:lams[2,3]){
     if(progress==TRUE) cat("Searching over lambda2 grid (",i,"/",n.l2,").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=best.l1,
@@ -155,6 +164,7 @@ pdRCON.fit <- function(S,
   time.exec <- Sys.time()-start.time
   return(list(model=mod.out,
               best.lambdas=c(best.l1,best.l2),
+              lambda.grid=lams,
               l1.path=l1.path,
               l2.path=l2.path,
               time.exec=time.exec))
@@ -752,13 +762,13 @@ compute.eBIC <- function(S,mod,n,
   }else{
     S <- S*(n-1)/n
     p <- dim(S)[1]
-    dof <- G$dof
+    n.par <- G$n.par
     log.lik <- log(det(K))-sum(S*K)
-    eBIC <- -n*log.lik+log(n)*dof+4*dof*gamma.eBIC*log(p)
+    eBIC <- -n*log.lik+log(n)*n.par+4*n.par*gamma.eBIC*log(p)
     #### corrected with n/2 instead of 1/2 in front of the loglik, so -2*(n/2)*loglik=-n*loglik
-    out.vec <- c(eBIC,log.lik,dof)
+    out.vec <- c(eBIC,log.lik,n.par)
   }
-  names(out.vec) <- c("eBIC     ","  log-Likelihood  ","DF (estimated.)")
+  names(out.vec) <- c("eBIC     ","  log-Likelihood  ","num. of. params")
   return(out.vec)
 }
 
