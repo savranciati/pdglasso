@@ -144,6 +144,7 @@ across.block <- function(X, new.val=NULL){
 #' @return a vector of two elements.
 #'
 #' @export
+#'
 #' @examples
 #' S <- cov(toy_data$sample.data$)
 #' max.lams(S)
