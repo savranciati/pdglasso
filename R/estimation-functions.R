@@ -59,7 +59,7 @@ pdRCON.fit <- function(S,
 
   if(is.null(lams)){
     lams <- matrix(0,2,3)
-    lams[,2] <- max.lams(S)
+    lams[,2] <- lams.max(S)
     lams[,1] <- lams[,2]/10
     lams[,3] <- c(10,10)
   }

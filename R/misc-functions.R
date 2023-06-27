@@ -147,8 +147,8 @@ across.block <- function(X, new.val=NULL){
 #'
 #' @examples
 #' S <- cov(toy_data$sample.data$)
-#' max.lams(S)
-max.lams <- function(S){
+#' lams.max(S)
+lams.max <- function(S){
   max.l1 <- max(abs(S[upper.tri(S, diag=FALSE)]))
   diff.inside <- abs(LL.block(S)-RR.block(S))/2
   diff.across <- abs(across.block(S)-t(across.block(S)))/2
