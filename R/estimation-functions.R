@@ -75,7 +75,7 @@ pdRCON.fit <- function(S,
   l1.vec <- seq(lams[1,1], lams[1,2], length.out=lams[1,3])
   l1.vec <- sort(l1.vec, decreasing=TRUE)
   for(i in 1:lams[1,3]){
-    if(progress==TRUE) cat("Searching over lambda1 grid (",i,"/",n.l1,").\n", sep="")
+    if(progress==TRUE) cat("Searching over lambda1 grid (",i,"/",lams[1,3],").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
                              lambda2=0,
@@ -108,7 +108,7 @@ pdRCON.fit <- function(S,
   l2.vec <- seq(lams[2,1],lams[2,2], length.out=lams[2,3])
   l2.vec <- sort(l2.vec, decreasing=TRUE)
   for(i in 1:lams[2,3]){
-    if(progress==TRUE) cat("Searching over lambda2 grid (",i,"/",n.l2,").\n", sep="")
+    if(progress==TRUE) cat("Searching over lambda2 grid (",i,"/",lams[2,3],").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=best.l1,
                              lambda2=l2.vec[i],
