@@ -212,6 +212,7 @@ pdRCON.check <- function(mod.out){
   # off-diagonal
   off.d <- mod.out$X[upper.tri(mod.out$X, diag=FALSE)]
   off.d <- log10(abs(off.d))
+  off.d <- off.d[is.finite(off.d)]
   plot(off.d, ylim=c(min(off.d), 0))
   title(main="Off-diagonal elements")
   abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
@@ -220,6 +221,7 @@ pdRCON.check <- function(mod.out){
   if(grepl("V",acronyms,fixed=T)){
     vertx <- diag(mod.out$X[1:q, 1:q]-mod.out$X[(q+1):p,(q+1):p])
     vertx <- log10(abs(vertx))
+    vertx <- vertx[is.finite(vertx)]
     plot(vertx, ylim=c(min(off.d), 0))
     title(main="Diff. of 'Vertices' elements")
     abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
@@ -230,6 +232,7 @@ pdRCON.check <- function(mod.out){
     inside.edges <- LL.block(mod.out$X)-RR.block(mod.out$X)
     inside.edges <- inside.edges[upper.tri(inside.edges, diag=FALSE)]
     inside.edges <- log10(abs(inside.edges))
+    inside.edges <- inside.edges[is.finite(inside.edges)]
     plot(inside.edges, ylim=c(min(off.d), 0))
     title(main="Diff. of 'Inside' elements")
     abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
@@ -240,6 +243,7 @@ pdRCON.check <- function(mod.out){
     across.edges <- across.block(mod.out$X)-t(across.block(mod.out$X))
     across.edges <- across.edges[upper.tri(across.edges, diag=FALSE)]
     across.edges <- log10(abs(across.edges))
+    across.edges <- across.edges[is.finite(across.edges)]
     plot(across.edges, ylim=c(min(off.d), 0))
     title(main="Diff. of 'Across' elements")
     abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
