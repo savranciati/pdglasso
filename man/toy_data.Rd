@@ -20,7 +20,12 @@ with zero mean vector and concentration matrix \code{K}.
 toy_data
 }
 \description{
-Data simulated by the function \code{\link{pdRCON.simulate}} with a call:
-\verb{toy_data <- pdRCON.simulate(20, type=c("v", "i","a), force.symm=NULL, dens=0.3)}
+Data simulated by the function \code{\link{pdRCON.simulate}} with parameters:
+\itemize{
+\item \code{p=20}
+\item \verb{type=c("v", "i","a)}
+\item \code{force.symm=NULL}
+\item \code{dens=0.3}
+}
 }
 \keyword{datasets}

@@ -1,7 +1,10 @@
 #' Toy dataset generated through [`pdRCON.simulate`] function
 #'
-#' Data simulated by the function [`pdRCON.simulate`] with a call:
-#' `toy_data <- pdRCON.simulate(20, type=c("v", "i","a), force.symm=NULL, dens=0.3)`
+#' Data simulated by the function [`pdRCON.simulate`] with parameters:
+#' * `p=20`
+#' * `type=c("v", "i","a")`
+#' * `force.symm=NULL`
+#' * `dens=0.3`
 #'
 #' @format ## `toy_data`
 #' A list with the following components:

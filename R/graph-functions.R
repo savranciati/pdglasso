@@ -197,22 +197,22 @@ pdColG.summarize <- function(pdColG, print.summary=TRUE){
   #
   if(print.summary){
     cat("\nOVERALL\n")
-    cat("Number of vertices: ", p, " \n")
-    cat("Number of edges: ", n.edges, " \n")
-    cat("Graph density  : ", round(n.edges/(p*(p-1)/2), 4) , " \n \n")
+    cat("number of vertices: ", p, " \n")
+    cat("number of edges: ", n.edges, " \n")
+    cat("graph density  : ", round(n.edges/(p*(p-1)/2), 4) , " \n \n")
     #
     cat("VERTICES\n")
     cat("number of coloured vertices: ", n.col.vertices, " \n \n", sep="")
     #
     cat("INSIDE BLOCK EDGES\n")
     cat("number of edges: ", n.inside.edges, "\n", sep="")
-    cat("number of uncoloured symmetric  edges: ", n.UNcol.symm.inside.edges, "\n", sep="")
-    cat("number of coloured  (symmetric) edges: ", n.col.inside.edges, " \n \n", sep="")
+    cat("number of uncoloured symmetric edges: ", n.UNcol.symm.inside.edges, "\n", sep="")
+    cat("number of coloured  symmetric edges: ", n.col.inside.edges, " \n \n", sep="")
     #
     cat("ACROSS BLOCK EDGES\n")
     cat("number of edges: ", n.across.edges, "\n", sep="")
-    cat("number of uncoloured symmetric  edges: ", n.UNcol.symm.across.edges, "\n", sep="")
-    cat("number of coloured  (symmetric) edges: ", n.col.across.edges, " \n \n", sep="")
+    cat("number of uncoloured symmetric edges: ", n.UNcol.symm.across.edges, "\n", sep="")
+    cat("number of coloured  symmetric edges: ", n.col.across.edges, " \n \n", sep="")
   }
   overall <- list(n.vertices=p, n.edges=n.edges)
   vertex <- list(n.col.vertices=n.col.vertices)

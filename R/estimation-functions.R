@@ -575,8 +575,7 @@ admm.inner <- function(X,
 pdRCON.mle <- function(S, pdColG,
                        eps.rel=1e-6,
                        eps.abs=1e-6,
-                       max_iter=5000,
-                       verbose=FALSE){
+                       max_iter=5000){
   # make vector lambda1
   lambda1 <- (mat2vec(pdColG)==0)
   lambda1[lambda1] <- Inf
