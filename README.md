@@ -19,6 +19,8 @@ Inside this repository we made publicly available a .zip file containing:
 * *breast_cancer.RData*, the dataset used in Section 6 of the manuscript
 * *breast_cancer_analysis.r*, the R script to reproduce the analysis of Section 6 of the manuscript.
 
+Also, for replicability, we deposit a .zip version of the entire package and environment 'freezed' at 27th of July 2023.
+
 ## Package overview
 
 An RCON model for paired data (pdRCON model) is a coloured Gaussian Graphical Model (GGM) where the $p$ variables are partitioned into a Left block $L$ and a right block $R$. Every variable in the left block has an homologous variable in the right block and certain types of equality *R*estrictions on the entries of the *CON*centration matrix $K$ are allowed. Every pdRCON model is uniquely represented by a Coloured Graph for Paired Data (pdColG) implemented in the form of a $p\times p$ symmetric matrix, where every entry is one of the values 0, 1 or 2, as follows: 
