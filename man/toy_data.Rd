@@ -23,7 +23,7 @@ toy_data
 Data simulated by the function \code{\link{pdRCON.simulate}} with parameters:
 \itemize{
 \item \code{p=20}
-\item \verb{type=c("v", "i","a)}
+\item \code{type=c("v", "i","a")}
 \item \code{force.symm=NULL}
 \item \code{dens=0.3}
 }

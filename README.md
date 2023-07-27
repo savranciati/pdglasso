@@ -1,8 +1,6 @@
-## Graphical Lasso for Coloured Gaussian Graphical Models for Paired Data
+# Graphical Lasso for Coloured Gaussian Graphical Models for Paired Data
 
-**THIS PACKAGE IS STILL A WORK IN PROGRESS. FILES AND FUNCTIONS ARE NOT FINAL.**
-
-How to install the package:
+## How to install the package:
 
 ```{r message = FALSE, warning = FALSE}
 library(devtools)
@@ -10,7 +8,18 @@ install_github("savranciati/pdglasso", build_vignettes=FALSE)
 library(pdglasso)
 ```
 
-## ---
+## Relevant paper for the package
+
+Ranciati, S., Roverato, A., (2023). "On the application of Gaussian graphical models to paired data problems", arXiv pre-print, https://arxiv.org/abs/2307.14160
+
+### Code reproducibility and data availability
+
+Inside this repository we made publicly available a .zip file containing:
+* *raw_data*, a folder containing the original data and some metadata information;
+* *breast_cancer.RData*, the dataset used in Section 6 of the manuscript
+* *breast_cancer_analysis.r*, the R script to reproduce the analysis of Section 6 of the manuscript.
+
+## Package overview
 
 An RCON model for paired data (pdRCON model) is a coloured Gaussian Graphical Model (GGM) where the $p$ variables are partitioned into a Left block $L$ and a right block $R$. Every variable in the left block has an homologous variable in the right block and certain types of equality *R*estrictions on the entries of the *CON*centration matrix $K$ are allowed. Every pdRCON model is uniquely represented by a Coloured Graph for Paired Data (pdColG) implemented in the form of a $p\times p$ symmetric matrix, where every entry is one of the values 0, 1 or 2, as follows: 
 
@@ -34,5 +43,3 @@ For the in-package documentation please check:
 ```{r message = FALSE, warning = FALSE}
 help("pdglasso-package")
 ```
-
-## Examples

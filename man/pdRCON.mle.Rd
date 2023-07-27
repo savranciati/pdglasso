@@ -4,14 +4,7 @@
 \alias{pdRCON.mle}
 \title{Maximum likelihood estimation}
 \usage{
-pdRCON.mle(
-  S,
-  pdColG,
-  eps.rel = 1e-06,
-  eps.abs = 1e-06,
-  max_iter = 5000,
-  verbose = FALSE
-)
+pdRCON.mle(S, pdColG, eps.rel = 1e-06, eps.abs = 1e-06, max_iter = 5000)
 }
 \arguments{
 \item{S}{a sample covariance matrix with the block structure described in \code{\link{pdglasso-package}}.}
@@ -26,9 +19,6 @@ of primal and dual residuals of the ADMM algorithm.}
 
 \item{max_iter}{an integer; maximum number of iterations to be run in case
 the algorithm does not converge.}
-
-\item{verbose}{a logical; if \code{TRUE} the progress (and internal convergence of
-inner loop) is shown in the console while the algorithm is running.}
 }
 \value{
 Either a matrix, that is the maximum likelihood estimate of

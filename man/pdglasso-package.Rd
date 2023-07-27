@@ -129,6 +129,8 @@ encode coloured edges.
 }
 
 \references{
+Ranciati, S., Roverato, A., (2023). On the application of Gaussian graphical models to paired data problems. \emph{arXiv pre-print}. \url{https://arxiv.org/abs/2307.14160}
+
 Ranciati, S., Roverato, A., Luati, A. (2021). Fused graphical lasso for brain networks with symmetries. \emph{Journal of the Royal Statistical Society Series C: Applied Statistics}, \emph{70}(5), 1299-1322. \url{https://doi.org/10.1111/rssc.12514}
 
 Højsgaard, S., Lauritzen, S. L. (2008). Graphical Gaussian models with edge and vertex symmetries. \emph{Journal of the Royal Statistical Society Series B: Statistical Methodology}, \emph{70}(5), 1005-1027 \url{https://doi.org/10.1111/j.1467-9868.2008.00666.x}
