@@ -154,9 +154,9 @@ pdColG.get <- function(admm.out,
 #'
 #' * `vertex`  a list with the number of coloured vertices of  \eqn{\mathcal{G}}.
 #'
-#' * `inside`  a list with the number of inside block edges, the number of uncolored symmetric and coloured inside block edges of \eqn{\mathcal{G}}.
+#' * `inside`  a list with the number of inside-block edges, the number of uncolored symmetric and coloured inside block edges of \eqn{\mathcal{G}}.
 #'
-#' * `across`  a list with the number of across block edges, the number of uncolored symmetric and coloured across block edges of \eqn{\mathcal{G}}.
+#' * `across`  a list with the number of across-block edges, the number of uncolored symmetric and coloured across block edges of \eqn{\mathcal{G}}.
 #'
 #' If `print.summary=TRUE` some summary statistics are also printed on the console
 #'
@@ -179,12 +179,12 @@ pdColG.summarize <- function(pdColG, print.summary=TRUE){
   # summary statistics for vertices
   n.col.vertices <- 2*sum(vertex.sym)
 
-  # summary statistics for inside block edges
+  # summary statistics for inside-block edges
   n.UNcol.symm.inside.edges <- 2*sum(X$G[1:q, 1:q]*X$G[(q+1):p, (q+1):p])
   n.col.inside.edges   <- 2*sum(X$G.sym)
   n.inside.edges       <- sum(X$G[1:q, 1:q])+sum(X$G[(q+1):p, (q+1):p])+n.col.inside.edges
 
-  # summary statistics for across block edges
+  # summary statistics for across-block edges
   Gtmp <- X$G[1:q, (q+1):p]
   diag(Gtmp) <- 0
   n.UNcol.symm.across.edges <- sum(Gtmp*t(Gtmp))
@@ -204,12 +204,12 @@ pdColG.summarize <- function(pdColG, print.summary=TRUE){
     cat("VERTICES\n")
     cat("number of coloured vertices: ", n.col.vertices, " \n \n", sep="")
     #
-    cat("INSIDE BLOCK EDGES\n")
+    cat("INSIDE-BLOCK EDGES\n")
     cat("number of edges: ", n.inside.edges, "\n", sep="")
     cat("number of uncoloured symmetric edges: ", n.UNcol.symm.inside.edges, "\n", sep="")
     cat("number of coloured  symmetric edges: ", n.col.inside.edges, " \n \n", sep="")
     #
-    cat("ACROSS BLOCK EDGES\n")
+    cat("ACROSS-BLOCK EDGES\n")
     cat("number of edges: ", n.across.edges, "\n", sep="")
     cat("number of uncoloured symmetric edges: ", n.UNcol.symm.across.edges, "\n", sep="")
     cat("number of coloured  symmetric edges: ", n.col.across.edges, " \n \n", sep="")

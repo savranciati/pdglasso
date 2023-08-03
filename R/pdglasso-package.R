@@ -16,8 +16,8 @@
 #' A pdRCON model is a Gaussian Graphical Model with additional equality
 #' restrictions on the entries of the concentration matrix. In the paired data
 #' framework, there are three different types of equality restrictions of
-#' interest, identified with the names *vertex*, *inside block edge* and
-#' *across block edge*, respectively. Relevant submodel classes can be specified both
+#' interest, identified with the names *vertex*, *inside-block edge* and
+#' *across-block edge*, respectively. Relevant submodel classes can be specified both
 #' by allowing different combinations of restriction types and by forcing
 #' different types of fully symmetric structures. In this package, different
 #' submodel classes are identified by the arguments `type` and `force.symm` and
@@ -36,28 +36,29 @@
 #' variables in \eqn{R}, thereby identifying a pair of homologous edges. If both
 #' edges are present in the graph the corresponding off-diagonal entries of
 #' \eqn{K} can be constrained to have equal value. These type of edges are
-#' referred to as *coloured symmetric inside block edges*. Different types of
+#' referred to as *coloured symmetric inside-block edges*. Different types of
 #' submodel classes of interest may be obtained by (i) not allowing coloured
-#' inside block edges, (ii) allowing both coloured and uncoloured inside block
-#' edges and (iii) allowing only coloured inside block edges.
+#' inside-block edges, (ii) allowing both coloured and uncoloured inside-block
+#' edges and (iii) allowing only coloured inside-block edges.
 #'
-#'   * We say that two variables are *across-block* if one variable belongs to \eqn{L}
+#'   * We say that two variables are
+#'   *across-block* if one variable belongs to \eqn{L}
 #' and the other to \eqn{R}. For every pair of non-homologous across-block
 #' variables there exists an homologous pair across-block variables, thereby
 #' identifying a pair of homologous edges. If both edges are present in the
 #' graph the corresponding off-diagonal entries of \eqn{K} can be constrained to
 #' have equal value. These type of edges are referred to as *coloured symmetric
-#' across block edges*. Different types of submodel classes of interest may be
-#' obtained by (i) not allowing coloured across block edges, (ii) allowing both
+#' across-block edges*. Different types of submodel classes of interest may be
+#' obtained by (i) not allowing coloured across-block edges, (ii) allowing both
 #' coloured and uncoloured across block edges and (iii) allowing only coloured
-#' across block edges, with the exception of edges joining a variable in \eqn{L}
+#' across-block edges, with the exception of edges joining a variable in \eqn{L}
 #' with its homologous in \eqn{R}.
 #'
 #' * We remark that every coloured edge belongs to a pair of coloured symmetric
-#' edges, either inside or across blocks. On the other hand, for an uncolored
+#' edges, either inside- or across- blocks. On the other hand, for an uncolored
 #' edge its homologous edge may or may  not be present in the graph. In the case
 #' where an uncoloured edge and its homologous are both present we say that they
-#' form a pair of *uncoloured symmetric edges*, either inside or across blocks.
+#' form a pair of *uncoloured symmetric edges*, either inside- or across- blocks.
 #'
 #'
 #' @section Use of the arguments `type` and `force.symm` to specify a submodel class:
@@ -73,13 +74,11 @@
 #'  allowed and, if in addition also `force.symm` contains the string
 #'  `"vertex"`, then all vertices are coloured.
 #'
-#'  * If `type` contains the string `"inside.block.edge"` then coloured inside
-#'  block edge symmetries are allowed and, if in addition also `force.symm`
+#'  * If `type` contains the string `"inside.block.edge"` then coloured inside-block edge symmetries are allowed and, if in addition also `force.symm`
 #'  contains the string `"inside.block.edge"`, then only coloured edges are
 #'  allowed inside blocks.
 #'
-#'  * If `type` contains the string `"across.block.edge"` then coloured across
-#'  block edge symmetries are allowed and, if in addition also `force.symm`
+#'  * If `type` contains the string `"across.block.edge"` then coloured across-block edge symmetries are allowed and, if in addition also `force.symm`
 #'  contains the string `"across.block.edge"`, then only coloured edges are
 #'  allowed across blocks,  with the exception of edges joining a variable in
 #'  \eqn{L} with its homologous in \eqn{R}.
@@ -101,7 +100,7 @@
 #'   instance, the functions that receive in input a sample covariance matrix
 #'   assume that the rows and columns of this matrix are ordered according to
 #'   these rules, so that it can be partitioned into four \eqn{q\times q}
-#'   submatrices naturally associated with the inside and across group
+#'   submatrices naturally associated with the inside- and across- block
 #'   components.
 #'
 #' @section Model representation through the `pdColG` matrix:

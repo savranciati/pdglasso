@@ -45,21 +45,20 @@ require(MASS)
 #'   `dens.vertex=1`.
 #'
 #'   The argument `dens.inside` specifies the proportion of coloured symmetric
-#'   inside block edges among the \eqn{q(q-1)/2}, with \eqn{q=p/2}, inside block
+#'   inside-block edges among the \eqn{q(q-1)/2}, with \eqn{q=p/2}, inside-block
 #'   edges. This is used if the string "inside.block.edge" is a component of
 #'   `type`, otherwise it is equivalent to `dens.inside=0`. The overall density
-#'   of inside block edges is obtained by the sum of the densities of coloured
-#'   and uncoloured inside block edges. This is  a value between `dens.inside`
+#'   of inside-block edges is obtained by the sum of the densities of coloured
+#'   and uncoloured inside-block edges. This is  a value between `dens.inside`
 #'   and `dens.inside+dens`. Furthermore, it is exactly equal to `dens` if
 #'   "inside.block.edge" is not a component of `type` and to `dens.inside` if
 #'   "inside.block.edge" is a component of both `type` and `force.symm`.
 #'
-#'   The argument `dens.across` specifies the proportion of coloured symmetric
-#'   across block edges among the potentially coloured \eqn{q(q-1)/2} across
+#'   The argument `dens.across` specifies the proportion of coloured symmetric across-block edges among the potentially coloured \eqn{q(q-1)/2} across-
 #'   block edges. This is used if the string "across.block.edge" is a component
 #'   of `type`, otherwise it is equivalent to `dens.across=0`. The overall
-#'   density of across block edges is obtained by the sum of the densities of
-#'   coloured and uncoloured across block edges. This is  a value between
+#'   density of across-block edges is obtained by the sum of the densities of
+#'   coloured and uncoloured across-block edges. This is  a value between
 #'   `dens.across` and `dens.across+dens`. Furthermore, it is exactly equal  to
 #'   `dens` if "across.block.edge" is not a component of `type`.
 #'
@@ -103,7 +102,7 @@ require(MASS)
 #'
 #' # generates a pdRCON model on 20 variables, a concentration matrix
 #' # for this model and a sample of size 50
-#' # all vertices are coloured and no coloured across block edge is allowed
+#' # all vertices are coloured and no coloured across-block edge is allowed
 #'
 #' set.seed(123)
 #' GenMod <- pdRCON.simulate(20, type=c("v", "i"), force.symm=c("v"), sample.size=50, dens=0.20)

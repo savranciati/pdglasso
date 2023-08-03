@@ -190,8 +190,8 @@ pdRCON.fit <- function(S,
 #'
 #' * off-diagonal elements,
 #' * vertices,
-#' * inside block,
-#' * across block.
+#' * inside-block,
+#' * across-block.
 #'
 #' @export
 #'
@@ -231,7 +231,7 @@ pdRCON.check <- function(mod.out){
     abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
   }
   #
-  # inside edges
+  # inside-block edges
   if(grepl("I",acronyms,fixed=T)){
     inside.edges <- LL.block(mod.out$X)-RR.block(mod.out$X)
     inside.edges <- inside.edges[upper.tri(inside.edges, diag=FALSE)]
@@ -242,7 +242,7 @@ pdRCON.check <- function(mod.out){
     abline(h=c(th.rel, th.primal, th.dual), lty=2, col=c("red", "green", "blue"), lwd=2)
   }
   #
-  # across edges
+  # across-block edges
   if(grepl("A",acronyms,fixed=T)){
     across.edges <- across.block(mod.out$X)-t(across.block(mod.out$X))
     across.edges <- across.edges[upper.tri(across.edges, diag=FALSE)]
@@ -669,10 +669,10 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
   # uncoloured vertices and edges
   Bu <- (G==1)
   #
-  # coloured vertices and inside block coloured edges
+  # coloured vertices and inside-block coloured edges
   Bci <- (G[l,l]==2)
   #
-  # across block coloured edges
+  # across-block coloured edges
   Bca <- (G[l,r]==2)
   #
   # missing edges: check zero concentrations
@@ -684,7 +684,7 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
   v  <- c()
   sK <- c()
   #
-  # coloured vertices and inside block coloured edges:
+  # coloured vertices and inside-block coloured edges:
   # check equality constraints in K.mle
   # check likelihood equations in S.mle
   if(any(Bci)){
@@ -695,7 +695,7 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
     v[1]  <- 0
   }
   ##
-  # across block coloured edges:
+  # across-block coloured edges:
   # check equality constraints in K.mle
   # check likelihood equations in S.mle
   if(any(Bca)){
