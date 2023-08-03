@@ -19,7 +19,7 @@ Inside this repository we made publicly available a .zip file containing:
 * *breast_cancer.RData*, the dataset used in Section 6 of the manuscript
 * *breast_cancer_analysis.r*, the R script to reproduce the analysis of Section 6 of the manuscript.
 
-Also, for replicability, we deposit a .zip version of the entire package and environment 'freezed' at 27th of July 2023.
+Also, for replicability, we deposit a .zip version of the entire package and environment 'freezed' at the submission of the arXiv version of the paper.
 
 ## Package overview
 

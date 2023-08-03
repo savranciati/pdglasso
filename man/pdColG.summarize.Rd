@@ -28,7 +28,7 @@ coloured graph for paired data \eqn{\mathcal{G}}. We refer to  \code{\link{pdgla
 matrix encoding a coloured graph for paired and details on how the structural quantities are defined and computed.
 }
 \examples{
-#
+
 pdColG.summarize(toy_data$pdColG)
 
 }

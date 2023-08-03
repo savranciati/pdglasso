@@ -79,8 +79,8 @@ call, as well as convergence information.
 }
 \description{
 By providing a covariance matrix \code{S} and values for \code{lambda1} and \code{lambda2},
-this function estimates a concentration matrix X within the family of pdRCON
-submodel class identified by the arguments \code{type} and \code{force.symm}, using an
+this function estimates a concentration matrix X within the pdRCON
+submodel class, identified by the arguments \code{type} and \code{force.symm}, based on the pdglasso method (Ranciati & Roverato, 2023) using an
 (adaptive) ADMM algorithm. The output is the matrix and a list of internal
 parameters used by the function, together with the specific call with the
 relevant pdRCON submodel class.
@@ -89,4 +89,7 @@ relevant pdRCON submodel class.
 
 S <- cov(toy_data$sample.data)
 admm.pdglasso(S)
+}
+\references{
+Ranciati, S., Roverato, A., (2023). On the application of Gaussian graphical models to paired data problems. \emph{arXiv pre-print}. \url{https://arxiv.org/abs/2307.14160}
 }

@@ -19,7 +19,7 @@ Depending on the acronym stored inside the input object, one or more plots depic
 }
 }
 \description{
-This function produces different plots of values of X in log10 scale,
+This function produces different plots of values of X in \code{\link{log10}} scale,
 depending on the submodel class identified by the acronym stored in the input
 object \code{mod.out}. The user might want to call this function to identify
 what values to pass as arguments \code{th1} and \code{th2} to a call to the function

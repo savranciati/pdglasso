@@ -78,7 +78,7 @@ output in the console.}
 \value{
 A list with the following components:
 \itemize{
-\item \code{model} the final model.
+\item \code{model} selected model; object resulting from the function \code{\link{admm.pdglasso}} with \code{best.lambdas}.
 \item \code{lambda.grid} the grid of values used for \code{lambda1} and \code{lambda2.}
 \item \code{best.lambdas} the selected values of \code{lambda1} and \code{lambda2} according to eBIC criterion.
 \item \code{l1.path} a matrix containing the grid values for \code{lambda1} as well as quantities used in eBIC computation.
@@ -102,5 +102,9 @@ for Paired Data (pdColG) from the selected model.
 }
 \examples{
 S <- cov(toy_data$sample.data)
-pdRCON.fit(S,n=60)
+sel.mod <- pdRCON.fit(S,n=60)
+sel.mod$l1.path
+sel.mod$l2.path
+pdRCON.check(sel.mod$model)
+pdColG.get(sel.mod$model)
 }

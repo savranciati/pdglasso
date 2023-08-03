@@ -2,7 +2,7 @@
 #'
 #' An RCON model for paired data (pdRCON model) is a coloured Gaussian Graphical
 #' Model (GGM) where the \eqn{p} variables are partitioned into a Left block
-#' \eqn{L} and a right block \eqn{R}. The two blocks are not independent, every
+#' \eqn{L} and a Right block \eqn{R}. The two blocks are not independent, every
 #' variable in the left block has an homologous variable in the right block and
 #' certain types of equality `R`estrictions on the entries of the
 #' `CON`centration matrix \eqn{K} are allowed. A pdRCON model is represented by

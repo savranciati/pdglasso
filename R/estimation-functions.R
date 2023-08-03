@@ -22,7 +22,7 @@
 #'
 #' @return A list with the following components:
 #'
-#' * `model` the final model.
+#' * `model` selected model; object resulting from the function [`admm.pdglasso`] with `best.lambdas`.
 #' * `lambda.grid` the grid of values used for `lambda1` and `lambda2.`
 #' * `best.lambdas` the selected values of `lambda1` and `lambda2` according to eBIC criterion.
 #' * `l1.path` a matrix containing the grid values for `lambda1` as well as quantities used in eBIC computation.
@@ -36,7 +36,11 @@
 #'
 #' @examples
 #' S <- cov(toy_data$sample.data)
-#' pdRCON.fit(S,n=60)
+#' sel.mod <- pdRCON.fit(S,n=60)
+#' sel.mod$l1.path
+#' sel.mod$l2.path
+#' pdRCON.check(sel.mod$model)
+#' pdColG.get(sel.mod$model)
 pdRCON.fit <- function(S,
                        n,
                        lams        = NULL,
@@ -158,8 +162,8 @@ pdRCON.fit <- function(S,
 
   l1.path=cbind(l1.vec,eBIC.l1)
   l2.path=cbind(l2.vec,eBIC.l2)
-  colnames(l1.path) <- c("lambda1.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged (1=TRUE)")
-  colnames(l2.path) <- c("lambda2.grid", "eBIC     ","  log-Likelihood  ","DF (estimated.)", "converged (1=TRUE)")
+  colnames(l1.path) <- c("lambda1.grid", "eBIC     ","  log-Likelihood  ","num. of params", "converged (1=TRUE)")
+  colnames(l2.path) <- c("lambda2.grid", "eBIC     ","  log-Likelihood  ","num. of params", "converged (1=TRUE)")
 
   time.exec <- Sys.time()-start.time
   return(list(model=mod.out,
@@ -174,7 +178,7 @@ pdRCON.fit <- function(S,
 
 #' Check orders of magnitude of entries of the estimated concentration matrix X under the pdRCON submodel class considered.
 #'
-#' This function produces different plots of values of X in log10 scale,
+#' This function produces different plots of values of X in [`log10`] scale,
 #' depending on the submodel class identified by the acronym stored in the input
 #' object `mod.out`. The user might want to call this function to identify
 #' what values to pass as arguments `th1` and `th2` to a call to the function
@@ -262,8 +266,8 @@ pdRCON.check <- function(mod.out){
 #' ADMM graphical lasso algorithm for coloured GGMs for paired data.
 #'
 #' By providing a covariance matrix `S` and values for `lambda1` and `lambda2`,
-#' this function estimates a concentration matrix X within the family of pdRCON
-#' submodel class identified by the arguments `type` and `force.symm`, using an
+#' this function estimates a concentration matrix X within the pdRCON
+#' submodel class, identified by the arguments `type` and `force.symm`, based on the pdglasso method (Ranciati & Roverato, 2023) using an
 #' (adaptive) ADMM algorithm. The output is the matrix and a list of internal
 #' parameters used by the function, together with the specific call with the
 #' relevant pdRCON submodel class.
@@ -312,6 +316,7 @@ pdRCON.check <- function(mod.out){
 #'
 #' @export
 #'
+#' @references Ranciati, S., Roverato, A., (2023). On the application of Gaussian graphical models to paired data problems. *arXiv pre-print*. \url{https://arxiv.org/abs/2307.14160}
 #' @examples
 #'
 #' S <- cov(toy_data$sample.data)
@@ -730,11 +735,11 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 
 #' Compute the extended Bayesian Information Criterion (eBIC).
 #'
-#' The function computes the value of the eBIC for a given model and gamma value, for the purpose
+#' This function computes the value of the eBIC for a given model and gamma value, for the purpose
 #' of model selection (see Eq.1 of Feygel & Drton, 2010).
 #'
 #' @param S a sample covariance (or correlation) matrix with the block structure described in [`pdglasso-package`].
-#' @param mod a list, the output object of a call to [`admm.pdglasso`]
+#' @param mod a list, the output object of a call to [`admm.pdglasso`].
 #' @param n the sample size of the data used to compute the sample covariance matrix S.
 #' @param gamma.eBIC a parameter governing the magnitude of the penalization term inside the criterion; it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, and 0.5 being the suggested default value.
 #' @param max_iter an integer; maximum number of iterations to be run in case
@@ -743,7 +748,7 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 #' @return A vector containing three elements:
 #' * the value of the eBIC,
 #' * the log-likelihood,
-#' * and the estimated number of degrees of freedom.
+#' * and the number of parameters.
 #' @export
 #'
 #' @references Foygel, R., Drton, M. (2010). Extended Bayesian information criteria for Gaussian graphical models. *Advances in neural information processing systems*, 23. \url{https://proceedings.neurips.cc/paper/2010/file/072b030ba126b2f4b2374f342be9ed44-Paper.pdf}
@@ -771,7 +776,7 @@ compute.eBIC <- function(S,mod,n,
     #### corrected with n/2 instead of 1/2 in front of the loglik, so -2*(n/2)*loglik=-n*loglik
     out.vec <- c(eBIC,log.lik,n.par)
   }
-  names(out.vec) <- c("eBIC     ","  log-Likelihood  ","num. of. params")
+  names(out.vec) <- c("eBIC     ","  log-Likelihood  ","num. of params")
   return(out.vec)
 }
 

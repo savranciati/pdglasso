@@ -11,7 +11,7 @@ Authors@R: c(
     email = "alberto.roverato@unipd.it",
     role = c("aut"),
     comment = c(ORCID = "0000-0001-7984-3593")))
-Description: This package deals with RCON models for paired data and implements an Alternating Directions Method of Multipliers (ADMM) algorithm to solve a penalized likelihood method. Also functions for the computation of maximum likelihood estimates and for the generation of simulated pdRCON models and data are provided.
+Description: This package deals with RCON models for paired data and implements an Alternating Directions Method of Multipliers (ADMM) algorithm to solve the penalized likelihood method introduced by Ranciati and Roverato (2023). Also functions for the computation of maximum likelihood estimates and for the generation of simulated pdRCON models and data are provided.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true

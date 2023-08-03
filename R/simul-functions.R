@@ -133,7 +133,7 @@ pdRCON.simulate <- function(p,
   PDCG <- make.pdColG(p = p, K = S.inv, type = type, force.symm = force.symm, dens = dens,
                       dens.vertex = dens.vertex, dens.inside = dens.vertex, dens.across = dens.vertex)
   if(concent.mat){
-    K <- pdRCON.mle(S, PDCG, verbose = FALSE)
+    K <- pdRCON.mle(S, PDCG)
     dimnames(K) <- dimnames(PDCG)
     if(sample){
       if (is.null(sample.size)) sample.size <- 3*p

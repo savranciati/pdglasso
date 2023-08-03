@@ -5,12 +5,12 @@
 \alias{pdglasso-package}
 \title{pdglasso: Graphical Lasso for Coloured Gaussian Graphical Models for Paired Data}
 \description{
-This package deals with RCON models for paired data and implements an Alternating Directions Method of Multipliers (ADMM) algorithm to solve a penalized likelihood method. Also functions for the computation of maximum likelihood estimates and for the generation of simulated pdRCON models and data are provided.
+This package deals with RCON models for paired data and implements an Alternating Directions Method of Multipliers (ADMM) algorithm to solve the penalized likelihood method introduced by Ranciati and Roverato (2023). Also functions for the computation of maximum likelihood estimates and for the generation of simulated pdRCON models and data are provided.
 }
 \details{
 An RCON model for paired data (pdRCON model) is a coloured Gaussian Graphical
 Model (GGM) where the \eqn{p} variables are partitioned into a Left block
-\eqn{L} and a right block \eqn{R}. The two blocks are not independent, every
+\eqn{L} and a Right block \eqn{R}. The two blocks are not independent, every
 variable in the left block has an homologous variable in the right block and
 certain types of equality \code{R}estrictions on the entries of the
 \code{CON}centration matrix \eqn{K} are allowed. A pdRCON model is represented by

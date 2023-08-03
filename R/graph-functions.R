@@ -163,7 +163,7 @@ pdColG.get <- function(admm.out,
 #' @export
 #'
 #' @examples
-#' #
+#'
 #' pdColG.summarize(toy_data$pdColG)
 #'
 pdColG.summarize <- function(pdColG, print.summary=TRUE){

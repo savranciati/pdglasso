@@ -9,7 +9,7 @@ compute.eBIC(S, mod, n, gamma.eBIC = 0.5, max_iter = 5000)
 \arguments{
 \item{S}{a sample covariance (or correlation) matrix with the block structure described in \code{\link{pdglasso-package}}.}
 
-\item{mod}{a list, the output object of a call to \code{\link{admm.pdglasso}}}
+\item{mod}{a list, the output object of a call to \code{\link{admm.pdglasso}}.}
 
 \item{n}{the sample size of the data used to compute the sample covariance matrix S.}
 
@@ -23,11 +23,11 @@ A vector containing three elements:
 \itemize{
 \item the value of the eBIC,
 \item the log-likelihood,
-\item and the estimated number of degrees of freedom.
+\item and the number of parameters.
 }
 }
 \description{
-The function computes the value of the eBIC for a given model and gamma value, for the purpose
+This function computes the value of the eBIC for a given model and gamma value, for the purpose
 of model selection (see Eq.1 of Feygel & Drton, 2010).
 }
 \examples{
