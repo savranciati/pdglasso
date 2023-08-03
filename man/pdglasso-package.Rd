@@ -25,8 +25,8 @@ of interest and on the usage of the package are given in the following.
 A pdRCON model is a Gaussian Graphical Model with additional equality
 restrictions on the entries of the concentration matrix. In the paired data
 framework, there are three different types of equality restrictions of
-interest, identified with the names \emph{vertex}, \emph{inside block edge} and
-\emph{across block edge}, respectively. Relevant submodel classes can be specified both
+interest, identified with the names \emph{vertex}, \emph{inside-block edge} and
+\emph{across-block edge}, respectively. Relevant submodel classes can be specified both
 by allowing different combinations of restriction types and by forcing
 different types of fully symmetric structures. In this package, different
 submodel classes are identified by the arguments \code{type} and \code{force.symm} and
@@ -44,26 +44,27 @@ coloured and uncoloured vertices and (iii) allowing only coloured vertices.
 variables in \eqn{R}, thereby identifying a pair of homologous edges. If both
 edges are present in the graph the corresponding off-diagonal entries of
 \eqn{K} can be constrained to have equal value. These type of edges are
-referred to as \emph{coloured symmetric inside block edges}. Different types of
+referred to as \emph{coloured symmetric inside-block edges}. Different types of
 submodel classes of interest may be obtained by (i) not allowing coloured
-inside block edges, (ii) allowing both coloured and uncoloured inside block
-edges and (iii) allowing only coloured inside block edges.
-\item We say that two variables are \emph{across-block} if one variable belongs to \eqn{L}
+inside-block edges, (ii) allowing both coloured and uncoloured inside-block
+edges and (iii) allowing only coloured inside-block edges.
+\item We say that two variables are
+\emph{across-block} if one variable belongs to \eqn{L}
 and the other to \eqn{R}. For every pair of non-homologous across-block
 variables there exists an homologous pair across-block variables, thereby
 identifying a pair of homologous edges. If both edges are present in the
 graph the corresponding off-diagonal entries of \eqn{K} can be constrained to
 have equal value. These type of edges are referred to as \emph{coloured symmetric
-across block edges}. Different types of submodel classes of interest may be
-obtained by (i) not allowing coloured across block edges, (ii) allowing both
+across-block edges}. Different types of submodel classes of interest may be
+obtained by (i) not allowing coloured across-block edges, (ii) allowing both
 coloured and uncoloured across block edges and (iii) allowing only coloured
-across block edges, with the exception of edges joining a variable in \eqn{L}
+across-block edges, with the exception of edges joining a variable in \eqn{L}
 with its homologous in \eqn{R}.
 \item We remark that every coloured edge belongs to a pair of coloured symmetric
-edges, either inside or across blocks. On the other hand, for an uncolored
+edges, either inside- or across- blocks. On the other hand, for an uncolored
 edge its homologous edge may or may  not be present in the graph. In the case
 where an uncoloured edge and its homologous are both present we say that they
-form a pair of \emph{uncoloured symmetric edges}, either inside or across blocks.
+form a pair of \emph{uncoloured symmetric edges}, either inside- or across- blocks.
 }
 }
 
@@ -80,12 +81,10 @@ only, and are not case-sensitive. The argument \code{type} cannot be \code{NULL}
 \item If \code{type} contains the string \code{"vertex"} then coloured vertex symmetries are
 allowed and, if in addition also \code{force.symm} contains the string
 \code{"vertex"}, then all vertices are coloured.
-\item If \code{type} contains the string \code{"inside.block.edge"} then coloured inside
-block edge symmetries are allowed and, if in addition also \code{force.symm}
+\item If \code{type} contains the string \code{"inside.block.edge"} then coloured inside-block edge symmetries are allowed and, if in addition also \code{force.symm}
 contains the string \code{"inside.block.edge"}, then only coloured edges are
 allowed inside blocks.
-\item If \code{type} contains the string \code{"across.block.edge"} then coloured across
-block edge symmetries are allowed and, if in addition also \code{force.symm}
+\item If \code{type} contains the string \code{"across.block.edge"} then coloured across-block edge symmetries are allowed and, if in addition also \code{force.symm}
 contains the string \code{"across.block.edge"}, then only coloured edges are
 allowed across blocks,  with the exception of edges joining a variable in
 \eqn{L} with its homologous in \eqn{R}.
@@ -109,7 +108,7 @@ in the sense that for every \eqn{i=1,\ldots, q} the variable in position
 instance, the functions that receive in input a sample covariance matrix
 assume that the rows and columns of this matrix are ordered according to
 these rules, so that it can be partitioned into four \eqn{q\times q}
-submatrices naturally associated with the inside and across group
+submatrices naturally associated with the inside- and across- block
 components.
 }
 

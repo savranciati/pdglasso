@@ -25,7 +25,8 @@ Data simulated by the function \code{\link{pdRCON.simulate}} with parameters:
 \item \code{p=20}
 \item \code{type=c("v", "i","a")}
 \item \code{force.symm=NULL}
-\item \code{dens=0.3}
+\item \code{dens=0.5}
+\item \code{Sigma} a \eqn{p \times p} matrix with unitary diagonal and 0.5 on off-diagonal elements.
 }
 }
 \keyword{datasets}

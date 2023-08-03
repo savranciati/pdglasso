@@ -14,8 +14,8 @@ Depending on the acronym stored inside the input object, one or more plots depic
 \itemize{
 \item off-diagonal elements,
 \item vertices,
-\item inside block,
-\item across block.
+\item inside-block,
+\item across-block.
 }
 }
 \description{

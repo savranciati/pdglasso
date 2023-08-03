@@ -16,8 +16,8 @@ An invisible list with the following components:
 \itemize{
 \item \code{overall} a list with the number of vertices and edges of  \eqn{\mathcal{G}}.
 \item \code{vertex}  a list with the number of coloured vertices of  \eqn{\mathcal{G}}.
-\item \code{inside}  a list with the number of inside block edges, the number of uncolored symmetric and coloured inside block edges of \eqn{\mathcal{G}}.
-\item \code{across}  a list with the number of across block edges, the number of uncolored symmetric and coloured across block edges of \eqn{\mathcal{G}}.
+\item \code{inside}  a list with the number of inside-block edges, the number of uncolored symmetric and coloured inside block edges of \eqn{\mathcal{G}}.
+\item \code{across}  a list with the number of across-block edges, the number of uncolored symmetric and coloured across block edges of \eqn{\mathcal{G}}.
 }
 
 If \code{print.summary=TRUE} some summary statistics are also printed on the console
