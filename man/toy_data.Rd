@@ -11,7 +11,7 @@ A list with the following components:
 \itemize{
 \item \code{pdColG} a matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.
 \item \code{K}, a concentration matrix adapted to \code{pdColG}.
-\item \code{sample.data}, a data frame with 60 rows and 20 columns from a multivariate normal distribution
+\item \code{sample.data}, a data frame with 250 rows and 20 columns from a multivariate normal distribution
 with zero mean vector and concentration matrix \code{K}.
 }
 }

@@ -4,9 +4,10 @@ require(MASS)
 #' Random simulation of pdRCON models
 #'
 #' Randomly generates a coloured graph for paired data \eqn{\mathcal{G}}, a
-#' concentration matrix \eqn{K} adapted to \eqn{\mathcal{G}} and a random sample
-#' from a multivariate normal distribution with zero mean vector and covariance
-#' matrix \eqn{\Sigma=K^{-1}}.
+#' concentration matrix \eqn{K} that both is adapted to \eqn{\mathcal{G}} and
+#' satisfies the equality constraints implied by \eqn{\mathcal{G}},  and a
+#' random sample from a multivariate normal distribution with zero mean vector
+#' and covariance matrix \eqn{\Sigma=K^{-1}}.
 #'
 #'
 #' @param p an even integer, that is the number of vertices of the generated
@@ -16,7 +17,7 @@ require(MASS)
 #' @param sample a logical (default `TRUE`) indicating whether a sample from a
 #'   normal distribution with zero mean vector and concentration matrix `K`
 #'   should be generated.
-#' @param Sigma a \eqn{p\times p} positive definite matrix. This the matrix
+#' @param Sigma a \eqn{p\times p} positive definite matrix. This is the matrix
 #'   argument of the [`rWishart`] function, which is used as starting point in
 #'   the random generation of the concentration matrix, as described in the
 #'   details section below. The default `NULL` is equivalent to the identity
@@ -30,6 +31,9 @@ require(MASS)
 #'   described in the details section below. The default `dens.vertex=NULL` is
 #'   equivalent to `dens.vertex=dens`, and similarly for `dens.inside` and
 #'   `dens.across`.
+#' @param print.type a logical; if `TRUE` the pdRCON submodel class considered, as
+#'   specified by the arguments `type` and `force.symm` - is returned as printed
+#'   output in the console.
 #'
 #' @details
 #'
@@ -45,20 +49,21 @@ require(MASS)
 #'   `dens.vertex=1`.
 #'
 #'   The argument `dens.inside` specifies the proportion of coloured symmetric
-#'   inside-block edges among the \eqn{q(q-1)/2}, with \eqn{q=p/2}, inside-block
+#'   inside block edges among the \eqn{q(q-1)}, with \eqn{q=p/2}, inside block
 #'   edges. This is used if the string "inside.block.edge" is a component of
 #'   `type`, otherwise it is equivalent to `dens.inside=0`. The overall density
-#'   of inside-block edges is obtained by the sum of the densities of coloured
-#'   and uncoloured inside-block edges. This is  a value between `dens.inside`
+#'   of inside block edges is obtained by the sum of the densities of coloured
+#'   and uncoloured inside block edges. This is  a value between `dens.inside`
 #'   and `dens.inside+dens`. Furthermore, it is exactly equal to `dens` if
 #'   "inside.block.edge" is not a component of `type` and to `dens.inside` if
 #'   "inside.block.edge" is a component of both `type` and `force.symm`.
 #'
-#'   The argument `dens.across` specifies the proportion of coloured symmetric across-block edges among the potentially coloured \eqn{q(q-1)/2} across-
+#'   The argument `dens.across` specifies the proportion of coloured symmetric
+#'   across block edges among the potentially coloured \eqn{q(q-1)} across
 #'   block edges. This is used if the string "across.block.edge" is a component
 #'   of `type`, otherwise it is equivalent to `dens.across=0`. The overall
-#'   density of across-block edges is obtained by the sum of the densities of
-#'   coloured and uncoloured across-block edges. This is  a value between
+#'   density of across block edges is obtained by the sum of the densities of
+#'   coloured and uncoloured across block edges. This is  a value between
 #'   `dens.across` and `dens.across+dens`. Furthermore, it is exactly equal  to
 #'   `dens` if "across.block.edge" is not a component of `type`.
 #'
@@ -87,7 +92,7 @@ require(MASS)
 #'   with mean vector zero and concentration matrix `K`.
 #'
 #'
-#' Note that the variable in \eqn{L} are are named `L1,...,Lq` and variables in
+#' Note that the variable in \eqn{L} are named `L1,...,Lq` and variables in
 #' \eqn{R} are are named `R1,...,Rq` where  `Li` is homologous to  `Ri` for
 #' every i=1,...,q.
 #'
@@ -100,12 +105,18 @@ require(MASS)
 #' set.seed(123)
 #' pdRCON.model <- pdRCON.simulate(10, concent=FALSE, sample=FALSE, dens=0.25)$pdColG
 #'
-#' # generates a pdRCON model on 20 variables, a concentration matrix
+#' # generates a distribution from a pdRCON model on 20 variables, a concentration matrix
 #' # for this model and a sample of size 50
-#' # all vertices are coloured and no coloured across-block edge is allowed
+#' # all vertices are coloured and no coloured across block edge is allowed
 #'
 #' set.seed(123)
 #' GenMod <- pdRCON.simulate(20, type=c("v", "i"), force.symm=c("v"), sample.size=50, dens=0.20)
+#'
+#' pdColG.summarize(GenMod$pdColG)
+#'
+#' # computation of the partial correlation matrix
+#' R <- -cov2cor(GenMod$K)
+#' diag(R) <- 1
 #'
 #' @export
 #'
@@ -119,7 +130,8 @@ pdRCON.simulate <- function(p,
                             dens = 0.1,
                             dens.vertex = NULL,
                             dens.inside = NULL,
-                            dens.across = NULL){
+                            dens.across = NULL,
+                            print.type = TRUE){
   if((p %% 2) != 0) stop("The number of variables p must be even")
   if(concent.mat) {
     if(is.null(Sigma)) Sigma <- diag(1, p)
@@ -129,10 +141,13 @@ pdRCON.simulate <- function(p,
   }else{
     S.inv <- NULL
   }
-  PDCG <- make.pdColG(p = p, K = S.inv, type = type, force.symm = force.symm, dens = dens,
-                      dens.vertex = dens.vertex, dens.inside = dens.vertex, dens.across = dens.vertex)
+  PDCG <- make.pdColG(p = p, K = S.inv, type = type, force.symm = force.symm,
+                      dens = dens,
+                      dens.vertex = dens.vertex, dens.inside = dens.inside, dens.across = dens.across,
+                      print.type=print.type)
   if(concent.mat){
     K <- pdRCON.mle(S, PDCG)
+    K[PDCG==0] <- 0
     dimnames(K) <- dimnames(PDCG)
     if(sample){
       if (is.null(sample.size)) sample.size <- 3*p
@@ -179,7 +194,8 @@ make.pdColG <- function(p=NULL,
                         dens=0.1,
                         dens.vertex=NULL,
                         dens.inside=NULL,
-                        dens.across=NULL){
+                        dens.across=NULL,
+                        print.type=FALSE){
 
   # initialization and checks
   if(is.null(dens.vertex)) dens.vertex <- dens
@@ -188,7 +204,7 @@ make.pdColG <- function(p=NULL,
   dens.v <- c(dens, dens.vertex, dens.inside, dens.across)
   if (any(dens.v>1) | any(dens.v<0)) stop("all densities must be values in the interval [0; 1]")
   #
-  out.make.a <- make.acronyms(type, force.symm)
+  out.make.a <- make.acronyms(type, force.symm, print.type=print.type)
   acr.type <- strsplit(out.make.a$acronym.of.type, split = "")[[1]]
   acr.force <- out.make.a$acronym.of.force
   #
@@ -241,7 +257,7 @@ make.pdColG <- function(p=NULL,
     G[lower.tri(G, diag=TRUE)] <- 0
 
     # inside.block.edge symmetries
-    if(any(acr.type=="I")){
+    if(any(acr.type=="I") & dens.inside!=0){
       G.sym <- symm.structure.gen(K[1:q, 1:q], K[(q+1):p, (q+1):p], dens=dens.inside)
       # remove coloured symmetric edges from overall graph
       G[1:q,1:q] <- G[1:q,1:q]*(1-G.sym)
@@ -251,7 +267,7 @@ make.pdColG <- function(p=NULL,
     }
 
     # across.block.edge symmetries
-    if(any(acr.type=="A")){
+    if(any(acr.type=="A") & dens.across!=0){
       G.across <- symm.structure.gen(K[1:q, (q+1):p], t(K[1:q, (q+1):p]), dens=dens.across)
       # remove coloured symmetric edges from overall graph
       G[1:q,(q+1):p] <- G[1:q,(q+1):p]*(1-G.across)
@@ -261,7 +277,7 @@ make.pdColG <- function(p=NULL,
     }
 
     # vertex symmetries
-    if(any(acr.type=="V")){
+    if(any(acr.type=="V") & dens.vertex!=0){
       ab.vec <- abs(diag(K[1:q,1:q])-diag(K[(q+1):p, (q+1):p]))
       n.symmetries <- floor(dens.vertex*q)
       threshold <- sort(ab.vec)[max(q-n.symmetries, 1)]
@@ -361,4 +377,103 @@ symm.structure.gen <- function(A=NULL, B=NULL, p=NULL, dens){
     G[upper.tri(G, diag=FALSE)] <- v
   }
   return(G)
+}
+
+
+
+#' Random simulation of Gaussian graphical models (GGMs)
+#'
+#' Randomly generates an undirected graph \eqn{\mathcal{G}}, a
+#' concentration matrix \eqn{K} adapted to \eqn{\mathcal{G}} and a random sample
+#' from a multivariate normal distribution with zero mean vector and covariance
+#' matrix \eqn{\Sigma=K^{-1}}.
+#'
+#' @inheritParams pdRCON.simulate
+#'
+#' @param p an even integer, that is the number of vertices of the generated
+#'   undirected graph `G`.
+#' @param concent.mat a logical (default `TRUE`) indicating whether a
+#'   concentration matrix `K` adapted to `G` should be generated.
+#' @param Sigma a \eqn{p\times p} positive definite matrix. This is the matrix
+#'   argument of the [`rWishart`] function, which is used as starting point in
+#'   the random generation of the concentration matrix, as described in the
+#'   details section of the function [`pdRCON.simulate`]. The default `NULL` is
+#'   equivalent to the identity matrix `Sigma=diag(p)`.
+#' @param dens a value between zero and one used to specify the sparsity
+#'   degree of the generated graph, as described in the details section of the
+#'   function [`pdRCON.simulate`].
+#'
+#' @return A list with the following components:
+#'
+#'  * `G` a randomly generated matrix encoding an undirected
+#'  graph on \eqn{p} vertices. More specifically, `G` is a `pdColG` graph with
+#'  no entry equal to 2, and it differs from the adjacency matrix of the
+#'  undirected graph because its diagonal entries are equal to one.
+#'
+#' * `K` a randomly generated concentration matrix adapted to `G`.
+#'
+#' * `sample.data` a randomly generated sample form a multivariate normal distribution
+#'   with mean vector zero and concentration matrix `K`.
+#'
+#'
+#' Note that the variable are named `V1,...,Vp`.
+#'
+#' @details A GGM is a pdRCON model with no parametric symmetries, and the
+#'   purpose of this function is that of providing a simplified call to the
+#'   function [`pdRCON.simulate`], with the appropriate choice of arguments
+#'   required to simulate from GGMs. Note, however, that pdRCON models make
+#'   sense only if the number of variables `p` is even, and this requirement is
+#'   (unnecessarily) retained here.
+#'
+#'
+#' @export
+#'
+#' @examples
+#'
+#' # generates distribution and data from a GGM on 20 variables and graph density equal to 0.2
+#' p <- 20
+#' n <-100
+#' set.seed(1234)
+#' GenMod <- GGM.simulate(20, sample.size=n, dens=0.20)
+#'
+#' # check graph sparsity degree
+#' n.edges <- sum(GenMod$G[upper.tri(GenMod$G)])
+#' n.edges/(p*(p-1)/2)
+#'
+#' # check positive definiteness
+#' min(eigen(GenMod$K)$values)
+#'
+#' # computation of the partial correlation matrix
+#' R <- -cov2cor(GenMod$K)
+#' diag(R) <- 1
+#'
+GGM.simulate <- function(p,
+                         concent.mat = TRUE,
+                         sample = TRUE,
+                         Sigma = NULL,
+                         sample.size = NULL,
+                         dens =0.1){
+  GenMod <- pdRCON.simulate (p,
+                             concent.mat = concent.mat,
+                             sample = sample,
+                             Sigma = Sigma,
+                             sample.size = sample.size,
+                             type = c("vertex"),
+                             force.symm = NULL,
+                             dens = dens,
+                             dens.vertex = 0,
+                             dens.inside = 0,
+                             dens.across= 0,
+                             print.type = FALSE)
+  V.lab <- paste("V", 1:p, sep="")
+  names(GenMod)[1] <- "G"
+  dimnames(GenMod$G) <- list(V.lab, V.lab)
+  if(concent.mat){
+    dimnames(GenMod$K) <- list(V.lab, V.lab)
+  }else{
+    sample = FALSE
+  }
+  if(sample) names(GenMod$sample.data) <- V.lab
+
+  return(GenMod)
 }

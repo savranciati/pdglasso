@@ -15,7 +15,8 @@ pdRCON.simulate(
   dens = 0.1,
   dens.vertex = NULL,
   dens.inside = NULL,
-  dens.across = NULL
+  dens.across = NULL,
+  print.type = TRUE
 )
 }
 \arguments{
@@ -29,7 +30,7 @@ concentration matrix \code{K} adapted to \code{pdColG} should be generated.}
 normal distribution with zero mean vector and concentration matrix \code{K}
 should be generated.}
 
-\item{Sigma}{a \eqn{p\times p} positive definite matrix. This the matrix
+\item{Sigma}{a \eqn{p\times p} positive definite matrix. This is the matrix
 argument of the \code{\link{rWishart}} function, which is used as starting point in
 the random generation of the concentration matrix, as described in the
 details section below. The default \code{NULL} is equivalent to the identity
@@ -46,6 +47,10 @@ one used to specify the sparsity degree of the generated graph, as
 described in the details section below. The default \code{dens.vertex=NULL} is
 equivalent to \code{dens.vertex=dens}, and similarly for \code{dens.inside} and
 \code{dens.across}.}
+
+\item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
+specified by the arguments \code{type} and \code{force.symm} - is returned as printed
+output in the console.}
 }
 \value{
 A list with the following components:
@@ -57,15 +62,16 @@ paired data on \eqn{p} vertices; see \code{\link{pdglasso-package}} for details.
 with mean vector zero and concentration matrix \code{K}.
 }
 
-Note that the variable in \eqn{L} are are named \verb{L1,...,Lq} and variables in
+Note that the variable in \eqn{L} are named \verb{L1,...,Lq} and variables in
 \eqn{R} are are named \verb{R1,...,Rq} where  \code{Li} is homologous to  \code{Ri} for
 every i=1,...,q.
 }
 \description{
 Randomly generates a coloured graph for paired data \eqn{\mathcal{G}}, a
-concentration matrix \eqn{K} adapted to \eqn{\mathcal{G}} and a random sample
-from a multivariate normal distribution with zero mean vector and covariance
-matrix \eqn{\Sigma=K^{-1}}.
+concentration matrix \eqn{K} that both is adapted to \eqn{\mathcal{G}} and
+satisfies the equality constraints implied by \eqn{\mathcal{G}},  and a
+random sample from a multivariate normal distribution with zero mean vector
+and covariance matrix \eqn{\Sigma=K^{-1}}.
 }
 \details{
 \strong{Details on the sparsity degree of the generated graph}
@@ -78,20 +84,21 @@ a component of \code{type} is equivalent to \code{dens.vertex=0} whereas the str
 \code{dens.vertex=1}.
 
 The argument \code{dens.inside} specifies the proportion of coloured symmetric
-inside-block edges among the \eqn{q(q-1)/2}, with \eqn{q=p/2}, inside-block
+inside block edges among the \eqn{q(q-1)}, with \eqn{q=p/2}, inside block
 edges. This is used if the string "inside.block.edge" is a component of
 \code{type}, otherwise it is equivalent to \code{dens.inside=0}. The overall density
-of inside-block edges is obtained by the sum of the densities of coloured
-and uncoloured inside-block edges. This is  a value between \code{dens.inside}
+of inside block edges is obtained by the sum of the densities of coloured
+and uncoloured inside block edges. This is  a value between \code{dens.inside}
 and \code{dens.inside+dens}. Furthermore, it is exactly equal to \code{dens} if
 "inside.block.edge" is not a component of \code{type} and to \code{dens.inside} if
 "inside.block.edge" is a component of both \code{type} and \code{force.symm}.
 
-The argument \code{dens.across} specifies the proportion of coloured symmetric across-block edges among the potentially coloured \eqn{q(q-1)/2} across-
+The argument \code{dens.across} specifies the proportion of coloured symmetric
+across block edges among the potentially coloured \eqn{q(q-1)} across
 block edges. This is used if the string "across.block.edge" is a component
 of \code{type}, otherwise it is equivalent to \code{dens.across=0}. The overall
-density of across-block edges is obtained by the sum of the densities of
-coloured and uncoloured across-block edges. This is  a value between
+density of across block edges is obtained by the sum of the densities of
+coloured and uncoloured across block edges. This is  a value between
 \code{dens.across} and \code{dens.across+dens}. Furthermore, it is exactly equal  to
 \code{dens} if "across.block.edge" is not a component of \code{type}.
 
@@ -115,11 +122,17 @@ according to the  \code{dens.xxx} arguments.
 set.seed(123)
 pdRCON.model <- pdRCON.simulate(10, concent=FALSE, sample=FALSE, dens=0.25)$pdColG
 
-# generates a pdRCON model on 20 variables, a concentration matrix
+# generates a distribution from a pdRCON model on 20 variables, a concentration matrix
 # for this model and a sample of size 50
-# all vertices are coloured and no coloured across-block edge is allowed
+# all vertices are coloured and no coloured across block edge is allowed
 
 set.seed(123)
 GenMod <- pdRCON.simulate(20, type=c("v", "i"), force.symm=c("v"), sample.size=50, dens=0.20)
+
+pdColG.summarize(GenMod$pdColG)
+
+# computation of the partial correlation matrix
+R <- -cov2cor(GenMod$K)
+diag(R) <- 1
 
 }
