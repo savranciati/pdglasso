@@ -1,5 +1,7 @@
 # Graphical Lasso for Coloured Gaussian Graphical Models for Paired Data
 
+<img src="pdglasso_logo.png" height=150>
+
 ## How to install the package:
 
 ```{r message = FALSE, warning = FALSE}
