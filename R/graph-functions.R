@@ -222,6 +222,154 @@ pdColG.summarize <- function(pdColG, print.summary=TRUE){
 }
 
 
+#' Visualize a coloured graph for paired data
+#'
+#' This functions produces a heatmap-style graphical representation of a graph object produced by
+#' a call to [`pdColG.get`], or a matrix compatible with the coloured graph specification
+#' used in this package.
+#'
+#' @param g a symmetric \eqn{p \times p} matrix coding a coloured graphical
+#'   model; only values allowed are the integers \eqn{\{0, 1, 2\}}; usually, an
+#'   object produced by a call to the function [`pdColG.get`]
+#'
+#' @param which.sym a string or a vector of strings; specifies which kind of symmetries are plotted (structural, parametric or both).
+#' @param block a string; allows the user to specify which portion of the graph (a block) is to be plotted: possible mutually exclusive options are "left", "right", "across", "everything";  default is "everything", which means the entire graph is plotted.
+#' @param asym.edges a logical value; if TRUE, Asymmetric edges are plotted otherwise their symbol is suppressed
+#' @param export.plot a logical value; if TRUE, a .pdf file is produced in the working director instead of plotting the graph as a new panel/window.
+#' @param fancy a logical value; if TRUE, symbols in the plot are used from the
+#'   Latin1 encoding for characters; set to FALSE if characters are not properly
+#'   displayed, so symbols are reverted to latin letters.
+#'
+#' @return either a plot within the running R session or a .pdf file saved in the working directory if the option export.plot is set to TRUE.
+#' @export
+#'
+#' @examples
+#'
+#' pdColG.plot(toy_data$pdColG)
+pdColG.plot <- function(G,
+                        block = "everything",
+                        which.sym = c("structural","parametric"),
+                        asym.edges = TRUE,
+                        export.plot = FALSE,
+                        fancy = TRUE){
+  # retain graph only (discard n.par) if G from pdColG.get is passed
+  if(is.list(G)) G <- G$pdColG
+  p <- dim(G)[1]
+  q <- p/2
+  strblock <- tolower(block)
+  strblock <-  match.arg(strblock, c("left", "right","across","everything") , several.ok = FALSE)
+
+  # define plot symbols
+  G.symbols <- list()
+  if(fancy){
+    G.symbols$asym_edge <- "~"
+    G.symbols$struct_sym <- "o"
+    G.symbols$param_sym <- "·"
+  }else{
+    G.symbols$asym_edge <- "-"
+    G.symbols$struct_sym <- "o"
+    G.symbols$param_sym <- "x"
+  }
+  # check if asymmetric edges are to be plotted
+  if(!asym.edges) G.symbols$asym_edge <- NA
+
+  strsym <- tolower(which.sym)
+  choice <-  match.arg(strsym, c("structural", "parametric") , several.ok = TRUE)
+  strsym <- ""
+  if (any(choice=="structural"))    strsym <- paste(strsym, "S", sep="")
+  if (any(choice=="parametric"))   strsym <- paste(strsym, "P", sep="")
+  switch(strsym,
+         #
+         S = G.symbols$param_sym <- NA,
+         P = G.symbols$struct_sym <- NA,
+         SP = G.symbols <- G.symbols
+  )
+
+  # convert content of G to symbols
+  cond.inside <- which( (G[1:q,1:q]*G[(q+1):p,(q+1):p])==1 , arr.ind = T)
+  cond.across <- which((G[1:q, (q+1):p]*t(G[1:q, (q+1):p]))==1, arr.ind = T)
+  cond.across[,2] <- cond.across[,2]+q
+
+  G[cond.inside] <- G.symbols$struct_sym ### structural symmetries LL RR
+  #given the output of array.ind=TRUE only produces positions for LL, need to overwrite the RR block too
+  G[cond.inside+q] <- G.symbols$struct_sym ### structural symmetries LL RR
+  #given the output of array.ind=TRUE only produces positions for LL, need to overwrite adjust for LR block
+  G[cond.across] <- G.symbols$struct_sym ### structural symmetries LR
+  diag(G[1:q, (q+1):p]) <- G.symbols$asym_edge
+
+  G[G==0] <- NA
+  G[G==1] <- G.symbols$asym_edge ### asymmetric edges
+  G[G==2] <- G.symbols$param_sym ### parametric symmetries
+  G[lower.tri(G)] <- NA
+
+
+  # selects portion or totale graph
+  switch(strblock,
+         left = G <- G[1:q, 1:q],
+         right = G <- G[(q+1):p, (q+1):p],
+         across = G <- G[1:q, (q+1):p],
+         everything = G <- G
+  )
+  p <- dim(G)[1]
+  q <- p/2
+
+  # adjust graphical parameters
+  cex.matrix <- matrix(1,p,p)
+  adj.matrix <- matrix(0.5,p,p)
+  if(fancy){
+    cex.matrix[G==G.symbols$param_sym] <- 4
+    adj.matrix[G==G.symbols$param_sym] <- 0.55
+  }
+  # store original graphical parameters
+  op <- par(no.readonly = TRUE)
+
+  # check if plot is to be saved as a pdf
+  if(export.plot) pdf(paste("graph_",strblock,".pdf",sep=""), width = 7, height = 7, onefile = TRUE)
+
+  par(oma=c(0,0,3,1.5))
+  par(mai=c(0.1,0.1,0.2,0.4))
+
+  image(
+    x = 1:p,        # X-axis values (columns)
+    y = 1:p,        # Y-axis values (rows)
+    z = matrix(0,p,p),                # Data matrix
+    col = "white",
+    xlab = "",
+    ylab = "",
+    main = "",
+    xaxs = "i",
+    yaxs = "i",
+    axes = FALSE,
+    asp=1
+  )
+  text(
+    x = rep(1:p, each = p),
+    y = rep(p:1, times = p),
+    labels = G,
+    cex = cex.matrix,                         # Adjust label size if needed
+    adj = adj.matrix,                           # Position text below each cell
+    col = "black"                      # Text color
+  )
+
+  mtext( text = colnames(G), at = 1:p, side = 3, line=1, las = 2, outer=FALSE)
+  mtext( text = rownames(G), at = p:1, side = 4, line=1, las = 2, outer=FALSE)
+
+  # guides
+  if(strblock=="everything"){
+    segments(y0=p/2 + 0.5, y1=p/2 + 0.5, x0=1-0.25, x1=p+0.25, col=1, lwd=2, lty=2)
+    segments(x0=p/2 + 0.5, x1=p/2 + 0.5, y0=1-0.25, y1=p+0.25, col=1, lwd=2, lty=2)
+  }
+  if(strblock=="across"){
+    segments(y0=p + 0.5, y1=1 + 0.0 , x0=1-0.25, x1=p+0.25, col=1, lwd=1, lty=2)
+    # 0.5 shift
+    segments(y0=p + 0.0, y1=1 - 0.5 , x0=1-0.25, x1=p+0.25, col=1, lwd=1, lty=2)
+  }
+
+  par(op)
+  if(export.plot) dev.off()
+  on.exit(dev.flush())
+}
+
 #' Conversion from the single matrix representation of the model to the multiple matrix representation.
 #'
 #' This is the inverse of the function [G.merge()], i.e. g is equal to `G.merge(G.split(g))`.
