@@ -287,7 +287,7 @@ pdColG.plot <- function(G,
 
   # Store LR diag for temporary manipulation
   LR.diag <- diag(G[1:q, (q+1):p])
-  G[1:q, (q+1):p] <- rep(0,q)
+  diag(G[1:q, (q+1):p]) <- rep(0,q)
   # convert content of G to symbols
   cond.inside <- which( (G[1:q,1:q]*G[(q+1):p,(q+1):p])==1 , arr.ind = T)
   cond.across <- which((G[1:q, (q+1):p]*t(G[1:q, (q+1):p]))==1, arr.ind = T)
