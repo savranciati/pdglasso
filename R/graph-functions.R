@@ -295,7 +295,7 @@ pdColG.plot <- function(G,
   G[cond.inside+q] <- G.symbols$struct_sym ### structural symmetries LL RR
   #given the output of array.ind=TRUE only produces positions for LL, need to overwrite adjust for LR block
   G[cond.across] <- G.symbols$struct_sym ### structural symmetries LR
-  diag(G[1:q, (q+1):p]) <- G.symbols$asym_edge
+  #diag(G[1:q, (q+1):p]) <- G.symbols$asym_edge
 
   G[G==0] <- NA
   G[G==1] <- G.symbols$asym_edge ### asymmetric edges
@@ -303,7 +303,7 @@ pdColG.plot <- function(G,
   G[lower.tri(G)] <- NA
 
 
-  # selects portion or totale graph
+  # selects portion or total graph
   switch(strblock,
          left = G <- G[1:q, 1:q],
          right = G <- G[(q+1):p, (q+1):p],
