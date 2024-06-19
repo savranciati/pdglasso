@@ -11,12 +11,13 @@
 #' for Paired Data (pdColG) from the selected model.
 #'
 #' @inheritParams admm.pdglasso
-#' @param n the sample size of the data used to compute the sample covariance matrix S.
-#' @param lams a 2x3 matrix; first row refers to `lambda1` and second row to
+#' @param n the sample size of the data used to compute the sample covariance
+#'   matrix S.
+#' @param lams a 2x4 matrix; first row refers to `lambda1` and second row to
 #'   `lambda2`; for each row, values are (i) minimum value for the grid; (ii)
-#'   maximum value for the grid; (iii) number of points in the grid; if `NULL`
-#'   defaulta values are used, i.e. from max.lams to max.lams/10, and 10 grid
-#'   points.
+#'   maximum value for the grid; (iii) number of points in the grid; (iv) if a
+#'   logarithmic spacing (TRUE) is desired for the grid or not (FALSE); if `NULL` defaulta values are
+#'   used, i.e. from max.lams to max.lams/20, and 20 grid points, log spacing for both.
 #' @param gamma.eBIC the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
 #' @param progress a logical value; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`
 #'
@@ -62,21 +63,21 @@ pdRCON.fit <- function(S,
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
 
   if(is.null(lams)){
-    lams <- matrix(0,2,3)
+    lams <- matrix(0,2,4)
     lams[,2] <- lams.max(S)
-    lams[,1] <- lams[,2]/10
-    lams[,3] <- c(10,10)
+    lams[,1] <- lams[,2]/20
+    lams[,3] <- c(20,20)
+    lams[,4] <- c(TRUE,TRUE)
   }
   rownames(lams) <- c("l1","l2")
-  colnames(lams) <- c("min","max","n.pts")
+  colnames(lams) <- c("min","max","n.pts","log.spacing")
 
   ## Prepare temp objects
   eBIC.l1 <-  matrix(0,lams[1,3],4)
   eBIC.l2 <-  matrix(0,lams[2,3],4)
 
   ### First grid search for lambda_1, with lambda_2=0
-  # l1.vec <- exp(seq(min.ls[1],max.ls[1], length.out=n.l1))
-  l1.vec <- seq(lams[1,1], lams[1,2], length.out=lams[1,3])
+  if(lams[1,4]==1) l1.vec <- exp(seq(log(lams[1,1]),log(lams[1,2]), length.out=lams[1,3])) else l1.vec <- seq(lams[1,1], lams[1,2], length.out=lams[1,3])
   l1.vec <- sort(l1.vec, decreasing=TRUE)
   for(i in 1:lams[1,3]){
     if(progress==TRUE) cat("Searching over lambda1 grid (",i,"/",lams[1,3],").\n", sep="")
@@ -109,7 +110,7 @@ pdRCON.fit <- function(S,
   if(progress==TRUE) cat("--- \n", sep="")
 
   ### Second grid search for lambda_2, with lambda_1=best.l1
-  l2.vec <- seq(lams[2,1],lams[2,2], length.out=lams[2,3])
+  if(lams[2,4]==1) l2.vec <- exp(seq(log(lams[2,1]),log(lams[2,2]), length.out=lams[2,3])) else l2.vec <-  seq(lams[2,1], lams[2,2], length.out=lams[2,3])
   l2.vec <- sort(l2.vec, decreasing=TRUE)
   for(i in 1:lams[2,3]){
     if(progress==TRUE) cat("Searching over lambda2 grid (",i,"/",lams[2,3],").\n", sep="")

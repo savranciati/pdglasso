@@ -146,7 +146,7 @@ across.block <- function(X, new.val=NULL){
 #' @export
 #'
 #' @examples
-#' S <- cov(toy_data$sample.data$)
+#' S <- cov(toy_data$sample.data)
 #' lams.max(S)
 lams.max <- function(S){
   max.l1 <- max(abs(S[upper.tri(S, diag=FALSE)]))

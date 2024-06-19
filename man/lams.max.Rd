@@ -20,6 +20,6 @@ Computes the maximum values for \code{lambda1} and \code{lambda2} such that:
 }
 }
 \examples{
-S <- cov(toy_data$sample.data$)
+S <- cov(toy_data$sample.data)
 lams.max(S)
 }

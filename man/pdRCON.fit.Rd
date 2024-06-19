@@ -29,13 +29,14 @@ pdRCON.fit(
 \item{S}{a sample covariance (or correlation) matrix with the block structure
 described in \code{\link{pdglasso-package}}.}
 
-\item{n}{the sample size of the data used to compute the sample covariance matrix S.}
+\item{n}{the sample size of the data used to compute the sample covariance
+matrix S.}
 
-\item{lams}{a 2x3 matrix; first row refers to \code{lambda1} and second row to
+\item{lams}{a 2x4 matrix; first row refers to \code{lambda1} and second row to
 \code{lambda2}; for each row, values are (i) minimum value for the grid; (ii)
-maximum value for the grid; (iii) number of points in the grid; if \code{NULL}
-defaulta values are used, i.e. from max.lams to max.lams/10, and 10 grid
-points.}
+maximum value for the grid; (iii) number of points in the grid; (iv) if a
+logarithmic spacing (TRUE) is desired for the grid or not (FALSE); if \code{NULL} defaulta values are
+used, i.e. from max.lams to max.lams/20, and 20 grid points, log spacing for both.}
 
 \item{gamma.eBIC}{the parameter for the eBIC computation. gamma=0 is equivalent to BIC.}
 
