@@ -15,7 +15,10 @@ library(pdglasso)
 Ranciati, S., Roverato, A., (2023). "On the application of Gaussian graphical models to paired data problems", arXiv pre-print, https://arxiv.org/abs/2307.14160
 
 ### Code reproducibility and data availability
+#### Updated version
+The .zip folder `additional simulations' contains ten subfolders with further results concerning 10 different independent replicated runs from the same simulation scheme. These are related to an ongoing review process for a submitted version of the paper so they might slightly differ from simulations of the arXiv version.
 
+#### arXiv version
 Inside this repository we made publicly available a .zip file containing:
 * *raw_data*, a folder containing the original data and some metadata information;
 * *breast_cancer.RData*, the dataset used in Section 6 of the manuscript
