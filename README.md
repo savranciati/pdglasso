@@ -13,7 +13,7 @@ library(pdglasso)
 ## Relevant paper for the package
 
 * Ranciati, S., Roverato, A., (2024). "On the application of Gaussian graphical models to paired data problems", **Statistics and Computing**, doi: https://doi.org/10.1007/s11222-024-10513-6 
-* Ranciati, S., Roverato, A., (2023). "On the application of Gaussian graphical models to paired data problems", **arXiv pre-print**, https://arxiv.org/abs/2307.14160
+* Ranciati, S., Roverato, A., (2024). "On the application of Gaussian graphical models to paired data problems", **arXiv pre-print**, https://arxiv.org/abs/2307.14160 [please check latest version]
 
 ### Code reproducibility and data availability
 #### Updated version
