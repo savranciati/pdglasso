@@ -121,6 +121,7 @@
 #' @author Saverio Ranciati (ORCID: 0000-0001-7880-9465) and Alberto Roverato (ORCID: 0000-0001-7984-3593)
 #' \cr **Maintainer**: Saverio Ranciati <saverio.ranciati2@unibo.it>
 #'
+#'
 #' @references Ranciati, S., Roverato, A., (2024). "On the application of Gaussian graphical models to paired data problems", *Statistics and Computing*, *34*(6), 1-19. \url{https://doi.org/10.1007/s11222-024-10513-6}
 #' @references Ranciati, S., Roverato, A., (2023). On the application of Gaussian graphical models to paired data problems. *arXiv pre-print*. \url{https://arxiv.org/abs/2307.14160}
 #' @references Ranciati, S., Roverato, A., Luati, A. (2021). Fused graphical lasso for brain networks with symmetries. *Journal of the Royal Statistical Society Series C: Applied Statistics*, *70*(5), 1299-1322. \url{https://doi.org/10.1111/rssc.12514}
