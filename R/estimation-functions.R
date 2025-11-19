@@ -268,7 +268,7 @@ pdRCON.check <- function(mod.out){
 #'
 #' By providing a covariance matrix `S` and values for `lambda1` and `lambda2`,
 #' this function estimates a concentration matrix X within the pdRCON
-#' submodel class, identified by the arguments `type` and `force.symm`, based on the pdglasso method (Ranciati & Roverato, 2023) using an
+#' submodel class, identified by the arguments `type` and `force.symm`, based on the pdglasso method (Ranciati & Roverato, 2024) using an
 #' (adaptive) ADMM algorithm. The output is the matrix and a list of internal
 #' parameters used by the function, together with the specific call with the
 #' relevant pdRCON submodel class.
@@ -317,7 +317,7 @@ pdRCON.check <- function(mod.out){
 #'
 #' @export
 #'
-#' @references Ranciati, S., Roverato, A., (2024). "On the application of Gaussian graphical models to paired data problems", *Statistics and Computing*, *34*(6), 1-19. \url{https://doi.org/10.1007/s11222-024-10513-6}
+#' @references Ranciati, S., Roverato, A., (2024). On the application of Gaussian graphical models to paired data problems. *Statistics and Computing*, *34*(6), 1-19. \url{https://doi.org/10.1007/s11222-024-10513-6}
 #' @references Ranciati, S., Roverato, A., (2023). On the application of Gaussian graphical models to paired data problems. *arXiv pre-print*. \url{https://arxiv.org/abs/2307.14160}
 #' @examples
 #'

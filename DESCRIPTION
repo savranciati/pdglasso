@@ -15,7 +15,7 @@ Description: This package deals with RCON models for paired data and implements 
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3
 ByteCompile: TRUE
 Roxygen: list(markdown = TRUE)
 Url: https://github.com/savranciati/pdglasso
