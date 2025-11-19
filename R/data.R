@@ -16,3 +16,15 @@
 #' with zero mean vector and concentration matrix `K`.
 #'
 "toy_data"
+
+
+#' fMRI Dataset
+#'
+#' Put reference here.
+#'
+#' @format ## `fMRI_parietal`
+#' A \eqn{404 \times 10} matrix.
+#'
+#'
+#'
+"fMRI_parietal"
