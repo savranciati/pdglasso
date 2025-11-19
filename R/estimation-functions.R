@@ -317,6 +317,7 @@ pdRCON.check <- function(mod.out){
 #'
 #' @export
 #'
+#' @references Ranciati, S., Roverato, A., (2024). "On the application of Gaussian graphical models to paired data problems", *Statistics and Computing*, *34*(6), 1-19. \url{https://doi.org/10.1007/s11222-024-10513-6}
 #' @references Ranciati, S., Roverato, A., (2023). On the application of Gaussian graphical models to paired data problems. *arXiv pre-print*. \url{https://arxiv.org/abs/2307.14160}
 #' @examples
 #'
