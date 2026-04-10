@@ -118,8 +118,9 @@
 #'
 #'
 #'
-#' @author Saverio Ranciati (ORCID: 0000-0001-7880-9465) and Alberto Roverato (ORCID: 0000-0001-7984-3593)
-#' \cr **Maintainer**: Saverio Ranciati <saverio.ranciati2@unibo.it>
+#' @author Saverio Ranciati (ORCID: 0000-0001-7880-9465), Alberto Roverato (ORCID: 0000-0001-7984-3593),
+#' Anna Vesely (ORCID: 0000-0001-6696-2390), and Peter Majcen (ORCID: 0009-0009-7020-7246)
+#' \cr **Maintainer**: Anna Vesely <anna.vesely2@unibo.it>
 #'
 #'
 #' @references Ranciati, S., Roverato, A., (2024). On the application of Gaussian graphical models to paired data problems. *Statistics and Computing*, *34*(6), 1-19. \url{https://doi.org/10.1007/s11222-024-10513-6}
@@ -136,5 +137,7 @@
 
 ## usethis namespace: start
 #' @importFrom MASS mvrnorm
+#' @useDynLib pdglasso, .registration = TRUE
+#' @importFrom Rcpp sourceCpp
 ## usethis namespace: end
 NULL

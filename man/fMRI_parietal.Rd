@@ -5,10 +5,8 @@
 \alias{fMRI_parietal}
 \title{fMRI Dataset}
 \format{
-\subsection{\code{fMRI_parietal}}{
-
+## `fMRI_parietal`
 A \eqn{404 \times 10} matrix.
-}
 }
 \usage{
 fMRI_parietal

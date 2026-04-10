@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc-functions.R
 \name{lams.max}
 \alias{lams.max}
-\title{Compute maximum theoretical values for \code{lambda1} and \code{lambda2}.}
+\title{Compute maximum theoretical values for `lambda1` and `lambda2`.}
 \usage{
 lams.max(S)
 }
@@ -10,14 +10,12 @@ lams.max(S)
 \item{S}{a covariance matrix.}
 }
 \value{
-a vector of two elements.
+A vector of two elements.
 }
 \description{
-Computes the maximum values for \code{lambda1} and \code{lambda2} such that:
-\itemize{
-\item if max of \code{lambda1} is used, the estimated concentration matrix will be diagonal;
-\item if max of \code{lambda2} is used, the estimated concentration matrix will be fully symmetric.
-}
+Computes the maximum values for `lambda1` and `lambda2` such that:
+* if max of `lambda1` is used, the estimated concentration matrix will be diagonal;
+* if max of `lambda2` is used, the estimated concentration matrix will be fully symmetric.
 }
 \examples{
 S <- cov(toy_data$sample.data)

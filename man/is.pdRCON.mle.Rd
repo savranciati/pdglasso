@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimation-functions.R
 \name{is.pdRCON.mle}
 \alias{is.pdRCON.mle}
-\title{Check if a concentration matrix satisfies the likelihood equations}
+\title{Check if a concentration matrix satisfies the likelihood equations.}
 \usage{
 is.pdRCON.mle(K.mle, pdColG, S, toll = 1e-08, print.checks = TRUE)
 }
@@ -10,41 +10,43 @@ is.pdRCON.mle(K.mle, pdColG, S, toll = 1e-08, print.checks = TRUE)
 \item{K.mle}{candidate mle of \eqn{K} to be checked.}
 
 \item{pdColG}{matrix representing a colored graph for paired data;
-see \code{\link{pdglasso-package}} for details.}
+see [`pdglasso-package`] for details.}
 
 \item{S}{a sample covariance matrix with the block structure describe
-in \code{\link{pdglasso-package}}.}
+in [`pdglasso-package`].}
 
 \item{toll}{threshold to check whether a value is equal to zero.}
 
-\item{print.checks}{a logical (default \code{TRUE}).}
+\item{print.checks}{a logical (default `TRUE`).}
 }
 \value{
-a logical equal to \code{TRUE} if \code{K.mle} satisfies the likelihood equations
-and \code{FALSE} otherwise. If \code{print.checks = TRUE} the values used for the
+a logical equal to `TRUE` if `K.mle` satisfies the likelihood equations
+and `FALSE` otherwise. If `print.checks = TRUE` the values used for the
 checking are printed.
 }
 \description{
 Checks if a matrix is the maximum likelihood estimate of the concentration
 matrix of a pdRCON model represented by the colored graph for paired data
-\code{pdColG}, computed from the covariance matrix \code{S}.
+`pdColG`, computed from the covariance matrix `S`.
 }
 \details{
-In order to check if \code{K.mle} is the maximum likelihood estimate, computed
-from \code{S}, under the model represented by \code{pdColG} the following quantities
+In order to check if `K.mle` is the maximum likelihood estimate, computed
+from `S`, under the model represented by `pdColG` the following quantities
 are considered:
-\itemize{
-\item the values of \code{K.mle} that are expected to be zero;
-\item the differences between the entries of \code{K.mle} which are expected to be equal;
-\item the differences between the relevant sums of the entries of \code{solve(K.mle)}
-and \code{S} which are expected to be equal, so as to satisfy the
-likelihood equations.
-\item all the absolute quantities of the previous three points are divided
-by the \eqn{\ell_2} norm of the non-zero entries of \code{K.mle} so as to
-obtain relative quantities.
 
-Then if all the above quantities are smaller than \code{toll} the check is
-considered successful and a \code{TRUE} is returned.
-}
+* the values of `K.mle` that are expected to be zero;
+
+* the differences between the entries of `K.mle` which are expected to be equal;
+
+* the differences between the relevant sums of the entries of `solve(K.mle)`
+  and `S` which are expected to be equal, so as to satisfy the
+  likelihood equations.
+
+* all the absolute quantities of the previous three points are divided
+  by the \eqn{\ell_2} norm of the non-zero entries of `K.mle` so as to
+  obtain relative quantities.
+
+  Then if all the above quantities are smaller than `toll` the check is
+  considered successful and a `TRUE` is returned.
 }
 \keyword{internal}

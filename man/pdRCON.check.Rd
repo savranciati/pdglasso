@@ -7,27 +7,25 @@
 pdRCON.check(mod.out)
 }
 \arguments{
-\item{mod.out}{An object of list type, that is the output of a call to the \code{\link{admm.pdglasso}} function. This can also be the output of a call to \code{\link{pdRCON.fit}}.}
+\item{mod.out}{An object of list type, that is the output of a call to the [`admm.pdglasso`] function. This can also be the output of a call to [`pdRCON.fit`].}
 }
 \value{
 Depending on the acronym stored inside the input object, one or more plots depicting:
-\itemize{
-\item off-diagonal elements,
-\item vertices,
-\item inside-block,
-\item across-block.
-}
+
+* off-diagonal elements,
+* vertices,
+* inside-block,
+* across-block.
 }
 \description{
-This function produces different plots of values of X in \code{\link{log10}} scale,
+This function produces different plots of values of X in [`log10`] scale,
 depending on the submodel class identified by the acronym stored in the input
-object \code{mod.out}. The user might want to call this function to identify
-what values to pass as arguments \code{th1} and \code{th2} to a call to the function
-\code{\link{pdColGet}}.
+object `mod.out`. The user might want to call this function to identify
+what values to pass as arguments `th1` and `th2` to a call to the function
+[`pdColGet`].
 }
 \examples{
-
 S <- cov(toy_data$sample.data)
-mod.out <- pdRCON.fit(S,n=60)
+mod.out <- pdRCON.fit(S,n=60)$model
 pdRCON.check(mod.out)
 }

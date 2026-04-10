@@ -1,14 +1,11 @@
-require(MASS)
 
-
-#' Random simulation of pdRCON models
+#' Random simulation of pdRCON models.
 #'
 #' Randomly generates a coloured graph for paired data \eqn{\mathcal{G}}, a
 #' concentration matrix \eqn{K} that both is adapted to \eqn{\mathcal{G}} and
 #' satisfies the equality constraints implied by \eqn{\mathcal{G}},  and a
 #' random sample from a multivariate normal distribution with zero mean vector
 #' and covariance matrix \eqn{\Sigma=K^{-1}}.
-#'
 #'
 #' @param p an even integer, that is the number of vertices of the generated
 #'   coloured graph for paired data `pdColG`.
@@ -36,9 +33,7 @@ require(MASS)
 #'   output in the console.
 #'
 #' @details
-#'
-#'
-#'
+#' 
 #'   **Details on the sparsity degree of the generated graph**
 #'
 #'   The argument `dens.vertex` specifies the proportion of coloured vertices
@@ -80,7 +75,6 @@ require(MASS)
 #'   adapted to a suitable coloured graph for paired data with sparsity degree
 #'   according to the  `dens.xxx` arguments.
 #'
-#'
 #' @return A list with the following components:
 #'
 #'  * `pdColG` a randomly generated a matrix representing a coloured graph for
@@ -91,12 +85,9 @@ require(MASS)
 #' * `sample.data` a randomly generated sample form a multivariate normal distribution
 #'   with mean vector zero and concentration matrix `K`.
 #'
-#'
 #' Note that the variable in \eqn{L} are named `L1,...,Lq` and variables in
 #' \eqn{R} are are named `R1,...,Rq` where  `Li` is homologous to  `Ri` for
 #' every i=1,...,q.
-#'
-#'
 #'
 #' @examples
 #'
@@ -117,9 +108,10 @@ require(MASS)
 #' # computation of the partial correlation matrix
 #' R <- -cov2cor(GenMod$K)
 #' diag(R) <- 1
-#'
+#' @importFrom MASS mvrnorm
+#' @importFrom stats rWishart
 #' @export
-#'
+
 pdRCON.simulate <- function(p,
                             concent.mat = TRUE,
                             sample = TRUE,
@@ -166,17 +158,19 @@ pdRCON.simulate <- function(p,
 }
 
 
-#' Random generation of a pdColG matrix
+
+
+#' Random generation of a pdColG matrix.
 #'
-#' @param K the inverse of a variance matrix
+#' @param K the inverse of a variance matrix.
 #' @param p,type,force.symm,dens,dens.vertex,dens.inside,dens.across the same as
-#'   in [`pdRCON.simulate`]
+#'   in [`pdRCON.simulate`].
 #'
 #' @details
 #'
-#' This function is called by [`pdRCON.simulate`]
+#' This function is called by [`pdRCON.simulate`].
 #'
-#' @return this function returns a `pdColG` matrix, see [`pdglasso-package`] for
+#' @return A `pdColG` matrix, see [`pdglasso-package`] for
 #'   details. If a matrix `K` is passed then this function produced a pdColG
 #'   graph that tries to mimic the "zero" structure of `K` in the sense that
 #'   missing edges correspond to the smallest entries of `K`. Similarly the
@@ -184,7 +178,7 @@ pdRCON.simulate <- function(p,
 #'   for details.
 #'
 #'   If `K=NULL` then the pdColG is generated randomly.
-#'
+#' @importFrom stats quantile
 #' @noRd
 #'
 make.pdColG <- function(p=NULL,
@@ -196,7 +190,7 @@ make.pdColG <- function(p=NULL,
                         dens.inside=NULL,
                         dens.across=NULL,
                         print.type=FALSE){
-
+  
   # initialization and checks
   if(is.null(dens.vertex)) dens.vertex <- dens
   if(is.null(dens.inside)) dens.inside <- dens
@@ -210,10 +204,10 @@ make.pdColG <- function(p=NULL,
   #
   if(is.null(K)){
     q <- p/2
-
+    
     # make overall graph
     G <- symm.structure.gen(p=p, dens=dens)
-
+    
     # inside.block.edge symmetries
     if(any(acr.type=="I")){
       G.sym <- symm.structure.gen(p=q, dens=dens.inside)
@@ -223,7 +217,7 @@ make.pdColG <- function(p=NULL,
     }else{
       G.sym <- NULL
     }
-
+    
     # across.block.edge symmetries
     if(any(acr.type=="A")){
       G.across <- symm.structure.gen(p=q, dens=dens.across)
@@ -233,7 +227,7 @@ make.pdColG <- function(p=NULL,
     }else{
       G.across <- NULL
     }
-
+    
     # vertex symmetries
     if(any(acr.type=="V")){
       m <- floor(dens.vertex*q)
@@ -249,13 +243,13 @@ make.pdColG <- function(p=NULL,
   }else{
     p <- nrow(K)
     q <- p/2
-
+    
     # overall graph
     Kvec <- abs(K[lower.tri(K, diag=FALSE)])
     threshold <- quantile(Kvec, 1-dens)
     G <- (abs(K)>=threshold)
     G[lower.tri(G, diag=TRUE)] <- 0
-
+    
     # inside.block.edge symmetries
     if(any(acr.type=="I") & dens.inside!=0){
       G.sym <- symm.structure.gen(K[1:q, 1:q], K[(q+1):p, (q+1):p], dens=dens.inside)
@@ -265,7 +259,7 @@ make.pdColG <- function(p=NULL,
     }else{
       G.sym <- NULL
     }
-
+    
     # across.block.edge symmetries
     if(any(acr.type=="A") & dens.across!=0){
       G.across <- symm.structure.gen(K[1:q, (q+1):p], t(K[1:q, (q+1):p]), dens=dens.across)
@@ -275,7 +269,7 @@ make.pdColG <- function(p=NULL,
     }else{
       G.across <- NULL
     }
-
+    
     # vertex symmetries
     if(any(acr.type=="V") & dens.vertex!=0){
       ab.vec <- abs(diag(K[1:q,1:q])-diag(K[(q+1):p, (q+1):p]))
@@ -311,10 +305,11 @@ make.pdColG <- function(p=NULL,
 
 
 
-# This function is called by [`make.pdColG`]
-# Generates a symmetric structure
+
+# This function is called by [`make.pdColG`].
+# Generates a symmetric structure.
 #
-# A,B  = two (concentration) matrices with same dimension
+# A,B  = two (concentration) matrices with same dimension.
 #
 # This function returns a binary (0/1) upper triangular matrix
 # with ones correspond to nonzero symmetries obtained as follows:
@@ -328,20 +323,18 @@ make.pdColG <- function(p=NULL,
 #
 
 
-#' Generate a symmetric structure
+#' Generate a symmetric structure.
 #'
-#' @param A,B two (concentration) matrices with same dimension
-#' @param p number of variables
-#' @param dens density of the symmetric structure
+#' @param A,B two (concentration) matrices with same dimension.
+#' @param p number of variables.
+#' @param dens density of the symmetric structure.
 #'
 #' @details
 #'
-#' This function is called by [`make.pdColG`]
+#' This function is called by [`make.pdColG`].
 #'
 #'
-#' @return
-#'
-#' This function returns a binary (0/1) upper triangular matrix with ones
+#' @return A binary (0/1) upper triangular matrix with ones
 #' correspond to nonzero symmetries obtained as follows:
 #'
 #' If `A` and  `B` are given then `p=nrow(A)`. The entries (i.e. concentrations)
@@ -357,7 +350,7 @@ make.pdColG <- function(p=NULL,
 #' `p` gives the number of vertices.
 #'
 #' @noRd
-#'
+
 symm.structure.gen <- function(A=NULL, B=NULL, p=NULL, dens){
   if(is.null(p)){
     p <- nrow(A)
@@ -381,7 +374,8 @@ symm.structure.gen <- function(A=NULL, B=NULL, p=NULL, dens){
 
 
 
-#' Random simulation of Gaussian graphical models (GGMs)
+
+#' Random simulation of Gaussian graphical models (GGMs).
 #'
 #' Randomly generates an undirected graph \eqn{\mathcal{G}}, a
 #' concentration matrix \eqn{K} adapted to \eqn{\mathcal{G}} and a random sample
@@ -446,13 +440,14 @@ symm.structure.gen <- function(A=NULL, B=NULL, p=NULL, dens){
 #' # computation of the partial correlation matrix
 #' R <- -cov2cor(GenMod$K)
 #' diag(R) <- 1
-#'
+
 GGM.simulate <- function(p,
                          concent.mat = TRUE,
                          sample = TRUE,
                          Sigma = NULL,
                          sample.size = NULL,
                          dens =0.1){
+  
   GenMod <- pdRCON.simulate (p,
                              concent.mat = concent.mat,
                              sample = sample,
@@ -474,6 +469,6 @@ GGM.simulate <- function(p,
     sample = FALSE
   }
   if(sample) names(GenMod$sample.data) <- V.lab
-
+  
   return(GenMod)
 }

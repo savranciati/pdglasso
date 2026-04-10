@@ -2,7 +2,7 @@
 % Please edit documentation in R/simul-functions.R
 \name{GGM.simulate}
 \alias{GGM.simulate}
-\title{Random simulation of Gaussian graphical models (GGMs)}
+\title{Random simulation of Gaussian graphical models (GGMs).}
 \usage{
 GGM.simulate(
   p,
@@ -15,41 +15,43 @@ GGM.simulate(
 }
 \arguments{
 \item{p}{an even integer, that is the number of vertices of the generated
-undirected graph \code{G}.}
+undirected graph `G`.}
 
-\item{concent.mat}{a logical (default \code{TRUE}) indicating whether a
-concentration matrix \code{K} adapted to \code{G} should be generated.}
+\item{concent.mat}{a logical (default `TRUE`) indicating whether a
+concentration matrix `K` adapted to `G` should be generated.}
 
-\item{sample}{a logical (default \code{TRUE}) indicating whether a sample from a
-normal distribution with zero mean vector and concentration matrix \code{K}
+\item{sample}{a logical (default `TRUE`) indicating whether a sample from a
+normal distribution with zero mean vector and concentration matrix `K`
 should be generated.}
 
 \item{Sigma}{a \eqn{p\times p} positive definite matrix. This is the matrix
-argument of the \code{\link{rWishart}} function, which is used as starting point in
+argument of the [`rWishart`] function, which is used as starting point in
 the random generation of the concentration matrix, as described in the
-details section of the function \code{\link{pdRCON.simulate}}. The default \code{NULL} is
-equivalent to the identity matrix \code{Sigma=diag(p)}.}
+details section of the function [`pdRCON.simulate`]. The default `NULL` is
+equivalent to the identity matrix `Sigma=diag(p)`.}
 
-\item{sample.size}{size of the randomly generated sample. The default \code{NULL}
-is equivalent to \code{sample.size=3*p}.}
+\item{sample.size}{size of the randomly generated sample. The default `NULL`
+is equivalent to `sample.size=3*p`.}
 
 \item{dens}{a value between zero and one used to specify the sparsity
 degree of the generated graph, as described in the details section of the
-function \code{\link{pdRCON.simulate}}.}
+function [`pdRCON.simulate`].}
 }
 \value{
 A list with the following components:
-\itemize{
-\item \code{G} a randomly generated matrix encoding an undirected
-graph on \eqn{p} vertices. More specifically, \code{G} is a \code{pdColG} graph with
-no entry equal to 2, and it differs from the adjacency matrix of the
-undirected graph because its diagonal entries are equal to one.
-\item \code{K} a randomly generated concentration matrix adapted to \code{G}.
-\item \code{sample.data} a randomly generated sample form a multivariate normal distribution
-with mean vector zero and concentration matrix \code{K}.
-}
 
-Note that the variable are named \verb{V1,...,Vp}.
+ * `G` a randomly generated matrix encoding an undirected
+ graph on \eqn{p} vertices. More specifically, `G` is a `pdColG` graph with
+ no entry equal to 2, and it differs from the adjacency matrix of the
+ undirected graph because its diagonal entries are equal to one.
+
+* `K` a randomly generated concentration matrix adapted to `G`.
+
+* `sample.data` a randomly generated sample form a multivariate normal distribution
+  with mean vector zero and concentration matrix `K`.
+
+
+Note that the variable are named `V1,...,Vp`.
 }
 \description{
 Randomly generates an undirected graph \eqn{\mathcal{G}}, a
@@ -59,11 +61,11 @@ matrix \eqn{\Sigma=K^{-1}}.
 }
 \details{
 A GGM is a pdRCON model with no parametric symmetries, and the
-purpose of this function is that of providing a simplified call to the
-function \code{\link{pdRCON.simulate}}, with the appropriate choice of arguments
-required to simulate from GGMs. Note, however, that pdRCON models make
-sense only if the number of variables \code{p} is even, and this requirement is
-(unnecessarily) retained here.
+  purpose of this function is that of providing a simplified call to the
+  function [`pdRCON.simulate`], with the appropriate choice of arguments
+  required to simulate from GGMs. Note, however, that pdRCON models make
+  sense only if the number of variables `p` is even, and this requirement is
+  (unnecessarily) retained here.
 }
 \examples{
 
@@ -83,5 +85,4 @@ min(eigen(GenMod$K)$values)
 # computation of the partial correlation matrix
 R <- -cov2cor(GenMod$K)
 diag(R) <- 1
-
 }

@@ -2,29 +2,29 @@
 % Please edit documentation in R/graph-functions.R
 \name{pdColG.get}
 \alias{pdColG.get}
-\title{Build a graph from the output of a call to \code{\link{admm.pdglasso}}.}
+\title{Build a graph from the output of a call to [`admm.pdglasso`].}
 \usage{
 pdColG.get(admm.out, th1 = NULL, th2 = NULL, print.summary = FALSE)
 }
 \arguments{
-\item{admm.out}{An object of list type, that is the output of a call to the \code{\link{admm.pdglasso}} function.}
+\item{admm.out}{an object of list type, that is the output of a call to the [`admm.pdglasso`] function.}
 
-\item{th1}{(optional) A scalar, the threshold to identify edges in the graph; it must be non-negative.}
+\item{th1}{(optional) a scalar, the threshold to identify edges in the graph; it must be non-negative.}
 
-\item{th2}{(optional) A scalar, the threshold to identify coloured edges in the graph; it must be non-negative.}
+\item{th2}{(optional) a scalar, the threshold to identify coloured edges in the graph; it must be non-negative.}
 
-\item{print.summary}{(optional) if \code{TRUE} provides summary statistics of the graph.}
+\item{print.summary}{(optional) if `TRUE` provides summary statistics of the graph.}
 }
 \value{
-a list with the following components:
-\itemize{
-\item \code{pdColG} a matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.
-\item \code{n.par} the number of parameters of the pdRCON model represented by \code{pdColg}.
-}
+A list with the following components:
+
+* `pdColG` a matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.
+
+* `n.par` the number of parameters of the pdRCON model represented by `pdColg`.
 }
 \description{
 This function returns a Coloured Graph for Paired Data (pdColG) from the
-output of a call to \code{\link{admm.pdglasso}}. We refer to \code{\link{pdglasso-package}} both for the description of the matrix
+output of a call to [`admm.pdglasso`]. We refer to [`pdglasso-package`] both for the description of the matrix
 encoding a coloured graph for paired and the available submodel classes.
 }
 \examples{

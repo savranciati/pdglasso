@@ -27,21 +27,22 @@ pdRCON.fit(
 }
 \arguments{
 \item{S}{a sample covariance (or correlation) matrix with the block structure
-described in \code{\link{pdglasso-package}}.}
+described in [`pdglasso-package`].}
 
 \item{n}{the sample size of the data used to compute the sample covariance
 matrix S.}
 
-\item{lams}{a 2x4 matrix; first row refers to \code{lambda1} and second row to
-\code{lambda2}; for each row, values are (i) minimum value for the grid; (ii)
+\item{lams}{a 2x4 matrix; first row refers to `lambda1` and second row to
+`lambda2`; for each row, values are (i) minimum value for the grid; (ii)
 maximum value for the grid; (iii) number of points in the grid; (iv) if a
-logarithmic spacing (TRUE) is desired for the grid or not (FALSE); if \code{NULL} defaulta values are
+logarithmic spacing (TRUE) is desired for the grid or not (FALSE); if `NULL` defaulta values are
 used, i.e. from max.lams to max.lams/20, and 20 grid points, log spacing for both.}
 
 \item{gamma.eBIC}{the parameter for the eBIC computation. gamma=0 is equivalent to BIC.}
 
-\item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which identify the pdRCON submodel class of interest; see
-\code{\link{pdglasso-package}} for details.}
+\item{type, force.symm}{two subvectors of `c("vertex", "inside.block.edge",
+"across.block.edge")` which identify the pdRCON submodel class of interest; see
+[`pdglasso-package`] for details.}
 
 \item{X.init}{(optional) a \eqn{p \times p} initial guess for the
 concentration matrix and/or starting solution for the ADMM algorithm.}
@@ -52,10 +53,10 @@ the outer loop. It must be strictly positive.}
 \item{rho2}{a scalar; tuning parameter of the ADMM algorithm to be used for
 the inner loop. It must be strictly positive.}
 
-\item{varying.rho1}{a logical; if \code{TRUE} the parameter rho1 is updated
+\item{varying.rho1}{a logical; if `TRUE` the parameter rho1 is updated
 iteratively to speed-up convergence.}
 
-\item{varying.rho2}{a logical; if \code{TRUE} the parameter rho2 is updated
+\item{varying.rho2}{a logical; if `TRUE` the parameter rho2 is updated
 iteratively to speed-up convergence.}
 
 \item{max_iter}{an integer; maximum number of iterations to be run in case
@@ -67,43 +68,43 @@ of primal and dual residuals of the ADMM algorithm.}
 \item{eps.rel}{a scalar; the relative precision required for the computation
 of primal and dual residuals of the ADMM algorithm.}
 
-\item{verbose}{a logical; if \code{TRUE} the progress (and internal convergence of
+\item{verbose}{a logical; if `TRUE` the progress (and internal convergence of
 inner loop) is shown in the console while the algorithm is running.}
 
-\item{progress}{a logical value; if \code{TRUE} provides a visual update in the console about the grid search over \code{lambda1} and \code{lambda2}}
+\item{progress}{a logical value; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`}
 
-\item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
-specified by the arguments \code{type} and \code{force.symm} - is returned as printed
-output in the console.}
+\item{print.type}{a logical; if `TRUE` the pdRCON submodel class considered, as
+specified by the arguments `type` and `force.symm`, is returned as printed
+output in the console. This option is only used when `rcpp = FALSE`; when
+`rcpp = TRUE`, no output is printed for efficiency.}
 }
 \value{
 A list with the following components:
-\itemize{
-\item \code{model} selected model; object resulting from the function \code{\link{admm.pdglasso}} with \code{best.lambdas}.
-\item \code{lambda.grid} the grid of values used for \code{lambda1} and \code{lambda2.}
-\item \code{best.lambdas} the selected values of \code{lambda1} and \code{lambda2} according to eBIC criterion.
-\item \code{l1.path} a matrix containing the grid values for \code{lambda1} as well as quantities used in eBIC computation.
-\item \code{l2.path} a matrix containing the grid values for \code{lambda2} as well as quantities used in eBIC computation.
-\item \code{time.exec} total execution time for the called function.
-}
+
+* `model` selected model; object resulting from the function [`admm.pdglasso`] with `best.lambdas`.
+* `lambda.grid` the grid of values used for `lambda1` and `lambda2.`
+* `best.lambdas` the selected values of `lambda1` and `lambda2` according to eBIC criterion.
+* `l1.path` a matrix containing the grid values for `lambda1` as well as quantities used in eBIC computation.
+* `l2.path` a matrix containing the grid values for `lambda2` as well as quantities used in eBIC computation.
+* `time.exec` total execution time for the called function.
 
 A warning is produced if at least one run of the algorithm for the grid
 searches has resulted in non-convergence (status can be checked by inspecting
-\code{l1.path} and \code{l2.path}).
+`l1.path` and `l2.path`).
 }
 \description{
-Performs a sequence of calls to \code{\link{admm.pdglasso}} providing two grids of
-values for \code{lambda1} and \code{lambda2}. First, a grid search conditional on
-\code{lambda2}=0 is run to select the best \code{lambda1} value among the candidates
-(according to eBIC); conditional on the best \code{lambda1}, a similar search is
-performed for \code{lambda2}. The output is the select model, given by the
+Performs a sequence of calls to [`admm.pdglasso`] providing two grids of
+values for `lambda1` and `lambda2`. First, a grid search conditional on
+`lambda2`=0 is run to select the best `lambda1` value among the candidates
+(according to eBIC); conditional on the best `lambda1`, a similar search is
+performed for `lambda2`. The output is the select model, given by the
 estimated concenration matrix.
-The user may call \code{\link{pdColG.get}} to obtain the corresponding Coloured Graph
+The user may call [`pdColG.get`] to obtain the corresponding Coloured Graph
 for Paired Data (pdColG) from the selected model.
 }
 \examples{
 S <- cov(toy_data$sample.data)
-sel.mod <- pdRCON.fit(S,n=60)
+sel.mod <- pdRCON.fit(S, n=60)
 sel.mod$l1.path
 sel.mod$l2.path
 pdRCON.check(sel.mod$model)

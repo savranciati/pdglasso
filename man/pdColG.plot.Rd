@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph-functions.R
 \name{pdColG.plot}
 \alias{pdColG.plot}
-\title{Visualize a coloured graph for paired data}
+\title{Visualize a coloured graph for paired data.}
 \usage{
 pdColG.plot(
   G,
@@ -14,6 +14,10 @@ pdColG.plot(
 )
 }
 \arguments{
+\item{G}{a symmetric \eqn{p \times p} matrix coding a coloured graphical
+model; only values allowed are the integers \eqn{\{0, 1, 2\}}; usually, an
+object produced by a call to the function [`pdColG.get`]}
+
 \item{block}{a string; allows the user to specify which portion of the graph (a block) is to be plotted: possible mutually exclusive options are "left", "right", "across", "everything";  default is "everything", which means the entire graph is plotted.}
 
 \item{which.sym}{a string or a vector of strings; specifies which kind of symmetries are plotted (structural, parametric or both).}
@@ -25,20 +29,15 @@ pdColG.plot(
 \item{fancy}{a logical value; if TRUE, symbols in the plot are used from the
 Latin1 encoding for characters; set to FALSE if characters are not properly
 displayed, so symbols are reverted to latin letters.}
-
-\item{g}{a symmetric \eqn{p \times p} matrix coding a coloured graphical
-model; only values allowed are the integers \eqn{\{0, 1, 2\}}; usually, an
-object produced by a call to the function \code{\link{pdColG.get}}}
 }
 \value{
-either a plot within the running R session or a .pdf file saved in the working directory if the option export.plot is set to TRUE.
+Either a plot within the running R session or a .pdf file saved in the working directory if the option export.plot is set to TRUE.
 }
 \description{
 This functions produces a heatmap-style graphical representation of a graph object produced by
-a call to \code{\link{pdColG.get}}, or a matrix compatible with the coloured graph specification
+a call to [`pdColG.get`], or a matrix compatible with the coloured graph specification
 used in this package.
 }
 \examples{
-
 pdColG.plot(toy_data$pdColG)
 }

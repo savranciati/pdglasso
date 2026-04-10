@@ -2,7 +2,7 @@
 % Please edit documentation in R/simul-functions.R
 \name{pdRCON.simulate}
 \alias{pdRCON.simulate}
-\title{Random simulation of pdRCON models}
+\title{Random simulation of pdRCON models.}
 \usage{
 pdRCON.simulate(
   p,
@@ -21,49 +21,50 @@ pdRCON.simulate(
 }
 \arguments{
 \item{p}{an even integer, that is the number of vertices of the generated
-coloured graph for paired data \code{pdColG}.}
+coloured graph for paired data `pdColG`.}
 
-\item{concent.mat}{a logical (default \code{TRUE}) indicating whether a
-concentration matrix \code{K} adapted to \code{pdColG} should be generated.}
+\item{concent.mat}{a logical (default `TRUE`) indicating whether a
+concentration matrix `K` adapted to `pdColG` should be generated.}
 
-\item{sample}{a logical (default \code{TRUE}) indicating whether a sample from a
-normal distribution with zero mean vector and concentration matrix \code{K}
+\item{sample}{a logical (default `TRUE`) indicating whether a sample from a
+normal distribution with zero mean vector and concentration matrix `K`
 should be generated.}
 
 \item{Sigma}{a \eqn{p\times p} positive definite matrix. This is the matrix
-argument of the \code{\link{rWishart}} function, which is used as starting point in
+argument of the [`rWishart`] function, which is used as starting point in
 the random generation of the concentration matrix, as described in the
-details section below. The default \code{NULL} is equivalent to the identity
-matrix \code{Sigma=diag(p)}.}
+details section below. The default `NULL` is equivalent to the identity
+matrix `Sigma=diag(p)`.}
 
-\item{sample.size}{size of the randomly generated sample. The default \code{NULL}
-is equivalent to \code{sample.size=3*p}.}
+\item{sample.size}{size of the randomly generated sample. The default `NULL`
+is equivalent to `sample.size=3*p`.}
 
-\item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which
-identify the pdRCON submodel class of interest; see \code{\link{pdglasso-package}} for details.}
+\item{type, force.symm}{two subvectors of `c("vertex", "inside.block.edge", "across.block.edge")` which
+identify the pdRCON submodel class of interest; see [`pdglasso-package`] for details.}
 
 \item{dens, dens.vertex, dens.inside, dens.across}{four values between zero and
 one used to specify the sparsity degree of the generated graph, as
-described in the details section below. The default \code{dens.vertex=NULL} is
-equivalent to \code{dens.vertex=dens}, and similarly for \code{dens.inside} and
-\code{dens.across}.}
+described in the details section below. The default `dens.vertex=NULL` is
+equivalent to `dens.vertex=dens`, and similarly for `dens.inside` and
+`dens.across`.}
 
-\item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
-specified by the arguments \code{type} and \code{force.symm} - is returned as printed
+\item{print.type}{a logical; if `TRUE` the pdRCON submodel class considered, as
+specified by the arguments `type` and `force.symm` - is returned as printed
 output in the console.}
 }
 \value{
 A list with the following components:
-\itemize{
-\item \code{pdColG} a randomly generated a matrix representing a coloured graph for
-paired data on \eqn{p} vertices; see \code{\link{pdglasso-package}} for details.
-\item \code{K} a randomly generated concentration matrix adapted to \code{pdColG}.
-\item \code{sample.data} a randomly generated sample form a multivariate normal distribution
-with mean vector zero and concentration matrix \code{K}.
-}
 
-Note that the variable in \eqn{L} are named \verb{L1,...,Lq} and variables in
-\eqn{R} are are named \verb{R1,...,Rq} where  \code{Li} is homologous to  \code{Ri} for
+ * `pdColG` a randomly generated a matrix representing a coloured graph for
+ paired data on \eqn{p} vertices; see [`pdglasso-package`] for details.
+
+* `K` a randomly generated concentration matrix adapted to `pdColG`.
+
+* `sample.data` a randomly generated sample form a multivariate normal distribution
+  with mean vector zero and concentration matrix `K`.
+
+Note that the variable in \eqn{L} are named `L1,...,Lq` and variables in
+\eqn{R} are are named `R1,...,Rq` where  `Li` is homologous to  `Ri` for
 every i=1,...,q.
 }
 \description{
@@ -74,46 +75,46 @@ random sample from a multivariate normal distribution with zero mean vector
 and covariance matrix \eqn{\Sigma=K^{-1}}.
 }
 \details{
-\strong{Details on the sparsity degree of the generated graph}
+**Details on the sparsity degree of the generated graph**
 
-The argument \code{dens.vertex} specifies the proportion of coloured vertices
-among the \eqn{p} vertices. This is used if the string "vertex" is a
-component of \code{type} but not of \code{force.symm}. The string "vertex" not being
-a component of \code{type} is equivalent to \code{dens.vertex=0} whereas the string
-"vertex" being a component of both \code{type} and \code{force.symm} is equivalent to
-\code{dens.vertex=1}.
+  The argument `dens.vertex` specifies the proportion of coloured vertices
+  among the \eqn{p} vertices. This is used if the string "vertex" is a
+  component of `type` but not of `force.symm`. The string "vertex" not being
+  a component of `type` is equivalent to `dens.vertex=0` whereas the string
+  "vertex" being a component of both `type` and `force.symm` is equivalent to
+  `dens.vertex=1`.
 
-The argument \code{dens.inside} specifies the proportion of coloured symmetric
-inside block edges among the \eqn{q(q-1)}, with \eqn{q=p/2}, inside block
-edges. This is used if the string "inside.block.edge" is a component of
-\code{type}, otherwise it is equivalent to \code{dens.inside=0}. The overall density
-of inside block edges is obtained by the sum of the densities of coloured
-and uncoloured inside block edges. This is  a value between \code{dens.inside}
-and \code{dens.inside+dens}. Furthermore, it is exactly equal to \code{dens} if
-"inside.block.edge" is not a component of \code{type} and to \code{dens.inside} if
-"inside.block.edge" is a component of both \code{type} and \code{force.symm}.
+  The argument `dens.inside` specifies the proportion of coloured symmetric
+  inside block edges among the \eqn{q(q-1)}, with \eqn{q=p/2}, inside block
+  edges. This is used if the string "inside.block.edge" is a component of
+  `type`, otherwise it is equivalent to `dens.inside=0`. The overall density
+  of inside block edges is obtained by the sum of the densities of coloured
+  and uncoloured inside block edges. This is  a value between `dens.inside`
+  and `dens.inside+dens`. Furthermore, it is exactly equal to `dens` if
+  "inside.block.edge" is not a component of `type` and to `dens.inside` if
+  "inside.block.edge" is a component of both `type` and `force.symm`.
 
-The argument \code{dens.across} specifies the proportion of coloured symmetric
-across block edges among the potentially coloured \eqn{q(q-1)} across
-block edges. This is used if the string "across.block.edge" is a component
-of \code{type}, otherwise it is equivalent to \code{dens.across=0}. The overall
-density of across block edges is obtained by the sum of the densities of
-coloured and uncoloured across block edges. This is  a value between
-\code{dens.across} and \code{dens.across+dens}. Furthermore, it is exactly equal  to
-\code{dens} if "across.block.edge" is not a component of \code{type}.
+  The argument `dens.across` specifies the proportion of coloured symmetric
+  across block edges among the potentially coloured \eqn{q(q-1)} across
+  block edges. This is used if the string "across.block.edge" is a component
+  of `type`, otherwise it is equivalent to `dens.across=0`. The overall
+  density of across block edges is obtained by the sum of the densities of
+  coloured and uncoloured across block edges. This is  a value between
+  `dens.across` and `dens.across+dens`. Furthermore, it is exactly equal  to
+  `dens` if "across.block.edge" is not a component of `type`.
 
-The argument \code{dens} specifies the density of uncoloured edges. Note that
-the algorithm generates uncoloured edges first, which may be overwritten by
-coloured edges. For this reason the actual density of uncoloured edges is
-typically smaller than \code{dens}.
+  The argument `dens` specifies the density of uncoloured edges. Note that
+  the algorithm generates uncoloured edges first, which may be overwritten by
+  coloured edges. For this reason the actual density of uncoloured edges is
+  typically smaller than `dens`.
 
-\strong{Details on the generating process of the concentration matrix}
+  **Details on the generating process of the concentration matrix**
 
-The concentration matrix is obtained by first generating a random Wishart
-matrix with matrix parameter \code{Sigma} and \eqn{p} degrees of freedom, which
-represents an initial unconstrained covariance matrix. This is inverted and
-adapted to a suitable coloured graph for paired data with sparsity degree
-according to the  \code{dens.xxx} arguments.
+  The concentration matrix is obtained by first generating a random Wishart
+  matrix with matrix parameter `Sigma` and \eqn{p} degrees of freedom, which
+  represents an initial unconstrained covariance matrix. This is inverted and
+  adapted to a suitable coloured graph for paired data with sparsity degree
+  according to the  `dens.xxx` arguments.
 }
 \examples{
 
@@ -134,5 +135,4 @@ pdColG.summarize(GenMod$pdColG)
 # computation of the partial correlation matrix
 R <- -cov2cor(GenMod$K)
 diag(R) <- 1
-
 }
