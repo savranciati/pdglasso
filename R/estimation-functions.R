@@ -488,7 +488,9 @@ compute.eBIC <- function(S,mod,n,
     S <- S*(n-1)/n
     p <- dim(S)[1]
     n.par <- G$n.par
-    log.lik <- log(det(K))-sum(S*K)
+    #log.lik <- log(det(K))-sum(S*K)
+    log.lik <- as.numeric(determinant(K, logarithm=TRUE)$modulus) - sum(S*K)
+    
     eBIC <- -n*log.lik+log(n)*n.par+4*n.par*gamma.eBIC*log(p)
     #### corrected with n/2 instead of 1/2 in front of the loglik, so -2*(n/2)*loglik=-n*loglik
     out.vec <- c(eBIC,log.lik,n.par)
