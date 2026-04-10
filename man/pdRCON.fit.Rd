@@ -22,7 +22,8 @@ pdRCON.fit(
   eps.rel = 1e-08,
   verbose = FALSE,
   progress = TRUE,
-  print.type = TRUE
+  print.type = TRUE,
+  mle.estimate = TRUE
 )
 }
 \arguments{
@@ -77,6 +78,9 @@ inner loop) is shown in the console while the algorithm is running.}
 specified by the arguments `type` and `force.symm`, is returned as printed
 output in the console. This option is only used when `rcpp = FALSE`; when
 `rcpp = TRUE`, no output is printed for efficiency.}
+
+\item{mle}{a logical; if `TRUE`, estimates the eBIC via the MLE (more accurate but slower computation);
+if `FALSE`, uses the pdglasso (ADMM) estimator (faster but potentially less precise).}
 }
 \value{
 A list with the following components:

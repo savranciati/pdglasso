@@ -20,6 +20,8 @@
 #'   used, i.e. from max.lams to max.lams/20, and 20 grid points, log spacing for both.
 #' @param gamma.eBIC the parameter for the eBIC computation. gamma=0 is equivalent to BIC.
 #' @param progress a logical value; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`
+#' @param mle a logical; if `TRUE`, estimates the eBIC via the MLE (more accurate but slower computation);
+#' if `FALSE`, uses the pdglasso (ADMM) estimator (faster but potentially less precise).
 #'
 #' @return A list with the following components:
 #'
@@ -59,7 +61,8 @@ pdRCON.fit <- function(S,
                        eps.rel     = 1e-08,
                        verbose     = FALSE,
                        progress    = TRUE,
-                       print.type  = TRUE){
+                       print.type  = TRUE,
+                       mle.estimate = TRUE){
   start.time <- Sys.time()
   ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
   
@@ -101,7 +104,8 @@ pdRCON.fit <- function(S,
                                    mod=mod.out,
                                    n=n,
                                    gamma.eBIC=gamma.eBIC,
-                                   max_iter=max_iter)
+                                   max_iter=max_iter,
+                                   mle = mle.estimate)
     eBIC.l1[i,4] <- mod.out$internal.par$converged+0
     if(eBIC.l1[i,4]==0) cat("Convergence not achieved for this value of lambda1! \n")
   }
@@ -134,7 +138,8 @@ pdRCON.fit <- function(S,
                                    mod=mod.out,
                                    n=n,
                                    gamma.eBIC=gamma.eBIC,
-                                   max_iter=max_iter)
+                                   max_iter=max_iter,
+                                   mle = mle.estimate)
     eBIC.l2[i,4] <- mod.out$internal.par$converged+0
     if(eBIC.l2[i,4]==0) cat("Convergence not achieved for this value of lambda2! \n")
   }
@@ -460,6 +465,8 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 #' @param gamma.eBIC a parameter governing the magnitude of the penalization term inside the criterion; it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, and 0.5 being the suggested default value.
 #' @param max_iter an integer; maximum number of iterations to be run in case
 #'   the algorithm does not converge; passed to [`pdRCON.mle`].
+#' @param mle a logical; if `TRUE`, uses the MLE (more accurate but slower computation);
+#'   if `FALSE`, uses the pdglasso (ADMM) estimator (faster but potentially less precise).
 #'   
 #' @return A vector containing three elements:
 #' * the value of the eBIC,
@@ -475,13 +482,21 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 
 compute.eBIC <- function(S,mod,n,
                          gamma.eBIC=0.5,
-                         max_iter=5000){
+                         max_iter=5000,
+                         mle = TRUE){
   G <- pdColG.get(mod)
-  K <- pdRCON.mle(S,
-                  pdColG = G$pdColG,
-                  eps.rel = mod$internal.par$eps.rel,
-                  eps.abs = mod$internal.par$eps.abs,
-                  max_iter = mod$internal.par$max_iter)
+  
+  if(mle){
+    K <- pdRCON.mle(S,
+                    pdColG = G$pdColG,
+                    eps.rel = mod$internal.par$eps.rel,
+                    eps.abs = mod$internal.par$eps.abs,
+                    max_iter = mod$internal.par$max_iter)
+  }else{
+    K <- mod$X
+  }
+  
+  
   if(is.null(K)){
     out.vec <- rep(NA,3)
   }else{

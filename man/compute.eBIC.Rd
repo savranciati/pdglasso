@@ -4,7 +4,7 @@
 \alias{compute.eBIC}
 \title{Compute the extended Bayesian Information Criterion (eBIC).}
 \usage{
-compute.eBIC(S, mod, n, gamma.eBIC = 0.5, max_iter = 5000)
+compute.eBIC(S, mod, n, gamma.eBIC = 0.5, max_iter = 5000, mle = TRUE)
 }
 \arguments{
 \item{S}{a sample covariance (or correlation) matrix with the block structure described in [`pdglasso-package`].}
@@ -17,6 +17,9 @@ compute.eBIC(S, mod, n, gamma.eBIC = 0.5, max_iter = 5000)
 
 \item{max_iter}{an integer; maximum number of iterations to be run in case
 the algorithm does not converge; passed to [`pdRCON.mle`].}
+
+\item{mle}{a logical; if `TRUE`, uses the MLE (more accurate but slower computation);
+if `FALSE`, uses the pdglasso (ADMM) estimator (faster but potentially less precise).}
 }
 \value{
 A vector containing three elements:
