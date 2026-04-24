@@ -113,7 +113,6 @@ pdRCON.select <- function(S,
                                    admm.out=mod.out,
                                    n=n,
                                    gamma.eBIC=gamma.eBIC,
-                                   max_iter=max_iter,
                                    mle = mle.estimate)
     eBIC.l1[i,4] <- mod.out$internal.par$converged+0
     if(eBIC.l1[i,4]==0) cat("Convergence not achieved for this value of lambda1! \n")
@@ -147,7 +146,6 @@ pdRCON.select <- function(S,
                                    admm.out=mod.out,
                                    n=n,
                                    gamma.eBIC=gamma.eBIC,
-                                   max_iter=max_iter,
                                    mle = mle.estimate)
     eBIC.l2[i,4] <- mod.out$internal.par$converged+0
     if(eBIC.l2[i,4]==0) cat("Convergence not achieved for this value of lambda2! \n")
@@ -386,7 +384,6 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 #' @param gamma.eBIC a parameter governing the magnitude of the penalization term inside the criterion; 
 #' it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, with 0.5 being the value 
 #' suggested by Feygel and Drton (2010).
-#' @param max_iter an integer; maximum number of iterations for convergence.
 #' @param mle a logical; if `TRUE`, the MLE are used otherwise 
 #'    the pdglasso estimator is used; see the "Details" section below. 
 #'   
@@ -416,7 +413,6 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 
 compute.eBIC <- function(S, admm.out,n,
                          gamma.eBIC=0.5,
-                         max_iter=5000,
                          mle = TRUE){
   G <- pdColG.get(admm.out, model.dimension=TRUE)
   

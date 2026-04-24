@@ -4,7 +4,7 @@
 \alias{compute.eBIC}
 \title{Extended Bayesian Information Criterion (eBIC) for pdRCON models}
 \usage{
-compute.eBIC(S, admm.out, n, gamma.eBIC = 0.5, max_iter = 5000, mle = TRUE)
+compute.eBIC(S, admm.out, n, gamma.eBIC = 0.5, mle = TRUE)
 }
 \arguments{
 \item{S}{a sample covariance matrix with the block structure described in \code{\link{pdglasso-package}}.}
@@ -16,8 +16,6 @@ compute.eBIC(S, admm.out, n, gamma.eBIC = 0.5, max_iter = 5000, mle = TRUE)
 \item{gamma.eBIC}{a parameter governing the magnitude of the penalization term inside the criterion;
 it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, with 0.5 being the value
 suggested by Feygel and Drton (2010).}
-
-\item{max_iter}{an integer; maximum number of iterations for convergence.}
 
 \item{mle}{a logical; if \code{TRUE}, the MLE are used otherwise
 the pdglasso estimator is used; see the "Details" section below.}

@@ -138,6 +138,7 @@
 
 ## usethis namespace: start
 #' @importFrom MASS mvrnorm
+#' @importFrom graphics layout
 #' @useDynLib pdglasso, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 ## usethis namespace: end
