@@ -13,7 +13,7 @@
 #'
 #' @section pdRCON models - terminology and relevant submodel classes:
 #'
-#' A pdRCON model is a Gaussian Graphical Model with additional equality
+#' A pdRCON model is a Gaussian Graphical Model (GGM) with additional equality
 #' restrictions on the entries of the concentration matrix. In the paired data
 #' framework, there are three different types of equality restrictions of
 #' interest, identified with the names *vertex*, *inside-block edge* and
@@ -50,18 +50,18 @@
 #' have equal value. These type of edges are referred to as *coloured symmetric
 #' across-block edges*. Different types of submodel classes of interest may be
 #' obtained by (i) not allowing coloured across-block edges, (ii) allowing both
-#' coloured and uncoloured across block edges and (iii) allowing only coloured
+#' coloured and uncoloured across-block edges and (iii) allowing only coloured
 #' across-block edges, with the exception of edges joining a variable in \eqn{L}
 #' with its homologous in \eqn{R}.
 #'
 #' * We remark that every coloured edge belongs to a pair of coloured symmetric
-#' edges, either inside- or across- blocks. On the other hand, for an uncolored
+#' edges, either inside- or across-blocks. On the other hand, for an uncolored
 #' edge its homologous edge may or may  not be present in the graph. In the case
 #' where an uncoloured edge and its homologous are both present we say that they
-#' form a pair of *uncoloured symmetric edges*, either inside- or across- blocks.
+#' form a pair of *uncoloured symmetric edges*, either inside- or across-blocks.
 #'
 #'
-#' @section Use of the arguments `type` and `force.symm` to specify a submodel class:
+#' @section Use of the arguments `type` and `force.symm` to specify submodel classes:
 #'
 #'  The functions of this package make it possible to specify different types of
 #'  pdRCON submodel classes of interest through the arguments `type` and
@@ -100,13 +100,14 @@
 #'   instance, the functions that receive in input a sample covariance matrix
 #'   assume that the rows and columns of this matrix are ordered according to
 #'   these rules, so that it can be partitioned into four \eqn{q\times q}
-#'   submatrices naturally associated with the inside- and across- block
-#'   components.
+#'   submatrices naturally associated with the inside- and across-block
+#'   components. The same is true for the `pdColG` matrix described below. 
 #'
 #' @section Model representation through the `pdColG` matrix:
 #'
 #'  Every pdRCON model is uniquely represented by a Coloured Graph for Paired
-#'  Data (pdColG) implemented in the form of a \eqn{p\times p} symmetric matrix
+#'  Data (pdColG) implemented in the form of an object of class `pdColG`
+#'  that is a \eqn{p\times p} symmetric matrix
 #'  where every entry is one of the values 0, 1 or 2, as follows:
 #'
 #'  * The diagonal entries of the pdColG matrix are all equal to either 1,
@@ -123,10 +124,10 @@
 #' \cr **Maintainer**: Anna Vesely <anna.vesely2@unibo.it>
 #'
 #'
-#' @references Ranciati, S., Roverato, A., (2024). On the application of Gaussian graphical models to paired data problems. *Statistics and Computing*, *34*(6), 1-19. \url{https://doi.org/10.1007/s11222-024-10513-6}
-#' @references Ranciati, S., Roverato, A., (2023). On the application of Gaussian graphical models to paired data problems. *arXiv pre-print*. \url{https://arxiv.org/abs/2307.14160}
-#' @references Ranciati, S., Roverato, A., Luati, A. (2021). Fused graphical lasso for brain networks with symmetries. *Journal of the Royal Statistical Society Series C: Applied Statistics*, *70*(5), 1299-1322. \url{https://doi.org/10.1111/rssc.12514}
-#' @references Højsgaard, S., Lauritzen, S. L. (2008). Graphical Gaussian models with edge and vertex symmetries. *Journal of the Royal Statistical Society Series B: Statistical Methodology*, *70*(5), 1005-1027. \url{https://doi.org/10.1111/j.1467-9868.2008.00666.x}
+#' @references Højsgaard, S. and Lauritzen, S. L. (2008). Graphical Gaussian models with edge and vertex symmetries. *Journal of the Royal Statistical Society Series B: Statistical Methodology*, *70*(5), 1005-1027. 
+#' @references Ranciati, S. and Roverato, A., (2024). On the application of Gaussian graphical models to paired data problems. *Statistics and Computing*, *34*(6), 1-19. 
+#' @references Ranciati, S., Roverato, A. and Luati, A. (2021). Fused graphical lasso for brain networks with symmetries. *Journal of the Royal Statistical Society Series C: Applied Statistics*, *70*(5), 1299-1322. 
+#' @references Roverato, A. and Nguyen, D.N. (2024). Exploration of the search space of Gaussian graphical models for paired data. *Journal of Machine Learning Research*, *25*(92), 1-41.
 #'
 #' @docType package
 #' @name pdglasso-package

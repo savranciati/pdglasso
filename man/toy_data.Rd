@@ -3,25 +3,30 @@
 \docType{data}
 \name{toy_data}
 \alias{toy_data}
-\title{Toy dataset generated through [`pdRCON.simulate`] function}
+\title{Toy dataset generated through \code{\link{pdRCON.simulate}} function}
 \format{
-## `toy_data`
-A list with the following components:
+\subsection{\code{toy_data}}{
 
-* `pdColG` a matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.
-* `K`, a concentration matrix adapted to `pdColG`.
-* `sample.data`, a data frame with 250 rows and 20 columns from a multivariate normal distribution
-with zero mean vector and concentration matrix `K`.
+A list with the following components:
+\itemize{
+\item \code{pdColG} a matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.
+\item \code{K}, a concentration matrix adapted to \code{pdColG}.
+\item \code{sample.data}, a data frame with 250 rows and 20 columns from a multivariate normal distribution
+with zero mean vector and concentration matrix \code{K}.
+}
+}
 }
 \usage{
 toy_data
 }
 \description{
-Data simulated by the function [`pdRCON.simulate`] with parameters:
-* `p=20`
-* `type=c("v", "i","a")`
-* `force.symm=NULL`
-* `dens=0.5`
-* `Sigma` a \eqn{p \times p} matrix with unitary diagonal and 0.5 on off-diagonal elements.
+Data simulated by the function \code{\link{pdRCON.simulate}} with parameters:
+\itemize{
+\item \code{p=20}
+\item \code{type=c("v", "i","a")}
+\item \code{force.symm=NULL}
+\item \code{dens=0.5}
+\item \code{Sigma} a \eqn{p \times p} matrix with unitary diagonal and 0.5 on off-diagonal elements.
+}
 }
 \keyword{datasets}

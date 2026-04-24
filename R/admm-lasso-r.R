@@ -1,4 +1,4 @@
-#' Half-vectorization operator, without the diagonal.
+#' Half-vectorization operator, without the diagonal
 #'
 #' @param M a symmetric matrix.
 #'
@@ -30,7 +30,7 @@ inv_half_vec_r<- function(m){
 
 
 #' Transforms a symmetric matrix into a vector applying the
-# v() operator.
+# v() operator
 #'
 #' @param M a matrix.
 #'
@@ -53,7 +53,7 @@ mat2vec_r <- function(M){
 
 
 
-#' Inverse operation with respect to mat2vec_r().
+#' Inverse operation with respect to mat2vec_r()
 #'
 #' @param m a vector.
 #'
@@ -87,7 +87,7 @@ vec2mat_r <- function(m){
 
 
 
-#' Computes F%*%v.
+#' Computes F%*%v
 #'
 #' @param v a vector.
 #' @param p number of rows/columns of S.
@@ -125,7 +125,7 @@ F_by_vec_r <- function(v, p, acr.type){
 
 
 
-#' Computes t(F)%*%v.
+#' Computes t(F)%*%v
 #'
 #' @param v a vector.
 #' @param p number of rows/columns of S.
@@ -183,7 +183,7 @@ tF_by_vec_r <- function(v, p, acr.type){
 
 
 
-#' R version, inner loop: ADMM graphical lasso algorithm for coloured GGMs for paired data.
+#' R version, inner loop: ADMM graphical lasso algorithm for coloured GGMs for paired data
 #'
 #' @param X a matrix.
 #' @param U a matrix.
@@ -293,7 +293,7 @@ admm_inner_r <- function(X,
 
 
 
-#' R version: ADMM graphical lasso algorithm for coloured GGMs for paired data.
+#' R version: ADMM graphical lasso algorithm for coloured GGMs for paired data
 #' @param S a matrix.
 #' @param lambda1 a non-negative scalar (or vector).
 #' @param lambda2 a non-negative scalar (or vector).

@@ -1,38 +1,38 @@
 
-#' ADMM graphical lasso algorithm for coloured GGMs for paired data.
+#' ADMM graphical lasso algorithm for pdRCON models
 #'
-#' By providing a covariance matrix `S` and values for `lambda1` and `lambda2`,
-#' this function estimates a concentration matrix `X` within the pdRCON
-#' submodel class, identified by the arguments `type` and `force.symm`, based on the pdglasso method (Ranciati & Roverato, 2024) using an
-#' (adaptive) ADMM algorithm. The output is the matrix and a list of internal
-#' parameters used by the function, together with the specific call with the
-#' relevant pdRCON submodel class.
+#' Estimate of a concentration matrix within the pdRCON 
+#' submodel class identified by the arguments `type` and `force.symm`, 
+#' based on the pdglasso method with penalty terms `lambda1` and `lambda2`
+#' (Ranciati and Roverato, 2024). Optimization is implemented by an
+#' ADMM algorithm (see Boyd *et. al.* 2011). The output is an object of 
+#' class `ADMMoutput` and the user may then call [`pdColG.get`] to obtain the Coloured Graph
+#' for Paired Data (pdColG) representing the selected model.
 #'
-#' @param S a sample covariance (or correlation) matrix with the block structure
+#' @param S a sample covariance matrix with the block structure
 #'   described in [`pdglasso-package`].
-#' @param lambda1 a non-negative scalar (or vector) penalty that encourages
+#' @param lambda1 a non-negative scalar penalty that encourages
 #'   sparsity in the concentration matrix.
-#' @param lambda2 a non-negative scalar (or vector) penalty that encourages
+#' @param lambda2 a non-negative scalar penalty that encourages
 #'   equality constraints in the concentration matrix.
 #' @param type,force.symm two subvectors of `c("vertex", "inside.block.edge",
 #'   "across.block.edge")` which identify the pdRCON submodel class of interest; see
 #'   [`pdglasso-package`] for details.
-#' @param X.init (optional) a \eqn{p \times p} initial guess for the
-#'   concentration matrix and/or starting solution for the ADMM algorithm.
-#' @param rho1 a scalar; tuning parameter of the ADMM algorithm to be used for
-#'   the outer loop. It must be strictly positive.
-#' @param rho2 a scalar; tuning parameter of the ADMM algorithm to be used for
-#'   the inner loop. It must be strictly positive.
-#' @param varying.rho1 a logical; if `TRUE` the parameter rho1 is updated
+#' @param X.init a \eqn{p \times p}
+#'   concentration matrix to be used as starting point of the ADMM. If `NULL` a default value is used. 
+#' @param rho1 a postive scalar; tuning parameter of the ADMM algorithm to be used for
+#'   the outer loop.
+#' @param rho2 a positive scalar; tuning parameter of the ADMM algorithm to be used for
+#'   the inner loop. 
+#' @param varying.rho1 a logical; if `TRUE` the parameter `rho1` is updated
 #'   iteratively to speed-up convergence.
-#' @param varying.rho2 a logical; if `TRUE` the parameter rho2 is updated
+#' @param varying.rho2 a logical; if `TRUE` the parameter `rho2` is updated
 #'   iteratively to speed-up convergence.
-#' @param max_iter an integer; maximum number of iterations to be run in case
-#'   the algorithm does not converge.
-#' @param eps.abs a scalar; the absolute precision required for the computation
-#'   of primal and dual residuals of the ADMM algorithm.
-#' @param eps.rel a scalar; the relative precision required for the computation
-#'   of primal and dual residuals of the ADMM algorithm.
+#' @param max_iter an integer; maximum number of iterations for convergence. 
+#' @param eps.abs a  positive scalar; the absolute tollerance for the computation
+#'   of primal and dual feasibility tollerances of the ADMM.
+#' @param eps.rel a positive scalar; the relative tollerance for the computation
+#'   of primal and dual feasibility tollerances of the ADMM.
 #' @param rcpp a logical; if `TRUE`, computations are performed using the Rcpp (C++) implementation;
 #' if `FALSE`, a pure R implementation is used.
 #' @param verbose a logical; if `TRUE` the progress (and internal convergence of
@@ -42,10 +42,9 @@
 #'   output in the console. This option is only used when `rcpp = FALSE`; when
 #'   `rcpp = TRUE`, no output is printed for efficiency.
 #'
-#' @return A list with the following components:
+#' @return A object of class `ADMMoutput` that is a list with the following components:
 #'
-#' * `X` the estimated concentration matrix under the pdRCON submodel class
-#'   considered and the values of `lambda1` and `lambda2`.
+#' * `X` the estimated concentration matrix.
 #'
 #' * `acronyms` a vector of strings identifying the pdRCON submodel class
 #'  considered as identified  by the arguments `type` and `force.symm`.
@@ -55,15 +54,27 @@
 #'
 #' @export
 #'
-#' @references Ranciati, S., Roverato, A., (2024). On the application of Gaussian graphical models to paired data problems. *Statistics and Computing*, *34*(6), 1-19. \url{https://doi.org/10.1007/s11222-024-10513-6}
-#' @references Ranciati, S., Roverato, A., (2023). On the application of Gaussian graphical models to paired data problems. *arXiv pre-print*. \url{https://arxiv.org/abs/2307.14160}
+#' @references Ranciati, S. and Roverato, A., (2024). On the application of Gaussian graphical models to paired data problems. *Statistics and Computing*, *34*(6), 1-19.
+#' @references Boyd, S., Parikh, N., Chu, E., Borja, P. and Eckstein, J. (2011). Distributed optimization and statistical learning via the alternating direction method of multipliers. *Foundations and Trends in Machine learning*, *3*(1), 1-122.
 #' @examples
+#' 
+#' # computation of the sample covariance
 #' S <- cov(toy_data$sample.data)
-#' admm.pdglasso(S)
+#' 
+#' # model with all types of symmetries allowed and no full symmetry required
+#' admm.out <- admm.pdglasso(S, lambda1=4, lambda2=0.7)
+#' G <- pdColG.get(admm.out)
+#' summary(G)
+#' 
+#' # model with no across-block symmetries allowed and full vertex-symmetry required
+#' admm.out <-admm.pdglasso(S, , lambda1=4, lambda2=0.7, type=c("v", "i"), force.symm = c("v"))
+#' G <- pdColG.get(admm.out)
+#' summary(G)
+#' 
 
 admm.pdglasso <- function(S,
-                          lambda1      = 1,
-                          lambda2      = 1e-4,
+                          lambda1,
+                          lambda2,
                           type         = c("vertex", "inside.block.edge", "across.block.edge"),
                           force.symm   = NULL,
                           X.init       = NULL,
@@ -164,9 +175,11 @@ admm.pdglasso <- function(S,
   X = res$X
   dimnames(X) <- dimnames(S)
   
-  return(list(
-    X = X,
-    acronyms = acronyms,
-    internal.par = internal.par
-  ))
+  return(as.ADMMoutput(
+    list(
+      X = X,
+      acronyms = acronyms,
+      internal.par = internal.par
+        )
+    ))
 }
