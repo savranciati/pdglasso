@@ -19,8 +19,7 @@ admm.pdglasso(
   eps.abs = 1e-06,
   eps.rel = 1e-06,
   rcpp = TRUE,
-  print.type = TRUE,
-  verbose = FALSE
+  print.type = TRUE
 )
 }
 \arguments{
@@ -64,11 +63,7 @@ if \code{FALSE}, a pure R implementation is used.}
 
 \item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
 specified by the arguments \code{type} and \code{force.symm}, is returned as printed
-output in the console. This option is only used when \code{rcpp = FALSE}; when
-\code{rcpp = TRUE}, no output is printed for efficiency.}
-
-\item{verbose}{a logical; if \code{TRUE} the progress (and internal convergence of
-inner loop) is shown in the console while the algorithm is running.}
+output in the console.}
 }
 \value{
 A object of class \code{ADMMoutput} that is a list with the following components:

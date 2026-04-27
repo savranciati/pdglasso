@@ -19,8 +19,7 @@ pdRCON.select(
   max_iter = 5000,
   eps.abs = 1e-08,
   eps.rel = 1e-08,
-  verbose = FALSE,
-  progress = TRUE,
+  verbose = TRUE,
   print.type = TRUE,
   mle.estimate = TRUE
 )
@@ -62,15 +61,11 @@ of primal and dual feasibility tollerances of the ADMM.}
 \item{eps.rel}{a positive scalar; the relative tollerance for the computation
 of primal and dual feasibility tollerances of the ADMM.}
 
-\item{verbose}{a logical; if \code{TRUE} the progress (and internal convergence of
-inner loop) is shown in the console while the algorithm is running.}
-
-\item{progress}{a logical; if \code{TRUE} provides a visual update in the console about the grid search over \code{lambda1} and \code{lambda2}}
+\item{verbose}{a logical; if \code{TRUE} provides a visual update in the console about the grid search over \code{lambda1} and \code{lambda2}}
 
 \item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
 specified by the arguments \code{type} and \code{force.symm}, is returned as printed
-output in the console. This option is only used when \code{rcpp = FALSE}; when
-\code{rcpp = TRUE}, no output is printed for efficiency.}
+output in the console.}
 
 \item{mle}{a logical; if \code{TRUE}, compute eBIC via the MLE,
 if \code{FALSE} the pdglasso estimator is used; see \code{\link{compute.eBIC}} for details.}

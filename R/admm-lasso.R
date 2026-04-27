@@ -35,12 +35,9 @@
 #'   of primal and dual feasibility tollerances of the ADMM.
 #' @param rcpp a logical; if `TRUE`, computations are performed using the Rcpp (C++) implementation;
 #' if `FALSE`, a pure R implementation is used.
-#' @param verbose a logical; if `TRUE` the progress (and internal convergence of
-#'   inner loop) is shown in the console while the algorithm is running.
 #' @param print.type a logical; if `TRUE` the pdRCON submodel class considered, as
 #'   specified by the arguments `type` and `force.symm`, is returned as printed
-#'   output in the console. This option is only used when `rcpp = FALSE`; when
-#'   `rcpp = TRUE`, no output is printed for efficiency.
+#'   output in the console.
 #'
 #' @return A object of class `ADMMoutput` that is a list with the following components:
 #'
@@ -86,8 +83,7 @@ admm.pdglasso <- function(S,
                           eps.abs      = 1e-6,
                           eps.rel      = 1e-6,
                           rcpp         = TRUE,
-                          print.type   = TRUE,
-                          verbose      = FALSE) {
+                          print.type   = TRUE) {
   
   stopifnot(is.matrix(S), nrow(S) == ncol(S))
   stopifnot(is.numeric(lambda1), all(lambda1 >= 0))
@@ -144,8 +140,7 @@ admm.pdglasso <- function(S,
       eps.abs     = eps.abs,
       eps.rel     = eps.rel,
       acr.type    = acr.type,
-      n.row.F     = n.row.F,
-      verbose     = verbose
+      n.row.F     = n.row.F
     )
     
   }

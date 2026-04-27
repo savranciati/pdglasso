@@ -195,7 +195,6 @@ tF_by_vec_r <- function(v, p, acr.type){
 #' @param max_iter_int an integer.
 #' @param eps.abs a scalar.
 #' @param eps.rel a scalar.
-#' @param verbose_int a logical.
 #' @param n.row.F a scalar.
 #' @param acr.type a string.
 #'
@@ -212,7 +211,6 @@ admm_inner_r <- function(X,
                          max_iter_int= 5000,
                          eps.abs   = 1e-12,
                          eps.rel   = 1e-8,
-                         verbose_int = FALSE,
                          n.row.F,
                          acr.type){
   #
@@ -267,7 +265,7 @@ admm_inner_r <- function(X,
     # Check convergence
     #
     if(r.kk.f<eps.pri & s.kk.f<eps.dual){
-      if(verbose_int==TRUE) cat(kk,".", sep="")
+      #if(verbose_int==TRUE) cat(kk,".", sep="")
       break
     }
     if(varying.rho2){
@@ -307,7 +305,6 @@ admm_inner_r <- function(X,
 #' @param max_iter an integer.
 #' @param eps.abs a scalar.
 #' @param eps.rel a scalar.
-#' @param verbose a logical.
 #' @param print.type a logical.
 #'
 #' @return A list.
@@ -325,8 +322,7 @@ admm_pdglasso_internal_r <- function(S,
                                      eps.abs,
                                      eps.rel,
                                      acr.type,
-                                     n.row.F,
-                                     verbose) {
+                                     n.row.F) {
   
   converged <- TRUE
   
@@ -362,7 +358,7 @@ admm_pdglasso_internal_r <- function(S,
     # Update Z - inner ADMM
     #
     Z <- admm_inner_r(X=X, U=U, rho1=rho1, lambda1=lambda1, lambda2=lambda2, rho2=rho2,
-                    verbose_int=verbose, varying.rho2=varying.rho2, n.row.F=n.row.F,
+                    varying.rho2=varying.rho2, n.row.F=n.row.F,
                     acr.type=acr.type, eps.abs=eps.abs, eps.rel=eps.rel)
     #
     # Update U

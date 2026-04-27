@@ -13,7 +13,7 @@
 #' @param lams a 2x4 numeric matrix to specify the path of lambda values, if `NULL` default values are
 #'   used; see the "Details" section below for additional information.
 #' @param gamma.eBIC parameter of eBIC with `gamma.eBIC=0` corresponding to the classical BIC; see [`compute.eBIC`] for details..
-#' @param progress a logical; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`
+#' @param verbose a logical; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`
 #' @param mle a logical; if `TRUE`, compute eBIC via the MLE,
 #' if `FALSE` the pdglasso estimator is used; see [`compute.eBIC`] for details.
 #'
@@ -68,8 +68,7 @@ pdRCON.select <- function(S,
                        max_iter    = 5000,
                        eps.abs     = 1e-08,
                        eps.rel     = 1e-08,
-                       verbose     = FALSE,
-                       progress    = TRUE,
+                       verbose    = TRUE,
                        print.type  = TRUE,
                        mle.estimate = TRUE){
   start.time <- Sys.time()
@@ -93,7 +92,7 @@ pdRCON.select <- function(S,
   if(lams[1,4]==1) l1.vec <- exp(seq(log(lams[1,1]),log(lams[1,2]), length.out=lams[1,3])) else l1.vec <- seq(lams[1,1], lams[1,2], length.out=lams[1,3])
   l1.vec <- sort(l1.vec, decreasing=TRUE)
   for(i in 1:lams[1,3]){
-    if(progress==TRUE) cat("Searching over lambda1 grid (",i,"/",lams[1,3],").\n", sep="")
+    if(verbose==TRUE) cat("Searching over lambda1 grid (",i,"/",lams[1,3],").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
                              lambda2=0,
@@ -107,7 +106,6 @@ pdRCON.select <- function(S,
                              max_iter=max_iter,
                              eps.abs=eps.abs,
                              eps.rel=eps.rel,
-                             verbose=FALSE,
                              print.type=FALSE)
     eBIC.l1[i,1:3] <- compute.eBIC(S=S,
                                    admm.out=mod.out,
@@ -120,13 +118,13 @@ pdRCON.select <- function(S,
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
   if(length(best.l1)==0) stop("Grid search of lambda1 failed!")
   
-  if(progress==TRUE) cat("--- \n", sep="")
+  if(verbose==TRUE) cat("--- \n", sep="")
   
   ### Second grid search for lambda_2, with lambda_1=best.l1
   if(lams[2,4]==1) l2.vec <- exp(seq(log(lams[2,1]),log(lams[2,2]), length.out=lams[2,3])) else l2.vec <-  seq(lams[2,1], lams[2,2], length.out=lams[2,3])
   l2.vec <- sort(l2.vec, decreasing=TRUE)
   for(i in 1:lams[2,3]){
-    if(progress==TRUE) cat("Searching over lambda2 grid (",i,"/",lams[2,3],").\n", sep="")
+    if(verbose==TRUE) cat("Searching over lambda2 grid (",i,"/",lams[2,3],").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=best.l1,
                              lambda2=l2.vec[i],
@@ -140,7 +138,6 @@ pdRCON.select <- function(S,
                              max_iter=max_iter,
                              eps.abs=eps.abs,
                              eps.rel=eps.rel,
-                             verbose=FALSE,
                              print.type=FALSE)
     eBIC.l2[i,1:3] <- compute.eBIC(S=S,
                                    admm.out=mod.out,
@@ -171,7 +168,6 @@ pdRCON.select <- function(S,
                            max_iter=max_iter,
                            eps.abs=eps.abs,
                            eps.rel=eps.rel,
-                           verbose=verbose,
                            print.type=print.type)
   
   l1.path=cbind(l1.vec,eBIC.l1)
