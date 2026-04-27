@@ -10,6 +10,8 @@
 \item{object}{a matrix of class \code{pdColG}; see \code{\link{pdglasso-package}} for details.}
 
 \item{print.summary}{a logical, if \code{TRUE} the summary is printed on the console.}
+
+\item{...}{additional parameters. Currently not used; reserved for future extensions.}
 }
 \value{
 An invisible list with the following components:

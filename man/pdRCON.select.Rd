@@ -67,7 +67,7 @@ of primal and dual feasibility tollerances of the ADMM.}
 specified by the arguments \code{type} and \code{force.symm}, is returned as printed
 output in the console.}
 
-\item{mle}{a logical; if \code{TRUE}, compute eBIC via the MLE,
+\item{mle.estimate}{a logical; if \code{TRUE}, compute eBIC via the MLE,
 if \code{FALSE} the pdglasso estimator is used; see \code{\link{compute.eBIC}} for details.}
 }
 \value{

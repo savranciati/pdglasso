@@ -28,6 +28,8 @@
 \item{fancy}{a logical value; if \code{TRUE}, symbols in the plot are used from the
 Latin1 encoding for characters; set to FALSE if characters are not properly
 displayed, so symbols are reverted to latin letters.}
+
+\item{...}{additional graphical parameters. Currently not used; reserved for future extensions.}
 }
 \value{
 Either a plot within the running R session or a .pdf file saved in the working directory if the option export.plot is set to \code{TRUE}.

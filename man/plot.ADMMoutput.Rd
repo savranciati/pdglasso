@@ -4,7 +4,7 @@
 \alias{plot.ADMMoutput}
 \title{Diagnostic plot for the output of the ADMM}
 \usage{
-\method{plot}{ADMMoutput}(x, y = TRUE, th1 = NULL, th2 = NULL, logarith10 = TRUE, ...)
+\method{plot}{ADMMoutput}(x, y = TRUE, th1 = NULL, th2 = NULL, logarithm10 = TRUE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{ADMMoutput} such as the output of a call to the \code{\link{admm.pdglasso}} function; see also \code{\link{pdRCON.select}}.}
@@ -15,6 +15,8 @@
 
 \item{logarithm10}{a logical, if \code{TRUE} the values of \code{th1} and \code{th2} are expected to be provided in log10-scale. This facilitate
 interaction with the plot whose y-axis is in log10 scale.}
+
+\item{...}{additional graphical parameters. Currently not used; reserved for future extensions.}
 }
 \value{
 A plot is produced with different panels depending on the model \code{type}. More specifically:

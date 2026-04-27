@@ -39,5 +39,5 @@ facilitate the specification of suitable values for the personalized thresholds 
 
 S <- cov(toy_data$sample.data)
 admm.out <- admm.pdglasso(S, lambda1=4, lambda2=0.7)
-pdColG.get(mod.out)
+pdColG.get(admm.out)
 }

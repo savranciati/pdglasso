@@ -14,7 +14,7 @@
 #'   used; see the "Details" section below for additional information.
 #' @param gamma.eBIC parameter of eBIC with `gamma.eBIC=0` corresponding to the classical BIC; see [`compute.eBIC`] for details..
 #' @param verbose a logical; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`
-#' @param mle a logical; if `TRUE`, compute eBIC via the MLE,
+#' @param mle.estimate a logical; if `TRUE`, compute eBIC via the MLE,
 #' if `FALSE` the pdglasso estimator is used; see [`compute.eBIC`] for details.
 #'
 #' @details **Details on the specification of the argument `lams`**
@@ -473,7 +473,7 @@ compute.eBIC <- function(S, admm.out,n,
 #'
 #' S <- cov(toy_data$sample.data)
 #' admm.out <- admm.pdglasso(S, lambda1=4, lambda2=0.7)
-#' pdColG.get(mod.out)
+#' pdColG.get(admm.out)
 
 pdColG.get <- function(admm.out,
                        th1 = NULL,

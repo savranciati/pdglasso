@@ -12,6 +12,7 @@
 #' @param fancy a logical value; if `TRUE`, symbols in the plot are used from the
 #'   Latin1 encoding for characters; set to FALSE if characters are not properly
 #'   displayed, so symbols are reverted to latin letters.
+#' @param ... additional graphical parameters. Currently not used; reserved for future extensions.
 #'
 #' @return Either a plot within the running R session or a .pdf file saved in the working directory if the option export.plot is set to `TRUE`.
 #' @importFrom grDevices pdf dev.off dev.flush
@@ -161,6 +162,7 @@ plot.pdColG <- function(x,
 #'
 #' @param object a matrix of class `pdColG`; see [`pdglasso-package`] for details.
 #' @param print.summary a logical, if `TRUE` the summary is printed on the console.
+#' @param ... additional parameters. Currently not used; reserved for future extensions.
 #'
 #' @return An invisible list with the following components:
 #'
@@ -245,7 +247,8 @@ summary.pdColG <- function(object, print.summary=TRUE, ...){
 #' @param y a logical, if `TRUE` the default threshold used in [`pdColG.get`] is represented (in log10-scale) in the plot.
 #' @param th1,th2 two positive scalars as in [`pdColG.get`], if not `NULL` they are represented (in log10-scale) in the plot. 
 #' @param logarithm10 a logical, if `TRUE` the values of `th1` and `th2` are expected to be provided in log10-scale. This facilitate  
-#' interaction with the plot whose y-axis is in log10 scale.   
+#' interaction with the plot whose y-axis is in log10 scale. 
+#' @param ... additional graphical parameters. Currently not used; reserved for future extensions.
 #'
 #'
 #' @return A plot is produced with different panels depending on the model `type`. More specifically: 
@@ -273,13 +276,13 @@ summary.pdColG <- function(object, print.summary=TRUE, ...){
 #' mod.out <- pdRCON.select(S,n=60)$model
 #' plot(mod.out)
 
-plot.ADMMoutput <- function(x, y=TRUE, th1=NULL, th2=NULL, logarith10=TRUE, ...){
+plot.ADMMoutput <- function(x, y=TRUE, th1=NULL, th2=NULL, logarithm10=TRUE, ...){
   mod.out <- x
   acronyms <- mod.out$acronyms$acronym.of.type
   th.default <- log10(mod.out$internal.par$eps.rel*10)
   
-  if(!is.null(th1) & !logarith10) th1 <- log10(th1)
-  if(!is.null(th2) & !logarith10) th2 <- log10(th2)
+  if(!is.null(th1) & !logarithm10) th1 <- log10(th1)
+  if(!is.null(th2) & !logarithm10) th2 <- log10(th2)
   
   p <- ncol(mod.out$X)
   q <- p/2
