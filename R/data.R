@@ -10,7 +10,7 @@
 #' @format ## `toy_data`
 #' A list with the following components:
 #'
-#' * `pdColG` a matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.
+#' * `pdColG`, a matrix of class `pdColG`; see [`pdglasso-package`] for details.
 #' * `K`, a concentration matrix adapted to `pdColG`.
 #' * `sample.data`, a data frame with 250 rows and 20 columns from a multivariate normal distribution
 #' with zero mean vector and concentration matrix `K`.
