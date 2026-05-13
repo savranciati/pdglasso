@@ -7,13 +7,18 @@
 \format{
 \subsection{\code{fMRI_parietal}}{
 
-A \eqn{404 \times 10} matrix.
+A \eqn{404 \times 10} dataframe with 404 observations referring to residuals from \eqn{p=5\times 2=10} time-series
+after filtering through a score-driven model.
+The residuals are associated to 10 different region of interest of the parietal area of the brain, five on the left empisphere e the paired
+homologous regions on the right hemisphere.
 }
 }
 \usage{
 fMRI_parietal
 }
 \description{
-Put reference here.
+This dataset contains residuals obtained through score-driven models on the time-series of brain activity at rest for an individual,
+measured on 10 regions of interest of the brain in the parietal area (five on the left hemisphere and five paired regions on the right hemisphere).
+Please check Sections 2 and 7 of Ranciati and Roverato (2024) for more information.
 }
 \keyword{datasets}
