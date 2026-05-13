@@ -19,6 +19,6 @@ fMRI_parietal
 \description{
 This dataset contains residuals obtained through score-driven models on the time-series of brain activity at rest for an individual,
 measured on 10 regions of interest of the brain in the parietal area (five on the left hemisphere and five paired regions on the right hemisphere).
-Please check Sections 2 and 7 of Ranciati and Roverato (2024) for more information.
+Please check Sections 2 and 7 of Ranciati and Roverato (2021) for more information.
 }
 \keyword{datasets}

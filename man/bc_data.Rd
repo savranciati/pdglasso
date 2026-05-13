@@ -20,6 +20,6 @@ bc_data
 \description{
 The paired samples in this dataset refer to individuals with both tumor and healthy adjacent tissue measurements, in the form of a set of genes of the Hedgehog Pathway
 and their gene-level transcription estimates, i.e. transformed normalized counts.
-Please check Section 8 of Ranciati and Roverato (2026) for more information.
+Please check Section 8 of Ranciati and Roverato (2024) for more information.
 }
 \keyword{datasets}

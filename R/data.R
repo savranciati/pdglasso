@@ -22,7 +22,7 @@
 #'
 #' This dataset contains residuals obtained through score-driven models on the time-series of brain activity at rest for an individual,
 #' measured on 10 regions of interest of the brain in the parietal area (five on the left hemisphere and five paired regions on the right hemisphere).
-#' Please check Sections 2 and 7 of Ranciati and Roverato (2024) for more information.
+#' Please check Sections 2 and 7 of Ranciati and Roverato (2021) for more information.
 #'
 #' @format ## `fMRI_parietal`
 #' A \eqn{404 \times 10} dataframe with 404 observations referring to residuals from \eqn{p=5\times 2=10} time-series
@@ -38,7 +38,7 @@
 #'
 #' The paired samples in this dataset refer to individuals with both tumor and healthy adjacent tissue measurements, in the form of a set of genes of the Hedgehog Pathway
 #' and their gene-level transcription estimates, i.e. transformed normalized counts. 
-#' Please check Section 8 of Ranciati and Roverato (2026) for more information.
+#' Please check Section 8 of Ranciati and Roverato (2024) for more information.
 #'
 #' @format ## `bcdata`
 #' A named \eqn{114 \times 178} matrix, where:
