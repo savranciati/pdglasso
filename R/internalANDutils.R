@@ -2,156 +2,158 @@
 #' Visual representation of a coloured graph for paired data
 #'
 #' Heatmap-style graphical representation of an object of class `pdColG`,
-#' such as that raturned by a call to  [`pdColG.get`].
+#' such as that returned by a call to  [`pdColG.get`].
 #'
 #' @param x a matrix of class `pdColG`; see [`pdglasso-package`] for details.
-#' @param y a string; allows the user to specify which portion of the graph (a block) is to be plotted: possible mutually exclusive options are "left", "right", "across", "everything";  default is "everything", which means the entire graph is plotted.
-#' @param which.sym a string or a vector of strings; specifies which kind of symmetries are plotted (structural, parametric or both).
-#' @param asym.edges a logical; if `TRUE`, Asymmetric edges are plotted otherwise their symbol is suppressed
-#' @param export.plot a logical; if `TRUE`, a .pdf file is produced in the working director instead of plotting the graph as a new panel/window.
-#' @param fancy a logical value; if `TRUE`, symbols in the plot are used from the
-#'   Latin1 encoding for characters; set to FALSE if characters are not properly
-#'   displayed, so symbols are reverted to latin letters.
+#' @param uncol.sym a logical; if `TRUE`, structural symmetries are highlighted in the heatmap.
+#' @param col.sym a logical; if `TRUE`, coloured structural symmetries are highlighted in the heatmap.
 #' @param ... additional graphical parameters. Currently not used; reserved for future extensions.
+#' 
+#' @return A plot visualizing the coloured graph enconded in the input matrix `x'. Each square of the heatmap can either be empty (white) for the diagonal and missing edges or represent a type of edge:
+#' 
+#' * a `darkgrey` square represents an edge in the graph between the corresponding row/column vertices;
+#' 
+#' * a `deepskyblue2` square represents an edge associated to a structural symmetry in the graph;
+#' 
+#' * a `purple2` square represents an edge associated to a coloured structural symmetry.
 #'
-#' @return Either a plot within the running R session or a .pdf file saved in the working directory if the option export.plot is set to `TRUE`.
-#' @importFrom grDevices pdf dev.off dev.flush
-#' @importFrom graphics par image text mtext segments
 #' @export
 #'
 #' @examples
 #' plot(toy_data$pdColG)
 
 plot.pdColG <- function(x, 
-                        y = "everything",
-                        which.sym = c("structural","parametric"),
-                        asym.edges = TRUE,
-                        export.plot = FALSE,
-                        fancy = TRUE, ...){
-  # retain graph only (discard n.par) if G from pdColG.get is passed
-  G <- x
-  block <- y
-  p <- dim(G)[1]
+                        uncol.sym = FALSE,
+                        col.sym = FALSE,...){
+  p <- ncol(x)
   q <- p/2
-  strblock <- tolower(block)
-  strblock <-  match.arg(strblock, c("left", "right","across","everything") , several.ok = FALSE)
-  
-  # define plot symbols
-  G.symbols <- list()
-  if(fancy){
-    G.symbols$asym_edge <- "~"
-    G.symbols$struct_sym <- "o"
-    G.symbols$param_sym <- "."
+  if(uncol.sym | col.sym){
+    # store LR diagonal for manipulation purposes
+    LR.diag <- diag(x[1:q, (q+1):p])
+    diag(x[1:q, (q+1):p]) <- rep(0,q)
+    # find structural symmetries inside blocks (LL, RR)
+    cond.inside <- which((x[1:q,1:q]*x[(q+1):p,(q+1):p])==1 , arr.ind = T)
+    # find structural symmetries across blocks (LR,RL)
+    cond.across <- which((x[1:q, (q+1):p]*t(x[1:q, (q+1):p]))==1, arr.ind = T)
+    cond.across[,2] <- cond.across[,2]+q
+    cond.across <- rbind(cond.across,cond.across[,c(2,1)])
+    # readjust LR diagonal
+    diag(x[1:q, (q+1):p]) <- LR.diag
+    
+    if(uncol.sym & col.sym){
+      # change 2 to 3 to represent coloured structural symmetries
+      x[x==2] <- 3
+      # change 1 to 2 to represent uncoloured structural symmetries
+      ## inside
+      x[cond.inside] <- 2
+      x[cond.inside+q] <- 2
+      ## and across
+      x[cond.across] <- 2
+      diag(x)[diag(x)<3] <- 0
+      
+      # plot heatmap
+      heatmap(x,
+              Rowv = NA,
+              Colv = NA,
+              revC = TRUE,
+              symm = TRUE,
+              add.expr = {
+                legend(
+                  "bottomleft",
+                  legend = c("Uncoloured symmetries",
+                             "Coloured symmetries"),
+                  fill = c("deepskyblue2","purple2"),
+                  border = "black",
+                  bty = "o",
+                  cex = 1,
+                  text.width = NULL
+                )
+                abline(h = q + 0.5, lwd = 2, col="black")
+                abline(v = q + 0.5, lwd = 2, col="black")
+              },
+              scale = "none",
+              col=c("white","darkgrey","deepskyblue2","purple2"),
+      )
+    }else{
+      if(uncol.sym){
+        # treat 2 values as normal edges
+        x[x==2] <- 1
+        # and only highlight uncoloured structural symmetries
+        ## inside
+        x[cond.inside] <- 2
+        x[cond.inside+q] <- 2
+        ## and across
+        x[cond.across] <- 2
+        diag(x) <- 0
+        
+        # plot heatmap
+        heatmap(x,
+                Rowv = NA,
+                Colv = NA,
+                revC = TRUE,
+                symm = TRUE,
+                add.expr = {
+                  legend(
+                    "bottomleft",
+                    legend = c("Uncoloured symmetries"),
+                    fill = c("deepskyblue2"),
+                    border = "black",
+                    bty = "o",
+                    cex = 1,
+                    text.width = NULL
+                  )
+                  abline(h = q + 0.5, lwd = 2, col="black")
+                  abline(v = q + 0.5, lwd = 2, col="black")
+                },
+                scale = "none",
+                col=c("white","darkgrey","deepskyblue2"),
+        )
+      }else{
+        diag(x)[diag(x)<2] <- 0
+        
+        # plot heatmap 
+        heatmap(x,
+                Rowv = NA,
+                Colv = NA,
+                revC = TRUE,
+                symm = TRUE,
+                add.expr = {
+                  legend(
+                    "bottomleft",
+                    legend = c("Coloured symmetries"),
+                    fill = c("purple2"),
+                    border = "black",
+                    bty = "o",
+                    cex = 1,
+                    text.width = NULL
+                  )
+                  abline(h = q + 0.5, lwd = 2, col="black")
+                  abline(v = q + 0.5, lwd = 2, col="black")
+                },
+                scale = "none",
+                col=c("white","darkgrey","purple2"),
+        )
+      }
+    }
   }else{
-    G.symbols$asym_edge <- "-"
-    G.symbols$struct_sym <- "o"
-    G.symbols$param_sym <- "x"
+    # Color 2 values as 1, treating uncoloured and coloured in the
+    # same way (both arguments set to FALSE)
+    diag(x) <- 0
+    
+    heatmap(x,
+            Rowv = NA,
+            Colv = NA,
+            revC = TRUE,
+            symm = TRUE,
+            add.expr = {
+              abline(h = q + 0.5, lwd = 2, col="black")
+              abline(v = q + 0.5, lwd = 2, col="black")
+            },
+            scale = "none",
+            col=c("white","darkgrey","darkgrey")
+    )
   }
-  # check if asymmetric edges are to be plotted
-  if(!asym.edges) G.symbols$asym_edge <- NA
-  
-  strsym <- tolower(which.sym)
-  choice <-  match.arg(strsym, c("structural", "parametric") , several.ok = TRUE)
-  strsym <- ""
-  if (any(choice=="structural"))   strsym <- paste(strsym, "S", sep="")
-  if (any(choice=="parametric"))   strsym <- paste(strsym, "P", sep="")
-  switch(strsym,
-         #
-         S  = G.symbols$param_sym <- NA,
-         P  = G.symbols$struct_sym <- NA,
-         SP = G.symbols <- G.symbols
-  )
-  
-  # Store LR diag for temporary manipulation
-  LR.diag <- diag(G[1:q, (q+1):p])
-  diag(G[1:q, (q+1):p]) <- rep(0,q)
-  # convert content of G to symbols
-  cond.inside <- which( (G[1:q,1:q]*G[(q+1):p,(q+1):p])==1 , arr.ind = T)
-  cond.across <- which((G[1:q, (q+1):p]*t(G[1:q, (q+1):p]))==1, arr.ind = T)
-  cond.across[,2] <- cond.across[,2]+q
-  
-  G[cond.inside] <- G.symbols$struct_sym ### structural symmetries LL RR
-  #given the output of array.ind=TRUE only produces positions for LL, need to overwrite the RR block too
-  G[cond.inside+q] <- G.symbols$struct_sym ### structural symmetries LL RR
-  #given the output of array.ind=TRUE only produces positions for LL, need to overwrite adjust for LR block
-  G[cond.across] <- G.symbols$struct_sym ### structural symmetries LR
-  diag(G[1:q, (q+1):p]) <- LR.diag
-  
-  G[G==0] <- NA
-  G[G==1] <- G.symbols$asym_edge ### asymmetric edges
-  G[G==2] <- G.symbols$param_sym ### parametric symmetries
-  G[lower.tri(G)] <- NA
-  
-  
-  # selects portion or total graph
-  switch(strblock,
-         left = G <- G[1:q, 1:q],
-         right = G <- G[(q+1):p, (q+1):p],
-         across = G <- G[1:q, (q+1):p],
-         everything = G <- G
-  )
-  p <- dim(G)[1]
-  q <- p/2
-  
-  # adjust graphical parameters
-  cex.matrix <- matrix(1,p,p)
-  adj.matrix <- matrix(0.5,p,p)
-  if(fancy){
-    cex.matrix[G==G.symbols$param_sym] <- 4
-    adj.matrix[G==G.symbols$param_sym] <- 0.55
-  }
-  # store original graphical parameters
-  op <- par(no.readonly = TRUE)
-  
-  # check if plot is to be saved as a pdf
-  if(export.plot) pdf(paste("graph_",strblock,".pdf",sep=""), width = 7, height = 7, onefile = TRUE)
-  
-  par(oma=c(0,0,3,1.5))
-  par(mai=c(0.1,0.1,0.2,0.4))
-  
-  image(
-    x = 1:p,        # X-axis values (columns)
-    y = 1:p,        # Y-axis values (rows)
-    z = matrix(0,p,p),                # Data matrix
-    col = "white",
-    xlab = "",
-    ylab = "",
-    main = "",
-    xaxs = "i",
-    yaxs = "i",
-    axes = FALSE,
-    asp=1
-  )
-  text(
-    x = rep(1:p, each = p),
-    y = rep(p:1, times = p),
-    labels = G,
-    cex = cex.matrix,                         # Adjust label size if needed
-    adj = adj.matrix,                           # Position text below each cell
-    col = "black"                      # Text color
-  )
-  
-  mtext( text = colnames(G), at = 1:p, side = 3, line=1, las = 2, outer=FALSE)
-  mtext( text = rownames(G), at = p:1, side = 4, line=1, las = 2, outer=FALSE)
-  
-  # guides
-  if(strblock=="everything"){
-    segments(y0=p/2 + 0.5, y1=p/2 + 0.5, x0=1-0.25, x1=p+0.25, col=1, lwd=2, lty=2)
-    segments(x0=p/2 + 0.5, x1=p/2 + 0.5, y0=1-0.25, y1=p+0.25, col=1, lwd=2, lty=2)
-  }
-  if(strblock=="across"){
-    segments(y0=p + 0.5, y1=1 + 0.0 , x0=1-0.25, x1=p+0.25, col=1, lwd=1, lty=2)
-    # 0.5 shift
-    segments(y0=p + 0.0, y1=1 - 0.5 , x0=1-0.25, x1=p+0.25, col=1, lwd=1, lty=2)
-  }
-  
-  par(op)
-  if(export.plot) dev.off()
-  on.exit(dev.flush())
 }
-
-
-
 
 
 
