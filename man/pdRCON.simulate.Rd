@@ -20,30 +20,30 @@ pdRCON.simulate(
 )
 }
 \arguments{
-\item{p}{an even integer, the number of variables of the generated model.}
+\item{p}{an even integer; the number of variables of the generated model.}
 
-\item{concent.mat}{a logical, if \code{TRUE} a
+\item{concent.mat}{a logical; if \code{TRUE} a
 concentration matrix \code{K} with the zero structure and symmetries encoded by \code{pdColG} is generated.}
 
-\item{sample}{a logical, if \code{TRUE} a sample from a
+\item{sample}{a logical; if \code{TRUE} a sample from a
 normal distribution with zero mean vector and concentration matrix \code{K}
 is generated.}
 
-\item{Sigma}{a \eqn{p\times p} positive definite matrix. This is the matrix
+\item{Sigma}{a pxp positive definite matrix; the matrix
 argument of the \code{\link{rWishart}} function, which is used as starting point in
 the random generation of the concentration matrix, as described in the
 "Details" section below. If \code{NULL}
 the identity matrix is used.}
 
-\item{sample.size}{a positive integer, size of the randomly generated sample. If \code{NULL}
-then \code{sample.size=3*p}.}
+\item{sample.size}{a positive integer; the size of the randomly generated sample. If \code{NULL}
+then the sample size is set to 3xp.}
 
 \item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which
 identify the pdRCON submodel class of interest; see \code{\link{pdglasso-package}} for details.}
 
 \item{dens, dens.vertex, dens.inside, dens.across}{four values between zero and
 one used to specify the sparsity degree of the generated graph, as
-described in the "Details" section below. The default \code{dens.vertex=NULL} is
+explained in the "Details" section below. The default \code{dens.vertex=NULL} is
 equivalent to \code{dens.vertex=dens}, and similarly for \code{dens.inside} and
 \code{dens.across}.}
 
@@ -55,11 +55,11 @@ output in the console.}
 A list with the following components:
 \itemize{
 \item \code{pdColG} a randomly generated a matrix of class \code{pdColG} representing a pdRCON model; see \code{\link{pdglasso-package}} for details.
-\item \code{K} either a randomly generated concentration matrix with the zero structure and symmetries encoded by \code{pdColG}  or
-\code{NULL} if \code{concent.mat=FALSE}..
-\item \code{sample.data} either a data frame randomly generated from a multivariate normal distribution
-with mean vector zero and concentration matrix \code{K}  or \code{NULL} if either
-\code{sample=FALSE} or \code{concent.mat=FALSE}.
+\item \code{K} a randomly generated concentration matrix with the zero structure and symmetries encoded by \code{pdColG}
+if \code{concent.mat=TRUE}, or \code{NULL} otherwise.
+\item \code{sample.data}  a data frame randomly generated from a multivariate normal distribution
+with mean vector zero and concentration matrix \code{K}   if both
+\code{sample=TRUE} and \code{concent.mat=TRUE}, or \code{NULL} otherwise.
 }
 
 Note that the variable in \eqn{L} are named \verb{L1,...,Lq} and variables in
@@ -67,8 +67,8 @@ Note that the variable in \eqn{L} are named \verb{L1,...,Lq} and variables in
 every i=1,...,q.
 }
 \description{
-Randomly generates a pdRCN model and, more specifically, the \code{pdColG} matrix representing the model,
-a concentration matrix \code{K} with the same zero pattern and equality constraints encoded by\code{pdColG},  and a
+Randomly generates a pdRCN model and, more specifically, the pdColG matrix representing the model,
+a concentration matrix \code{K} with the same zero pattern and equality constraints encoded by \code{pdColG},  and a
 random sample from a multivariate normal distribution with zero mean vector
 and covariance matrix \code{Sigma}, that is the inverse of \code{K}.
 }
@@ -119,7 +119,8 @@ according to the  \code{dens.xxx} arguments.
 # generates a pdRCON model on 10 variables in the form of a pdColG matrix
 
 set.seed(123)
-pdRCON.model <- pdRCON.simulate(10, concent=FALSE, sample=FALSE, dens=0.25)$pdColG
+rpdColG <- pdRCON.simulate(10, concent=FALSE, sample=FALSE, dens=0.25)$pdColG
+rpdColG
 
 # generates a distribution from a pdRCON model on 20 variables, a concentration matrix
 # for this model and a sample of size 50

@@ -30,35 +30,24 @@ described in \code{\link{pdglasso-package}}.}
 
 \item{n}{the sample size.}
 
-\item{lams}{a 2x4 numeric matrix to specify the path of lambda values, if \code{NULL} default values are
-used; see the "Details" section below for additional information.}
+\item{lams}{a 2x4 numeric matrix that specifies the path of lambda values, if \code{NULL} default values are
+used, as explained in the "Details" section below.}
 
-\item{gamma.eBIC}{parameter of eBIC with \code{gamma.eBIC=0} corresponding to the classical BIC; see \code{\link{compute.eBIC}} for details..}
+\item{gamma.eBIC}{a value between zero and one; the magnitude of the penalization term of the eBIC; see  \code{\link{compute.eBIC}} for details.}
 
 \item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which identify the pdRCON submodel class of interest; see
 \code{\link{pdglasso-package}} for details.}
 
-\item{X.init}{a \eqn{p \times p}
-concentration matrix to be used as starting point of the ADMM. If \code{NULL} a default value is used.}
+\item{X.init}{a  matrix of the same dimension as \code{S} to be used as starting point of the ADMM. If \code{NULL} a default value is used.}
 
-\item{rho1}{a postive scalar; tuning parameter of the ADMM algorithm to be used for
-the outer loop.}
+\item{rho1, rho2}{two positive scalars; tuning parameters of the outer and inner loop, respectively, of the ADMM.}
 
-\item{rho2}{a positive scalar; tuning parameter of the ADMM algorithm to be used for
-the inner loop.}
-
-\item{varying.rho1}{a logical; if \code{TRUE} the parameter \code{rho1} is updated
-iteratively to speed-up convergence.}
-
-\item{varying.rho2}{a logical; if \code{TRUE} the parameter \code{rho2} is updated
+\item{varying.rho1, varying.rho2}{two logicals; if \code{TRUE} the parameters \code{rho1} and \code{rho2}, respectively, are updated
 iteratively to speed-up convergence.}
 
 \item{max_iter}{an integer; maximum number of iterations for convergence.}
 
-\item{eps.abs}{a  positive scalar; the absolute tollerance for the computation
-of primal and dual feasibility tollerances of the ADMM.}
-
-\item{eps.rel}{a positive scalar; the relative tollerance for the computation
+\item{eps.abs, eps.rel}{two  positive scalars; the absolute and relative tollerance, respectively, for the computation
 of primal and dual feasibility tollerances of the ADMM.}
 
 \item{verbose}{a logical; if \code{TRUE} provides a visual update in the console about the grid search over \code{lambda1} and \code{lambda2}}
@@ -83,7 +72,7 @@ A list with the following components:
 
 A warning is produced if at least one run of the algorithm for the grid
 searches has resulted in non-convergence (status can be checked by inspecting
-\code{l1.path} and \code{l2.path}).
+\code{l1.path} and \code{l2.path}); see the "Details" section of the function  \code{\link{compute.eBIC}}.
 }
 \description{
 Performs a sequence of calls to \code{\link{admm.pdglasso}} on a sequence of
@@ -91,15 +80,15 @@ values for \code{lambda1} and \code{lambda2}. More specifically, firstly a path 
 \code{lambda2}=0, is considered to select a "best" \code{lambda1} value according to eBIC.
 Next, a path of \code{lambda2} values is considered, with \code{lambda1} fixed to its previously selected value,
 and the final model is selected according to eBIC.
-The user may then call \code{\link{pdColG.get}} to obtain the Coloured Graph
+The user can then call \code{\link{pdColG.get}} to obtain the Coloured Graph
 for Paired Data (pdColG) representing the selected model.
 }
 \details{
-\strong{Details on the specification of the argument \code{lams}}
+\strong{Details on the specification of the argument lams}
 
 The argument \code{lams} is a 2x4 matrix used to specified the grid of penalty terms.
 The first row of \code{lams} refers to \code{lambda1} and second row to
-\code{lambda2}. For each row of the \code{lams} matrix entries are: the minimum and maximum value of the path (columns 1 and 2);
+\code{lambda2}. For each row of the \code{lams} matrix, entries are: the minimum and maximum value of the path (columns 1 and 2);
 the number of points of the path (column 3); \code{0} for linear spacing and
 \code{1} logarithmic spacing (column 4). If \code{lams=NULL} the default values are computed as follows: maximum lambda values are computed from \code{\link{lams.max}}
 and paths of 20 points are used form max.lams/20 to max.lams, with logarithm spacing.

@@ -26,40 +26,26 @@ admm.pdglasso(
 \item{S}{a sample covariance matrix with the block structure
 described in \code{\link{pdglasso-package}}.}
 
-\item{lambda1}{a non-negative scalar penalty that encourages
-sparsity in the concentration matrix.}
-
-\item{lambda2}{a non-negative scalar penalty that encourages
-equality constraints in the concentration matrix.}
+\item{lambda1, lambda2}{two non-negative scalar penalties that encourage
+sparsity (\code{lambda1}) and parametric symmetries (\code{lambda2}) in the concentration matrix.}
 
 \item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which identify the pdRCON submodel class of interest; see
 \code{\link{pdglasso-package}} for details.}
 
-\item{X.init}{a \eqn{p \times p}
-concentration matrix to be used as starting point of the ADMM. If \code{NULL} a default value is used.}
+\item{X.init}{a  matrix of the same dimension as \code{S} to be used as starting point of the ADMM. If \code{NULL} a default value is used.}
 
-\item{rho1}{a postive scalar; tuning parameter of the ADMM algorithm to be used for
-the outer loop.}
+\item{rho1, rho2}{two positive scalars; tuning parameters of the outer and inner loop, respectively, of the ADMM.}
 
-\item{rho2}{a positive scalar; tuning parameter of the ADMM algorithm to be used for
-the inner loop.}
-
-\item{varying.rho1}{a logical; if \code{TRUE} the parameter \code{rho1} is updated
-iteratively to speed-up convergence.}
-
-\item{varying.rho2}{a logical; if \code{TRUE} the parameter \code{rho2} is updated
+\item{varying.rho1, varying.rho2}{two logicals; if \code{TRUE} the parameters \code{rho1} and \code{rho2}, respectively, are updated
 iteratively to speed-up convergence.}
 
 \item{max_iter}{an integer; maximum number of iterations for convergence.}
 
-\item{eps.abs}{a  positive scalar; the absolute tollerance for the computation
-of primal and dual feasibility tollerances of the ADMM.}
-
-\item{eps.rel}{a positive scalar; the relative tollerance for the computation
+\item{eps.abs, eps.rel}{two  positive scalars; the absolute and relative tollerance, respectively, for the computation
 of primal and dual feasibility tollerances of the ADMM.}
 
 \item{rcpp}{a logical; if \code{TRUE}, computations are performed using the Rcpp (C++) implementation;
-if \code{FALSE}, a pure R implementation is used.}
+if \code{FALSE}, a pure (slower) R implementation is used.}
 
 \item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
 specified by the arguments \code{type} and \code{force.symm}, is returned as printed
@@ -81,7 +67,7 @@ submodel class identified by the arguments \code{type} and \code{force.symm},
 based on the pdglasso method with penalty terms \code{lambda1} and \code{lambda2}
 (Ranciati and Roverato, 2024). Optimization is implemented by an
 ADMM algorithm (see Boyd \emph{et. al.} 2011). The output is an object of
-class \code{ADMMoutput} and the user may then call \code{\link{pdColG.get}} to obtain the Coloured Graph
+class \code{ADMMoutput} and the user may then call the function \code{\link{pdColG.get}} to obtain the Coloured Graph
 for Paired Data (pdColG) representing the selected model.
 }
 \examples{

@@ -3,14 +3,14 @@
 \docType{data}
 \name{bc_data}
 \alias{bc_data}
-\title{Breast Cancer Dataset}
+\title{Breast Cancer dataset}
 \format{
 \subsection{\code{bcdata}}{
 
 A named \eqn{114 \times 178} matrix, where:
 \itemize{
 \item each row refers to one of the 114 individuals in the dataset;
-\item each column is one of the \eqn{p=89 \times 2=178} genes of the Hedgehog Pathway, whose expressions were measured on healthy (first half) and adjacent tumor affected samples (second half)
+\item each column is one of the \eqn{p=89 \times 2=178} genes of the Hedgehog Pathway, whose expressions were measured on healthy (first half) and adjacent tumor affected samples (second half).
 }
 }
 }

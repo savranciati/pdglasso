@@ -6,35 +6,25 @@
 #' based on the pdglasso method with penalty terms `lambda1` and `lambda2`
 #' (Ranciati and Roverato, 2024). Optimization is implemented by an
 #' ADMM algorithm (see Boyd *et. al.* 2011). The output is an object of 
-#' class `ADMMoutput` and the user may then call [`pdColG.get`] to obtain the Coloured Graph
+#' class `ADMMoutput` and the user may then call the function [`pdColG.get`] to obtain the Coloured Graph
 #' for Paired Data (pdColG) representing the selected model.
 #'
 #' @param S a sample covariance matrix with the block structure
 #'   described in [`pdglasso-package`].
-#' @param lambda1 a non-negative scalar penalty that encourages
-#'   sparsity in the concentration matrix.
-#' @param lambda2 a non-negative scalar penalty that encourages
-#'   equality constraints in the concentration matrix.
+#' @param lambda1,lambda2 two non-negative scalar penalties that encourage
+#'   sparsity (`lambda1`) and parametric symmetries (`lambda2`) in the concentration matrix.
 #' @param type,force.symm two subvectors of `c("vertex", "inside.block.edge",
 #'   "across.block.edge")` which identify the pdRCON submodel class of interest; see
 #'   [`pdglasso-package`] for details.
-#' @param X.init a \eqn{p \times p}
-#'   concentration matrix to be used as starting point of the ADMM. If `NULL` a default value is used. 
-#' @param rho1 a postive scalar; tuning parameter of the ADMM algorithm to be used for
-#'   the outer loop.
-#' @param rho2 a positive scalar; tuning parameter of the ADMM algorithm to be used for
-#'   the inner loop. 
-#' @param varying.rho1 a logical; if `TRUE` the parameter `rho1` is updated
-#'   iteratively to speed-up convergence.
-#' @param varying.rho2 a logical; if `TRUE` the parameter `rho2` is updated
+#' @param X.init a  matrix of the same dimension as `S` to be used as starting point of the ADMM. If `NULL` a default value is used. 
+#' @param rho1,rho2 two positive scalars; tuning parameters of the outer and inner loop, respectively, of the ADMM.
+#' @param varying.rho1,varying.rho2 two logicals; if `TRUE` the parameters `rho1` and `rho2`, respectively, are updated
 #'   iteratively to speed-up convergence.
 #' @param max_iter an integer; maximum number of iterations for convergence. 
-#' @param eps.abs a  positive scalar; the absolute tollerance for the computation
-#'   of primal and dual feasibility tollerances of the ADMM.
-#' @param eps.rel a positive scalar; the relative tollerance for the computation
+#' @param eps.abs,eps.rel two  positive scalars; the absolute and relative tollerance, respectively, for the computation
 #'   of primal and dual feasibility tollerances of the ADMM.
 #' @param rcpp a logical; if `TRUE`, computations are performed using the Rcpp (C++) implementation;
-#' if `FALSE`, a pure R implementation is used.
+#' if `FALSE`, a pure (slower) R implementation is used.
 #' @param print.type a logical; if `TRUE` the pdRCON submodel class considered, as
 #'   specified by the arguments `type` and `force.symm`, is returned as printed
 #'   output in the console.

@@ -11,10 +11,10 @@ compute.eBIC(S, admm.out, n, gamma.eBIC = 0.5, mle = TRUE)
 
 \item{admm.out}{an object of class \code{ADMMoutput}, such as the output of a call to \code{\link{admm.pdglasso}}; see also \code{\link{pdRCON.select}}.}
 
-\item{n}{the sample size.}
+\item{n}{a positive integer; the sample size.}
 
-\item{gamma.eBIC}{a parameter governing the magnitude of the penalization term inside the criterion;
-it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, with 0.5 being the value
+\item{gamma.eBIC}{a value between zero and one; the magnitude of the penalization term inside the criterion,
+where 0 makes eBIC equivalent to BIC and 0.5 is the value
 suggested by Feygel and Drton (2010).}
 
 \item{mle}{a logical; if \code{TRUE}, the MLE are used otherwise
@@ -24,7 +24,7 @@ the pdglasso estimator is used; see the "Details" section below.}
 A vector containing three elements:
 \itemize{
 \item the value of the eBIC,
-\item the log-likelihood,
+\item the value of the log-likelihood,
 \item the number of parameters.
 }
 }
@@ -33,7 +33,7 @@ This function computes the value of the eBIC for a pdRCON model
 from the output of \code{\link{admm.pdglasso}}; see Eq.1 of Feygel and Drton (2010).
 }
 \details{
-\strong{Details on the specification of the argument \code{mle}}
+\strong{Details on the specification of the argument mle}
 
 The extended Bayesian Information Criterion implemented in this function requires that the parameters are estimated by maximum likelihood.
 However, the computation of MLEs may considerably slow down the procedure and, more seriously, in the high-dimensional setting

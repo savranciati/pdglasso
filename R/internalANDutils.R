@@ -5,26 +5,34 @@
 #' such as that returned by a call to  [`pdColG.get`].
 #'
 #' @param x a matrix of class `pdColG`; see [`pdglasso-package`] for details.
+#' @param y not used. Included for compatibility with the generic `plot()` method.
 #' @param uncol.sym a logical; if `TRUE`, structural symmetries are highlighted in the heatmap.
 #' @param col.sym a logical; if `TRUE`, coloured structural symmetries are highlighted in the heatmap.
-#' @param ... additional graphical parameters. Currently not used; reserved for future extensions.
+#' @param ... unused. Included for compatibility with the generic `plot()` method.
 #' 
 #' @return A plot visualizing the coloured graph enconded in the input matrix `x'. Each square of the heatmap can either be empty (white) for the diagonal and missing edges or represent a type of edge:
 #' 
-#' * a `darkgrey` square represents an edge in the graph between the corresponding row/column vertices;
+#' * a `darkgrey` square represents an edge in the graph;
 #' 
-#' * a `deepskyblue2` square represents an edge associated to a structural symmetry in the graph;
+#' * a `deepskyblue2` square represents an uncoloured structural symmetry;
 #' 
-#' * a `purple2` square represents an edge associated to a coloured structural symmetry.
+#' * a `purple2` square represents either a vertex symmetry or a coloured structural symmetry.
 #'
 #' @export
 #'
 #' @examples
-#' plot(toy_data$pdColG)
+#' S <- var(toy_data$sample.data)
+#' mod.out <- admm.pdglasso(S, lambda1=4, lambda2=0.6)
+#' G <- pdColG.get(mod.out)
+#' plot(G)
+#' plot(G, uncol.sym=TRUE)
+#' plot(G, uncol.sym=TRUE, col.sym=TRUE)
 
 plot.pdColG <- function(x, 
+                        y=NULL,
                         uncol.sym = FALSE,
-                        col.sym = FALSE,...){
+                        col.sym = FALSE,
+                        ...){
   p <- ncol(x)
   q <- p/2
   if(uncol.sym | col.sym){
@@ -33,7 +41,7 @@ plot.pdColG <- function(x,
     diag(x[1:q, (q+1):p]) <- rep(0,q)
     # find structural symmetries inside blocks (LL, RR)
     cond.inside <- which((x[1:q,1:q]*x[(q+1):p,(q+1):p])==1 , arr.ind = T)
-    # find structural symmetries across blocks (LR,RL)
+    # find structural symmetries across blocks (LR,RL)
     cond.across <- which((x[1:q, (q+1):p]*t(x[1:q, (q+1):p]))==1, arr.ind = T)
     cond.across[,2] <- cond.across[,2]+q
     cond.across <- rbind(cond.across,cond.across[,c(2,1)])
@@ -163,12 +171,12 @@ plot.pdColG <- function(x,
 #' of an object of class `pdColG`, such as that raturned by a call to  [`pdColG.get`].
 #'
 #' @param object a matrix of class `pdColG`; see [`pdglasso-package`] for details.
-#' @param print.summary a logical, if `TRUE` the summary is printed on the console.
-#' @param ... additional parameters. Currently not used; reserved for future extensions.
+#' @param print.summary a logical; if `TRUE` the summary is printed on the console.
+#' @param ... not used. Included for compatibility with the generic `summary()` method.
 #'
 #' @return An invisible list with the following components:
 #'
-#' * `overall` a list with the number of vertices and edges.
+#' * `overall` a list with the number of vertices, edges and free parameters of the associated pdRCON model.
 #'
 #' * `vertex`  a list with the number of coloured vertices.
 #'
@@ -180,6 +188,9 @@ plot.pdColG <- function(x,
 #'
 #' @examples
 #' summary(toy_data$pdColG)
+#' 
+#' model.summary <- summary(toy_data$pdColG, print.summary=FALSE)
+#' model.summary
 #' 
 summary.pdColG <- function(object, print.summary=TRUE, ...){
   pdColG <- object
@@ -210,27 +221,31 @@ summary.pdColG <- function(object, print.summary=TRUE, ...){
   # overall
   n.edges <- sum(X$G)+n.col.inside.edges+n.col.across.edges
   
+  # number of parameters
+  n.par <- n.edges + p -(n.col.vertices+n.col.inside.edges+n.col.across.edges)/2
+  
   #
   if(print.summary){
     cat("\nOVERALL\n")
-    cat("number of vertices: ", p, " \n")
-    cat("number of edges: ", n.edges, " \n")
-    cat("graph density  : ", round(n.edges/(p*(p-1)/2), 4) , " \n \n")
+    cat("number of vertices   :", p, " \n")
+    cat("number of edges      :", n.edges, " \n")
+    cat("graph density        :", round(n.edges/(p*(p-1)/2), 4) , " \n")
+    cat("number of parameters :", n.par , " \n \n")
     #
     cat("VERTICES\n")
     cat("number of coloured vertices: ", n.col.vertices, " \n \n", sep="")
     #
     cat("INSIDE-BLOCK EDGES\n")
-    cat("number of edges: ", n.inside.edges, "\n", sep="")
+    cat("number of edges:", n.inside.edges, "\n", sep="")
     cat("number of uncoloured symmetric edges: ", n.UNcol.symm.inside.edges, "\n", sep="")
-    cat("number of coloured  symmetric edges: ", n.col.inside.edges, " \n \n", sep="")
+    cat("number of  coloured  symmetric edges: ", n.col.inside.edges, " \n \n", sep="")
     #
     cat("ACROSS-BLOCK EDGES\n")
     cat("number of edges: ", n.across.edges, "\n", sep="")
     cat("number of uncoloured symmetric edges: ", n.UNcol.symm.across.edges, "\n", sep="")
-    cat("number of coloured  symmetric edges: ", n.col.across.edges, " \n \n", sep="")
+    cat("number of  coloured  symmetric edges: ", n.col.across.edges, " \n \n", sep="")
   }
-  overall <- list(n.vertices=p, n.edges=n.edges)
+  overall <- list(n.vertices=p, n.edges=n.edges, n.par=n.par)
   vertex <- list(n.col.vertices=n.col.vertices)
   inside   <- list(n.edges=n.inside.edges, n.UNcol.symm.edges=n.UNcol.symm.inside.edges, n.col.edges=n.col.inside.edges)
   across   <- list(n.edges=n.across.edges, n.UNcol.symm.edges=n.UNcol.symm.across.edges, n.col.edges=n.col.across.edges)
@@ -241,16 +256,17 @@ summary.pdColG <- function(object, print.summary=TRUE, ...){
 #' Diagnostic plot for the output of the ADMM
 #'
 #' A plot, with different panels, obtained from the output of [`admm.pdglasso`], which is helpful to check the convergence of the ADMM.  
-#' This function can be used to visualize the default threshold used by [`pdColG.get`] as well to identify specific `th1` and `th2` threshold values to be used in
+#' This function can also be used to visualize the default threshold used by [`pdColG.get`] as well to identify specific `th1` and `th2` threshold values to be used in
 #' place of the default one. 
 #' 
 #'
 #' @param x an object of class `ADMMoutput` such as the output of a call to the [`admm.pdglasso`] function; see also [`pdRCON.select`].
-#' @param y a logical, if `TRUE` the default threshold used in [`pdColG.get`] is represented (in log10-scale) in the plot.
-#' @param th1,th2 two positive scalars as in [`pdColG.get`], if not `NULL` they are represented (in log10-scale) in the plot. 
-#' @param logarithm10 a logical, if `TRUE` the values of `th1` and `th2` are expected to be provided in log10-scale. This facilitate  
+#' @param y  not used. Included for compatibility with the generic `plot()` method.
+#' @param add.default.th a logical; if `TRUE` the default threshold used in [`pdColG.get`] is represented (in log10-scale) in the plot.
+#' @param th1,th2 two positive scalars as in [`pdColG.get`]; if not `NULL` they are represented (in log10-scale) in the plot. 
+#' @param logarithm10 a logical; if `TRUE` the values of `th1` and `th2` are expected to be provided in log10-scale. This facilitate  
 #' interaction with the plot whose y-axis is in log10 scale. 
-#' @param ... additional graphical parameters. Currently not used; reserved for future extensions.
+#' @param ... not used. Included for compatibility with the generic `plot()` method.
 #'
 #'
 #' @return A plot is produced with different panels depending on the model `type`. More specifically: 
@@ -263,22 +279,29 @@ summary.pdColG <- function(object, print.summary=TRUE, ...){
 #' 
 #' * a panel with the differences of homologous across-block concentration values is provided if across-block symmetries are allowed
 #' 
-#' According to the values of the arguments `y`, `th1` and `th2`, horizontal dashed lines with the corresponding thresholds are included in the panels. 
+#' According to the values of the arguments `add.default.th`, `th1` and `th2`, horizontal dashed lines with the corresponding thresholds are included in the panels. 
 #' 
 #' The function returns an invisible vector with the values of `th1`, `th2`
 #' and of the default threshold. The quantities `th1` and `th2`
-#' can directly given as input for the same arguments of [`pdColG.get`]. Consistently with the
-#' behavior of [`pdColG.get`], a `NULL` value of `th1` or`th2` is replaced by the default threshold. 
+#' can directly be given as input for the same arguments of [`pdColG.get`]. Consistently with the
+#' behavior of [`pdColG.get`], a `NULL` value of `th1` or `th2` is replaced by the default threshold. 
 #' 
 #' @importFrom graphics par title abline legend
 #' @export
 #'
 #' @examples
 #' S <- cov(toy_data$sample.data)
-#' mod.out <- pdRCON.select(S,n=60)$model
+#' mod.out <- admm.pdglasso(S, lambda1=4, lambda2=0.3)
+#' 
+#' # full plot with four panels
+#' plot(mod.out)
+#' 
+#' # model without across-block symmetries
+#' mod.out <- admm.pdglasso(S, lambda1=4, lambda2=0.3, type=c("v", "i"))
 #' plot(mod.out)
 
-plot.ADMMoutput <- function(x, y=TRUE, th1=NULL, th2=NULL, logarithm10=TRUE, ...){
+plot.ADMMoutput <- function(x, y=NULL, add.default.th=TRUE, th1=NULL, th2=NULL, logarithm10=TRUE, ...){
+  y <- add.default.th
   mod.out <- x
   acronyms <- mod.out$acronyms$acronym.of.type
   th.default <- log10(mod.out$internal.par$eps.rel*10)
@@ -359,7 +382,7 @@ plot.ADMMoutput <- function(x, y=TRUE, th1=NULL, th2=NULL, logarithm10=TRUE, ...
 
 
 
-#' Maximum theoretical values of `lambda1` and `lambda2`
+#' Maximum theoretical values of lambda1 and lambda2
 #' 
 #' Computes the maximum theoretical values `lambda1.max` and `lambda2.max` of `lambda1` and `lambda2`, respectively. 
 #' For every `lambda1` greater than `lambda1.max` the pdglasso estimator is a diagonal matrix whereas 

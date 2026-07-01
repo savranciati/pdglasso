@@ -11,10 +11,7 @@ pdRCON.mle(S, pdColG, eps.rel = 1e-06, eps.abs = 1e-06, max_iter = 5000)
 
 \item{pdColG}{a pdColG matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.}
 
-\item{eps.rel}{a positive scalar; the relative tollerance for the computation
-of primal and dual feasibility tollerances of the ADMM.}
-
-\item{eps.abs}{a  positive scalar; the absolute tollerance for the computation
+\item{eps.abs, eps.rel}{two  positive scalars; the absolute and relative tollerance, respectively, for the computation
 of primal and dual feasibility tollerances of the ADMM.}
 
 \item{max_iter}{an integer; maximum number of iterations for convergence.}
@@ -32,7 +29,7 @@ If the sample covariance matrix is not full-rank, then it is
 possible that the maximum likelihood estimate does not exist. The maximum
 likelihood estimate is computed by running the function \code{\link{admm.pdglasso}}
 with suitable penalties and, if it does not exist, then the ADMM algorithm
-fails to converge, a warning is produced and a \code{NULL} is returned.
+fails to converge. In this case, a warning is produced and a \code{NULL} is returned.
 }
 \examples{
 S <- var(toy_data$sample.data)

@@ -5,23 +5,23 @@
 #' `lambda2`=0, is considered to select a "best" `lambda1` value according to eBIC. 
 #' Next, a path of `lambda2` values is considered, with `lambda1` fixed to its previously selected value, 
 #' and the final model is selected according to eBIC.
-#' The user may then call [`pdColG.get`] to obtain the Coloured Graph
+#' The user can then call [`pdColG.get`] to obtain the Coloured Graph
 #' for Paired Data (pdColG) representing the selected model.
 #'
 #' @inheritParams admm.pdglasso
 #' @param n the sample size.
-#' @param lams a 2x4 numeric matrix to specify the path of lambda values, if `NULL` default values are
-#'   used; see the "Details" section below for additional information.
-#' @param gamma.eBIC parameter of eBIC with `gamma.eBIC=0` corresponding to the classical BIC; see [`compute.eBIC`] for details..
+#' @param lams a 2x4 numeric matrix that specifies the path of lambda values, if `NULL` default values are
+#'   used, as explained in the "Details" section below.
+#' @param gamma.eBIC a value between zero and one; the magnitude of the penalization term of the eBIC; see  [`compute.eBIC`] for details.
 #' @param verbose a logical; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`
 #' @param mle.estimate a logical; if `TRUE`, compute eBIC via the MLE,
 #' if `FALSE` the pdglasso estimator is used; see [`compute.eBIC`] for details.
 #'
-#' @details **Details on the specification of the argument `lams`**
+#' @details **Details on the specification of the argument lams**
 #' 
 #' The argument `lams` is a 2x4 matrix used to specified the grid of penalty terms.
 #' The first row of `lams` refers to `lambda1` and second row to
-#' `lambda2`. For each row of the `lams` matrix entries are: the minimum and maximum value of the path (columns 1 and 2); 
+#' `lambda2`. For each row of the `lams` matrix, entries are: the minimum and maximum value of the path (columns 1 and 2); 
 #'  the number of points of the path (column 3); `0` for linear spacing and  
 #' `1` logarithmic spacing (column 4). If `lams=NULL` the default values are computed as follows: maximum lambda values are computed from [`lams.max`]
 #' and paths of 20 points are used form max.lams/20 to max.lams, with logarithm spacing. 
@@ -43,7 +43,7 @@
 #'
 #' A warning is produced if at least one run of the algorithm for the grid
 #' searches has resulted in non-convergence (status can be checked by inspecting
-#' `l1.path` and `l2.path`).
+#' `l1.path` and `l2.path`); see the "Details" section of the function  [`compute.eBIC`].
 #' @export
 #'
 #' @examples
@@ -204,7 +204,7 @@ pdRCON.select <- function(S,
 #'   possible that the maximum likelihood estimate does not exist. The maximum
 #'   likelihood estimate is computed by running the function [`admm.pdglasso`]
 #'   with suitable penalties and, if it does not exist, then the ADMM algorithm
-#'   fails to converge, a warning is produced and a `NULL` is returned.
+#'   fails to converge. In this case, a warning is produced and a `NULL` is returned.
 #'
 #' @export
 #'
@@ -376,14 +376,14 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 #'
 #' @param S a sample covariance matrix with the block structure described in [`pdglasso-package`].
 #' @param admm.out an object of class `ADMMoutput`, such as the output of a call to [`admm.pdglasso`]; see also [`pdRCON.select`].
-#' @param n the sample size.
-#' @param gamma.eBIC a parameter governing the magnitude of the penalization term inside the criterion; 
-#' it ranges from 0 to 1, where 0 makes the eBIC equivalent to BIC, with 0.5 being the value 
+#' @param n a positive integer; the sample size.
+#' @param gamma.eBIC a value between zero and one; the magnitude of the penalization term inside the criterion, 
+#' where 0 makes eBIC equivalent to BIC and 0.5 is the value 
 #' suggested by Feygel and Drton (2010).
 #' @param mle a logical; if `TRUE`, the MLE are used otherwise 
 #'    the pdglasso estimator is used; see the "Details" section below. 
 #'   
-#' @details **Details on the specification of the argument `mle`**
+#' @details **Details on the specification of the argument mle**
 #' 
 #' The extended Bayesian Information Criterion implemented in this function requires that the parameters are estimated by maximum likelihood. 
 #' However, the computation of MLEs may considerably slow down the procedure and, more seriously, in the high-dimensional setting   
@@ -393,7 +393,7 @@ is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
 #' 
 #' * the value of the eBIC,
 #' 
-#' * the log-likelihood,
+#' * the value of the log-likelihood,
 #' 
 #' * the number of parameters.
 #' 
@@ -436,7 +436,7 @@ compute.eBIC <- function(S, admm.out,n,
     #### corrected with n/2 instead of 1/2 in front of the loglik, so -2*(n/2)*loglik=-n*loglik
     out.vec <- c(eBIC,log.lik,n.par)
   }
-  names(out.vec) <- c("eBIC     ","  log-Likelihood  ","num. of params")
+  names(out.vec) <- c("eBIC     ","  log-likelihood  ","num. of parameters")
   return(out.vec)
 }
 
@@ -448,17 +448,17 @@ compute.eBIC <- function(S, admm.out,n,
 #' resulting from a call to [`admm.pdglasso`]; see also [`pdRCON.select`]. 
 #'
 #' @param admm.out an object of class `ADMMoutput`.
-#' @param th1,th2 two positive scalars, the thresholds to identify edges  
+#' @param th1,th2 two positive scalars; the thresholds to identify missing edges  
 #' (`th1`) and coloured edges (`th2`) in the graph, if `NULL` 
-#' a default value is used; as describe in the "Details" section below. .
+#' a default value is used; see the "Details" section below. 
 #' @param model.dimension a logical, if `TRUE` the number of parameters of the model is returned.
 #'
-#' @details **Details of the specification of the argument `th1` and `th2`**
+#' @details **Details of the specification of the argument th1 and th2**
 #' 
 #' Due to finite-precision arithmetic in computing, the fitted concentration matrix obtained from the ADMM has no exact zeros and no exact identical 
 #' pairs of concentration values. Hence, `th1` and `th2` provide tollerances for values and differences, respectively, to be regarded as close enough to 
-#' zero. If  `NULL` tollerances are automatically derived from tollerance values used to check convergence of the ADMM. 
-#' The function [`plot.ADMMoutput`] allows to visualize the role played by the default threshold as well as to specify
+#' zero. `NULL` values are replaced by default thresholds automatically obtained from tollerance values used to check convergence of the ADMM. 
+#' Note that the function [`plot.ADMMoutput`] allows one to visualize the role played by the default threshold as well as to 
 #' facilitate the specification of suitable values for the personalized thresholds `th1` and `th2`.
 #'
 #' @return Either an object of class `pdColG`, if `model.dimension=FALSE`, or a list with the following components if `model.dimension=TRUE`:

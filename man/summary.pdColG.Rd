@@ -9,14 +9,14 @@
 \arguments{
 \item{object}{a matrix of class \code{pdColG}; see \code{\link{pdglasso-package}} for details.}
 
-\item{print.summary}{a logical, if \code{TRUE} the summary is printed on the console.}
+\item{print.summary}{a logical; if \code{TRUE} the summary is printed on the console.}
 
-\item{...}{additional parameters. Currently not used; reserved for future extensions.}
+\item{...}{not used. Included for compatibility with the generic \code{summary()} method.}
 }
 \value{
 An invisible list with the following components:
 \itemize{
-\item \code{overall} a list with the number of vertices and edges.
+\item \code{overall} a list with the number of vertices, edges and free parameters of the associated pdRCON model.
 \item \code{vertex}  a list with the number of coloured vertices.
 \item \code{inside}  a list with the number of inside-block edges, the number of uncolored symmetric and coloured inside block edges.
 \item \code{across}  a list with the number of across-block edges, the number of uncolored symmetric and coloured across block edges.
@@ -28,5 +28,8 @@ of an object of class \code{pdColG}, such as that raturned by a call to  \code{\
 }
 \examples{
 summary(toy_data$pdColG)
+
+model.summary <- summary(toy_data$pdColG, print.summary=FALSE)
+model.summary
 
 }

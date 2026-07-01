@@ -4,23 +4,25 @@
 \alias{plot.pdColG}
 \title{Visual representation of a coloured graph for paired data}
 \usage{
-\method{plot}{pdColG}(x, uncol.sym = FALSE, col.sym = FALSE, ...)
+\method{plot}{pdColG}(x, y = NULL, uncol.sym = FALSE, col.sym = FALSE, ...)
 }
 \arguments{
 \item{x}{a matrix of class \code{pdColG}; see \code{\link{pdglasso-package}} for details.}
+
+\item{y}{not used. Included for compatibility with the generic \code{plot()} method.}
 
 \item{uncol.sym}{a logical; if \code{TRUE}, structural symmetries are highlighted in the heatmap.}
 
 \item{col.sym}{a logical; if \code{TRUE}, coloured structural symmetries are highlighted in the heatmap.}
 
-\item{...}{additional graphical parameters. Currently not used; reserved for future extensions.}
+\item{...}{unused. Included for compatibility with the generic \code{plot()} method.}
 }
 \value{
 A plot visualizing the coloured graph enconded in the input matrix `x'. Each square of the heatmap can either be empty (white) for the diagonal and missing edges or represent a type of edge:
 \itemize{
-\item a \code{darkgrey} square represents an edge in the graph between the corresponding row/column vertices;
-\item a \code{deepskyblue2} square represents an edge associated to a structural symmetry in the graph;
-\item a \code{purple2} square represents an edge associated to a coloured structural symmetry.
+\item a \code{darkgrey} square represents an edge in the graph;
+\item a \code{deepskyblue2} square represents an uncoloured structural symmetry;
+\item a \code{purple2} square represents either a vertex symmetry or a coloured structural symmetry.
 }
 }
 \description{
@@ -28,5 +30,10 @@ Heatmap-style graphical representation of an object of class \code{pdColG},
 such as that returned by a call to  \code{\link{pdColG.get}}.
 }
 \examples{
-plot(toy_data$pdColG)
+S <- var(toy_data$sample.data)
+mod.out <- admm.pdglasso(S, lambda1=4, lambda2=0.6)
+G <- pdColG.get(mod.out)
+plot(G)
+plot(G, uncol.sym=TRUE)
+plot(G, uncol.sym=TRUE, col.sym=TRUE)
 }

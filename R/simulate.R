@@ -1,29 +1,29 @@
 
 #' Random simulation of pdRCON models
 #'
-#' Randomly generates a pdRCN model and, more specifically, the `pdColG` matrix representing the model, 
-#' a concentration matrix `K` with the same zero pattern and equality constraints encoded by`pdColG`,  and a
+#' Randomly generates a pdRCN model and, more specifically, the pdColG matrix representing the model, 
+#' a concentration matrix `K` with the same zero pattern and equality constraints encoded by `pdColG`,  and a
 #' random sample from a multivariate normal distribution with zero mean vector
 #' and covariance matrix `Sigma`, that is the inverse of `K`.
 #'
-#' @param p an even integer, the number of variables of the generated model.
-#' @param concent.mat a logical, if `TRUE` a
+#' @param p an even integer; the number of variables of the generated model.
+#' @param concent.mat a logical; if `TRUE` a
 #'   concentration matrix `K` with the zero structure and symmetries encoded by `pdColG` is generated.
-#' @param sample a logical, if `TRUE` a sample from a
+#' @param sample a logical; if `TRUE` a sample from a
 #'   normal distribution with zero mean vector and concentration matrix `K`
 #'   is generated.
-#' @param Sigma a \eqn{p\times p} positive definite matrix. This is the matrix
+#' @param Sigma a pxp positive definite matrix; the matrix
 #'   argument of the [`rWishart`] function, which is used as starting point in
 #'   the random generation of the concentration matrix, as described in the
 #'   "Details" section below. If `NULL`
 #'   the identity matrix is used.
-#' @param sample.size a positive integer, size of the randomly generated sample. If `NULL`
-#'   then `sample.size=3*p`.
+#' @param sample.size a positive integer; the size of the randomly generated sample. If `NULL`
+#'   then the sample size is set to 3xp.
 #' @param type,force.symm two subvectors of `c("vertex", "inside.block.edge", "across.block.edge")` which
 #' identify the pdRCON submodel class of interest; see [`pdglasso-package`] for details.
 #' @param dens,dens.vertex,dens.inside,dens.across four values between zero and
 #'   one used to specify the sparsity degree of the generated graph, as
-#'   described in the "Details" section below. The default `dens.vertex=NULL` is
+#'   explained in the "Details" section below. The default `dens.vertex=NULL` is
 #'   equivalent to `dens.vertex=dens`, and similarly for `dens.inside` and
 #'   `dens.across`.
 #' @param print.type a logical; if `TRUE` the pdRCON submodel class considered, as
@@ -77,12 +77,12 @@
 #'
 #'  * `pdColG` a randomly generated a matrix of class `pdColG` representing a pdRCON model; see [`pdglasso-package`] for details.
 #'
-#' *  `K` either a randomly generated concentration matrix with the zero structure and symmetries encoded by `pdColG`  or  
-#'    `NULL` if `concent.mat=FALSE`..
+#' *  `K` a randomly generated concentration matrix with the zero structure and symmetries encoded by `pdColG`    
+#'     if `concent.mat=TRUE`, or `NULL` otherwise. 
 #'
-#' * `sample.data` either a data frame randomly generated from a multivariate normal distribution
-#'   with mean vector zero and concentration matrix `K`  or `NULL` if either 
-#'   `sample=FALSE` or `concent.mat=FALSE`.
+#' * `sample.data`  a data frame randomly generated from a multivariate normal distribution
+#'   with mean vector zero and concentration matrix `K`   if both 
+#'   `sample=TRUE` and `concent.mat=TRUE`, or `NULL` otherwise.
 #'
 #' Note that the variable in \eqn{L} are named `L1,...,Lq` and variables in
 #' \eqn{R} are are named `R1,...,Rq` where  `Li` is homologous to  `Ri` for
@@ -93,7 +93,8 @@
 #' # generates a pdRCON model on 10 variables in the form of a pdColG matrix
 #'
 #' set.seed(123)
-#' pdRCON.model <- pdRCON.simulate(10, concent=FALSE, sample=FALSE, dens=0.25)$pdColG
+#' rpdColG <- pdRCON.simulate(10, concent=FALSE, sample=FALSE, dens=0.25)$pdColG
+#' rpdColG
 #'
 #' # generates a distribution from a pdRCON model on 20 variables, a concentration matrix
 #' # for this model and a sample of size 50
@@ -386,12 +387,12 @@ symm.structure.gen <- function(A=NULL, B=NULL, p=NULL, dens){
 #'
 #' @inheritParams pdRCON.simulate
 #'
-#' @param p an even integer, the number of variables of the generated model; 
+#' @param p an even integer; the number of variables of the generated model; 
 #' see the "Details" section below.
-#' @param concent.mat a logical, if `TRUE` a
+#' @param concent.mat a logical; if `TRUE` a
 #'   concentration matrix `K` adapted to `G` is generated.
-#' @param Sigma a \eqn{p\times p} positive definite matrix. This is the matrix
-#'   argument of the [`rWishart`] function, which is used as starting point in
+#' @param Sigma a pxp positive definite matrix; the matrix
+#'   argument of the function [`rWishart`], which is used as starting point in
 #'   the random generation of the concentration matrix, as described in the
 #'   "Details" section of the function [`pdRCON.simulate`]. If `NULL`
 #'   the identity matrix is used.
@@ -404,12 +405,12 @@ symm.structure.gen <- function(A=NULL, B=NULL, p=NULL, dens){
 #'  * `G` a randomly generated (symmetric) adjacency matrix of an undirected
 #'  graph on `p` vertices.
 #'
-#' * `K` either a randomly generated concentration matrix adapted to `G` or  
-#'    `NULL` if `concent.mat=FALSE`.
+#' * `K`  a randomly generated concentration matrix adapted to `G`  
+#'     if `concent.mat=TRUE`, or `NULL` otherwise.
 #'
-#' * `sample.data`  either a data frame randomly generated from a multivariate normal distribution
-#'   with mean vector zero and concentration matrix `K` or `NULL` if either 
-#'   `sample=FALSE` or `concent.mat=FALSE`.
+#' * `sample.data` a data frame randomly generated from a multivariate normal distribution
+#'   with mean vector zero and concentration matrix `K`  if both 
+#'   `sample=TRUE` and `concent.mat=TRUE`, or `NULL` otherwise.
 #'
 #'
 #' Note that the variable are named `V1,...,Vp`.
@@ -418,7 +419,7 @@ symm.structure.gen <- function(A=NULL, B=NULL, p=NULL, dens){
 #'   purpose of this function is that of providing a simplified call to the
 #'   function [`pdRCON.simulate`], with the appropriate choice of arguments
 #'   required to simulate a GGM. Note, however, that pdRCON models make
-#'   sense only if the number of variables `p` is even, and this requirement is
+#'   sense only if the number of variables p is even, and this requirement is
 #'   (unnecessarily) retained here.
 #'
 #'
@@ -430,7 +431,7 @@ symm.structure.gen <- function(A=NULL, B=NULL, p=NULL, dens){
 #' p <- 20
 #' n <-100
 #' set.seed(1234)
-#' GenMod <- GGM.simulate(20, sample.size=n, dens=0.20)
+#' GenMod <- GGM.simulate(p, sample.size=n, dens=0.20)
 #'
 #' # check graph sparsity degree
 #' n.edges <- sum(GenMod$G[upper.tri(GenMod$G)])

@@ -2,7 +2,7 @@
 % Please edit documentation in R/internalANDutils.R
 \name{lams.max}
 \alias{lams.max}
-\title{Maximum theoretical values of \code{lambda1} and \code{lambda2}}
+\title{Maximum theoretical values of lambda1 and lambda2}
 \usage{
 lams.max(S)
 }

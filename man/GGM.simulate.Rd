@@ -14,24 +14,24 @@ GGM.simulate(
 )
 }
 \arguments{
-\item{p}{an even integer, the number of variables of the generated model;
+\item{p}{an even integer; the number of variables of the generated model;
 see the "Details" section below.}
 
-\item{concent.mat}{a logical, if \code{TRUE} a
+\item{concent.mat}{a logical; if \code{TRUE} a
 concentration matrix \code{K} adapted to \code{G} is generated.}
 
-\item{sample}{a logical, if \code{TRUE} a sample from a
+\item{sample}{a logical; if \code{TRUE} a sample from a
 normal distribution with zero mean vector and concentration matrix \code{K}
 is generated.}
 
-\item{Sigma}{a \eqn{p\times p} positive definite matrix. This is the matrix
-argument of the \code{\link{rWishart}} function, which is used as starting point in
+\item{Sigma}{a pxp positive definite matrix; the matrix
+argument of the function \code{\link{rWishart}}, which is used as starting point in
 the random generation of the concentration matrix, as described in the
 "Details" section of the function \code{\link{pdRCON.simulate}}. If \code{NULL}
 the identity matrix is used.}
 
-\item{sample.size}{a positive integer, size of the randomly generated sample. If \code{NULL}
-then \code{sample.size=3*p}.}
+\item{sample.size}{a positive integer; the size of the randomly generated sample. If \code{NULL}
+then the sample size is set to 3xp.}
 
 \item{dens}{a value between zero and one used to specify the sparsity
 degree of the generated graph, as described in the "Details" section of the
@@ -42,11 +42,11 @@ A list with the following components:
 \itemize{
 \item \code{G} a randomly generated (symmetric) adjacency matrix of an undirected
 graph on \code{p} vertices.
-\item \code{K} either a randomly generated concentration matrix adapted to \code{G} or
-\code{NULL} if \code{concent.mat=FALSE}.
-\item \code{sample.data}  either a data frame randomly generated from a multivariate normal distribution
-with mean vector zero and concentration matrix \code{K} or \code{NULL} if either
-\code{sample=FALSE} or \code{concent.mat=FALSE}.
+\item \code{K}  a randomly generated concentration matrix adapted to \code{G}
+if \code{concent.mat=TRUE}, or \code{NULL} otherwise.
+\item \code{sample.data} a data frame randomly generated from a multivariate normal distribution
+with mean vector zero and concentration matrix \code{K}  if both
+\code{sample=TRUE} and \code{concent.mat=TRUE}, or \code{NULL} otherwise.
 }
 
 Note that the variable are named \verb{V1,...,Vp}.
@@ -64,7 +64,7 @@ A GGM is a pdRCON model with no parametric symmetries, and the
 purpose of this function is that of providing a simplified call to the
 function \code{\link{pdRCON.simulate}}, with the appropriate choice of arguments
 required to simulate a GGM. Note, however, that pdRCON models make
-sense only if the number of variables \code{p} is even, and this requirement is
+sense only if the number of variables p is even, and this requirement is
 (unnecessarily) retained here.
 }
 \examples{
@@ -73,7 +73,7 @@ sense only if the number of variables \code{p} is even, and this requirement is
 p <- 20
 n <-100
 set.seed(1234)
-GenMod <- GGM.simulate(20, sample.size=n, dens=0.20)
+GenMod <- GGM.simulate(p, sample.size=n, dens=0.20)
 
 # check graph sparsity degree
 n.edges <- sum(GenMod$G[upper.tri(GenMod$G)])
