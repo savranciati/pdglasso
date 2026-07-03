@@ -19,7 +19,8 @@
 #' * a `purple2` square represents either a vertex symmetry or a coloured structural symmetry.
 #'
 #' @export
-#'
+#' @importFrom stats heatmap
+#' 
 #' @examples
 #' S <- var(toy_data$sample.data)
 #' mod.out <- admm.pdglasso(S, lambda1=4, lambda2=0.6)
