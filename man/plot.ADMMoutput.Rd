@@ -15,38 +15,40 @@
 )
 }
 \arguments{
-\item{x}{an object of class \code{ADMMoutput} such as the output of a call to the \code{\link{admm.pdglasso}} function; see also \code{\link{pdRCON.select}}.}
+\item{x}{an object of class `ADMMoutput` such as the output of a call to the [`admm.pdglasso`] function; see also [`pdRCON.select`].}
 
-\item{y}{not used. Included for compatibility with the generic \code{plot()} method.}
+\item{y}{not used. Included for compatibility with the generic `plot()` method.}
 
-\item{add.default.th}{a logical; if \code{TRUE} the default threshold used in \code{\link{pdColG.get}} is represented (in log10-scale) in the plot.}
+\item{add.default.th}{a logical; if `TRUE` the default threshold used in [`pdColG.get`] is represented (in log10-scale) in the plot.}
 
-\item{th1, th2}{two positive scalars as in \code{\link{pdColG.get}}; if not \code{NULL} they are represented (in log10-scale) in the plot.}
+\item{th1, th2}{two positive scalars as in [`pdColG.get`]; if not `NULL` they are represented (in log10-scale) in the plot.}
 
-\item{logarithm10}{a logical; if \code{TRUE} the values of \code{th1} and \code{th2} are expected to be provided in log10-scale. This facilitate
+\item{logarithm10}{a logical; if `TRUE` the values of `th1` and `th2` are expected to be provided in log10-scale. This facilitate
 interaction with the plot whose y-axis is in log10 scale.}
 
-\item{...}{not used. Included for compatibility with the generic \code{plot()} method.}
+\item{...}{not used. Included for compatibility with the generic `plot()` method.}
 }
 \value{
-A plot is produced with different panels depending on the model \code{type}. More specifically:
-\itemize{
-\item a panel with the values of the off-diagonal concentrations is always provided,
-\item a panel with the differences of homologous diagonal concentration values is provided if vertex symmetries are allowed,
-\item a panel with the differences of homologous inside-block concentration values is provided if inside-block symmetries are allowed,
-\item a panel with the differences of homologous across-block concentration values is provided if across-block symmetries are allowed
-}
+A plot is produced with different panels depending on the model `type`. More specifically: 
 
-According to the values of the arguments \code{add.default.th}, \code{th1} and \code{th2}, horizontal dashed lines with the corresponding thresholds are included in the panels.
+* a panel with the values of the off-diagonal concentrations is always provided,
 
-The function returns an invisible vector with the values of \code{th1}, \code{th2}
-and of the default threshold. The quantities \code{th1} and \code{th2}
-can directly be given as input for the same arguments of \code{\link{pdColG.get}}. Consistently with the
-behavior of \code{\link{pdColG.get}}, a \code{NULL} value of \code{th1} or \code{th2} is replaced by the default threshold.
+* a panel with the differences of homologous diagonal concentration values is provided if vertex symmetries are allowed,
+
+* a panel with the differences of homologous inside-block concentration values is provided if inside-block symmetries are allowed,
+
+* a panel with the differences of homologous across-block concentration values is provided if across-block symmetries are allowed
+
+According to the values of the arguments `add.default.th`, `th1` and `th2`, horizontal dashed lines with the corresponding thresholds are included in the panels. 
+
+The function returns an invisible vector with the values of `th1`, `th2`
+and of the default threshold. The quantities `th1` and `th2`
+can directly be given as input for the same arguments of [`pdColG.get`]. Consistently with the
+behavior of [`pdColG.get`], a `NULL` value of `th1` or `th2` is replaced by the default threshold.
 }
 \description{
-A plot, with different panels, obtained from the output of \code{\link{admm.pdglasso}}, which is helpful to check the convergence of the ADMM.
-This function can also be used to visualize the default threshold used by \code{\link{pdColG.get}} as well to identify specific \code{th1} and \code{th2} threshold values to be used in
+A plot, with different panels, obtained from the output of [`admm.pdglasso`], which is helpful to check the convergence of the ADMM.  
+This function can also be used to visualize the default threshold used by [`pdColG.get`] as well to identify specific `th1` and `th2` threshold values to be used in
 place of the default one.
 }
 \examples{

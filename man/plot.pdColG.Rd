@@ -7,27 +7,28 @@
 \method{plot}{pdColG}(x, y = NULL, uncol.sym = FALSE, col.sym = FALSE, ...)
 }
 \arguments{
-\item{x}{a matrix of class \code{pdColG}; see \code{\link{pdglasso-package}} for details.}
+\item{x}{a matrix of class `pdColG`; see [`pdglasso-package`] for details.}
 
-\item{y}{not used. Included for compatibility with the generic \code{plot()} method.}
+\item{y}{not used. Included for compatibility with the generic `plot()` method.}
 
-\item{uncol.sym}{a logical; if \code{TRUE}, structural symmetries are highlighted in the heatmap.}
+\item{uncol.sym}{a logical; if `TRUE`, structural symmetries are highlighted in the heatmap.}
 
-\item{col.sym}{a logical; if \code{TRUE}, coloured structural symmetries are highlighted in the heatmap.}
+\item{col.sym}{a logical; if `TRUE`, coloured structural symmetries are highlighted in the heatmap.}
 
-\item{...}{unused. Included for compatibility with the generic \code{plot()} method.}
+\item{...}{unused. Included for compatibility with the generic `plot()` method.}
 }
 \value{
 A plot visualizing the coloured graph enconded in the input matrix `x'. Each square of the heatmap can either be empty (white) for the diagonal and missing edges or represent a type of edge:
-\itemize{
-\item a \code{darkgrey} square represents an edge in the graph;
-\item a \code{deepskyblue2} square represents an uncoloured structural symmetry;
-\item a \code{purple2} square represents either a vertex symmetry or a coloured structural symmetry.
-}
+
+* a `darkgrey` square represents an edge in the graph;
+
+* a `deepskyblue2` square represents an uncoloured structural symmetry;
+
+* a `purple2` square represents either a vertex symmetry or a coloured structural symmetry.
 }
 \description{
-Heatmap-style graphical representation of an object of class \code{pdColG},
-such as that returned by a call to  \code{\link{pdColG.get}}.
+Heatmap-style graphical representation of an object of class `pdColG`,
+such as that returned by a call to  [`pdColG.get`].
 }
 \examples{
 S <- var(toy_data$sample.data)

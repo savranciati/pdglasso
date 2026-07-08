@@ -24,19 +24,20 @@ admm.pdglasso(
 }
 \arguments{
 \item{S}{a sample covariance matrix with the block structure
-described in \code{\link{pdglasso-package}}.}
+described in [`pdglasso-package`].}
 
 \item{lambda1, lambda2}{two non-negative scalar penalties that encourage
-sparsity (\code{lambda1}) and parametric symmetries (\code{lambda2}) in the concentration matrix.}
+sparsity (`lambda1`) and parametric symmetries (`lambda2`) in the concentration matrix.}
 
-\item{type, force.symm}{two subvectors of \code{c("vertex", "inside.block.edge", "across.block.edge")} which identify the pdRCON submodel class of interest; see
-\code{\link{pdglasso-package}} for details.}
+\item{type, force.symm}{two subvectors of `c("vertex", "inside.block.edge",
+"across.block.edge")` which identify the pdRCON submodel class of interest; see
+[`pdglasso-package`] for details.}
 
-\item{X.init}{a  matrix of the same dimension as \code{S} to be used as starting point of the ADMM. If \code{NULL} a default value is used.}
+\item{X.init}{a  matrix of the same dimension as `S` to be used as starting point of the ADMM. If `NULL` a default value is used.}
 
 \item{rho1, rho2}{two positive scalars; tuning parameters of the outer and inner loop, respectively, of the ADMM.}
 
-\item{varying.rho1, varying.rho2}{two logicals; if \code{TRUE} the parameters \code{rho1} and \code{rho2}, respectively, are updated
+\item{varying.rho1, varying.rho2}{two logicals; if `TRUE` the parameters `rho1` and `rho2`, respectively, are updated
 iteratively to speed-up convergence.}
 
 \item{max_iter}{an integer; maximum number of iterations for convergence.}
@@ -44,30 +45,31 @@ iteratively to speed-up convergence.}
 \item{eps.abs, eps.rel}{two  positive scalars; the absolute and relative tollerance, respectively, for the computation
 of primal and dual feasibility tollerances of the ADMM.}
 
-\item{rcpp}{a logical; if \code{TRUE}, computations are performed using the Rcpp (C++) implementation;
-if \code{FALSE}, a pure (slower) R implementation is used.}
+\item{rcpp}{a logical; if `TRUE`, computations are performed using the Rcpp (C++) implementation;
+if `FALSE`, a pure (slower) R implementation is used.}
 
-\item{print.type}{a logical; if \code{TRUE} the pdRCON submodel class considered, as
-specified by the arguments \code{type} and \code{force.symm}, is returned as printed
+\item{print.type}{a logical; if `TRUE` the pdRCON submodel class considered, as
+specified by the arguments `type` and `force.symm`, is returned as printed
 output in the console.}
 }
 \value{
-A object of class \code{ADMMoutput} that is a list with the following components:
-\itemize{
-\item \code{X} the estimated concentration matrix.
-\item \code{acronyms} a vector of strings identifying the pdRCON submodel class
-considered as identified  by the arguments \code{type} and \code{force.symm}.
-\item \code{internal.par} a list of internal parameters passed to the function at the
+A object of class `ADMMoutput` that is a list with the following components:
+
+* `X` the estimated concentration matrix.
+
+* `acronyms` a vector of strings identifying the pdRCON submodel class
+ considered as identified  by the arguments `type` and `force.symm`.
+
+* `internal.par` a list of internal parameters passed to the function at the
 call, as well as convergence information.
 }
-}
 \description{
-Estimate of a concentration matrix within the pdRCON
-submodel class identified by the arguments \code{type} and \code{force.symm},
-based on the pdglasso method with penalty terms \code{lambda1} and \code{lambda2}
+Estimate of a concentration matrix within the pdRCON 
+submodel class identified by the arguments `type` and `force.symm`, 
+based on the pdglasso method with penalty terms `lambda1` and `lambda2`
 (Ranciati and Roverato, 2024). Optimization is implemented by an
-ADMM algorithm (see Boyd \emph{et. al.} 2011). The output is an object of
-class \code{ADMMoutput} and the user may then call the function \code{\link{pdColG.get}} to obtain the Coloured Graph
+ADMM algorithm (see Boyd *et. al.* 2011). The output is an object of 
+class `ADMMoutput` and the user may then call the function [`pdColG.get`] to obtain the Coloured Graph
 for Paired Data (pdColG) representing the selected model.
 }
 \examples{
@@ -87,7 +89,7 @@ summary(G)
 
 }
 \references{
-Ranciati, S. and Roverato, A., (2024). On the application of Gaussian graphical models to paired data problems. \emph{Statistics and Computing}, \emph{34}(6), 1-19.
+Ranciati, S. and Roverato, A., (2024). On the application of Gaussian graphical models to paired data problems. *Statistics and Computing*, *34*(6), 1-19.
 
-Boyd, S., Parikh, N., Chu, E., Borja, P. and Eckstein, J. (2011). Distributed optimization and statistical learning via the alternating direction method of multipliers. \emph{Foundations and Trends in Machine learning}, \emph{3}(1), 1-122.
+Boyd, S., Parikh, N., Chu, E., Borja, P. and Eckstein, J. (2011). Distributed optimization and statistical learning via the alternating direction method of multipliers. *Foundations and Trends in Machine learning*, *3*(1), 1-122.
 }

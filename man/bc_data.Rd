@@ -5,21 +5,17 @@
 \alias{bc_data}
 \title{Breast Cancer dataset}
 \format{
-\subsection{\code{bcdata}}{
-
+## `bcdata`
 A named \eqn{114 \times 178} matrix, where:
-\itemize{
-\item each row refers to one of the 114 individuals in the dataset;
-\item each column is one of the \eqn{p=89 \times 2=178} genes of the Hedgehog Pathway, whose expressions were measured on healthy (first half) and adjacent tumor affected samples (second half).
-}
-}
+* each row refers to one of the 114 individuals in the dataset;
+* each column is one of the \eqn{p=89 \times 2=178} genes of the Hedgehog Pathway, whose expressions were measured on healthy (first half) and adjacent tumor affected samples (second half).
 }
 \usage{
 bc_data
 }
 \description{
 The paired samples in this dataset refer to individuals with both tumor and healthy adjacent tissue measurements, in the form of a set of genes of the Hedgehog Pathway
-and their gene-level transcription estimates, i.e. transformed normalized counts.
+and their gene-level transcription estimates, i.e. transformed normalized counts. 
 Please check Section 8 of Ranciati and Roverato (2024) for more information.
 }
 \keyword{datasets}

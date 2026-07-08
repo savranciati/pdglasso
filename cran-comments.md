@@ -16,7 +16,15 @@
 
 
 
-\* This is a new release.
+\## Notes
+
+
+
+\* The NOTE about possibly misspelled words refers to acronyms and proper
+
+&#x20; names (ADMM, RCON, pdRCON, Ranciati, and Roverato) used in the
+
+&#x20; Description field.
 
 
 

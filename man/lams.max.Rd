@@ -10,12 +10,12 @@ lams.max(S)
 \item{S}{a sample covariance matrix.}
 }
 \value{
-A vector of two elements, \code{lambda1.max} and \code{lambda2.max}.
+A vector of two elements, `lambda1.max` and `lambda2.max`.
 }
 \description{
-Computes the maximum theoretical values \code{lambda1.max} and \code{lambda2.max} of \code{lambda1} and \code{lambda2}, respectively.
-For every \code{lambda1} greater than \code{lambda1.max} the pdglasso estimator is a diagonal matrix whereas
-for every \code{lambda2} greater than \code{lambda2.max} the pdglasso estimator is fully symmetric.
+Computes the maximum theoretical values `lambda1.max` and `lambda2.max` of `lambda1` and `lambda2`, respectively. 
+For every `lambda1` greater than `lambda1.max` the pdglasso estimator is a diagonal matrix whereas 
+for every `lambda2` greater than `lambda2.max` the pdglasso estimator is fully symmetric.
 }
 \examples{
 S <- cov(toy_data$sample.data)

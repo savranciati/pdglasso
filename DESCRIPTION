@@ -1,8 +1,7 @@
 Package: pdglasso
 Type: Package
 Title: Graphical Lasso for Coloured Gaussian Graphical Models for Paired Data
-Version: 2.0 
-Date: 2026-01-17
+Version: 2.0.1 
 Authors@R: c(
     person("Saverio", "Ranciati",
     email = "saverio.ranciati2@unibo.it",
@@ -21,12 +20,11 @@ Authors@R: c(
     role = c("aut"),
     comment = c(ORCID = "0009-0009-7020-7246"))
     )
-Description: This package deals with RCON models for paired data and implements an Alternating Directions Method of Multipliers (ADMM) algorithm to solve the penalized likelihood method introduced by Ranciati and Roverato (2024). Also functions for the computation of maximum likelihood estimates and for the generation of simulated pdRCON models and data are provided.
+Description: Implements methods for RCON models for paired data, including an Alternating Direction Method of Multipliers (ADMM) algorithm for solving the penalized likelihood problem introduced by Ranciati and Roverato (2024). Provides functions for computing maximum likelihood estimates and for generating simulated pdRCON models and datasets.
 License: GPL (>= 3)
 Imports: Rcpp (>= 1.0.13), MASS
 LinkingTo: Rcpp, RcppEigen
 Encoding: UTF-8
 LazyData: true
-Roxygen: list(markdown = TRUE)
 Config/roxygen2/version: 8.0.0
 RoxygenNote: 7.3.3

@@ -7,36 +7,37 @@
 compute.eBIC(S, admm.out, n, gamma.eBIC = 0.5, mle = TRUE)
 }
 \arguments{
-\item{S}{a sample covariance matrix with the block structure described in \code{\link{pdglasso-package}}.}
+\item{S}{a sample covariance matrix with the block structure described in [`pdglasso-package`].}
 
-\item{admm.out}{an object of class \code{ADMMoutput}, such as the output of a call to \code{\link{admm.pdglasso}}; see also \code{\link{pdRCON.select}}.}
+\item{admm.out}{an object of class `ADMMoutput`, such as the output of a call to [`admm.pdglasso`]; see also [`pdRCON.select`].}
 
 \item{n}{a positive integer; the sample size.}
 
-\item{gamma.eBIC}{a value between zero and one; the magnitude of the penalization term inside the criterion,
-where 0 makes eBIC equivalent to BIC and 0.5 is the value
+\item{gamma.eBIC}{a value between zero and one; the magnitude of the penalization term inside the criterion, 
+where 0 makes eBIC equivalent to BIC and 0.5 is the value 
 suggested by Feygel and Drton (2010).}
 
-\item{mle}{a logical; if \code{TRUE}, the MLE are used otherwise
+\item{mle}{a logical; if `TRUE`, the MLE are used otherwise 
 the pdglasso estimator is used; see the "Details" section below.}
 }
 \value{
 A vector containing three elements:
-\itemize{
-\item the value of the eBIC,
-\item the value of the log-likelihood,
-\item the number of parameters.
-}
+
+* the value of the eBIC,
+
+* the value of the log-likelihood,
+
+* the number of parameters.
 }
 \description{
-This function computes the value of the eBIC for a pdRCON model
-from the output of \code{\link{admm.pdglasso}}; see Eq.1 of Feygel and Drton (2010).
+This function computes the value of the eBIC for a pdRCON model  
+from the output of [`admm.pdglasso`]; see Eq.1 of Feygel and Drton (2010).
 }
 \details{
-\strong{Details on the specification of the argument mle}
+**Details on the specification of the argument mle**
 
-The extended Bayesian Information Criterion implemented in this function requires that the parameters are estimated by maximum likelihood.
-However, the computation of MLEs may considerably slow down the procedure and, more seriously, in the high-dimensional setting
+The extended Bayesian Information Criterion implemented in this function requires that the parameters are estimated by maximum likelihood. 
+However, the computation of MLEs may considerably slow down the procedure and, more seriously, in the high-dimensional setting   
 MLEs may even not exist. For this reason, we provide the option that the eBIC is, naively, computed by using the pdglasso estimate.
 }
 \examples{
@@ -47,5 +48,5 @@ compute.eBIC(S, admm.out, n=60, gamma.eBIC=0.5)
 compute.eBIC(S, admm.out, n=60, gamma.eBIC=0.5, mle=FALSE)
 }
 \references{
-Foygel, R. and Drton, M. (2010). Extended Bayesian information criteria for Gaussian graphical models. \emph{Advances in neural information processing systems}, 23.
+Foygel, R. and Drton, M. (2010). Extended Bayesian information criteria for Gaussian graphical models. *Advances in neural information processing systems*, 23.
 }

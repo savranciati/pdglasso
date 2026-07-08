@@ -7,9 +7,9 @@
 pdRCON.mle(S, pdColG, eps.rel = 1e-06, eps.abs = 1e-06, max_iter = 5000)
 }
 \arguments{
-\item{S}{a sample covariance matrix with the block structure described in \code{\link{pdglasso-package}}.}
+\item{S}{a sample covariance matrix with the block structure described in [`pdglasso-package`].}
 
-\item{pdColG}{a pdColG matrix representing a coloured graph for paired data; see \code{\link{pdglasso-package}} for details.}
+\item{pdColG}{a pdColG matrix representing a coloured graph for paired data; see [`pdglasso-package`] for details.}
 
 \item{eps.abs, eps.rel}{two  positive scalars; the absolute and relative tollerance, respectively, for the computation
 of primal and dual feasibility tollerances of the ADMM.}
@@ -18,18 +18,18 @@ of primal and dual feasibility tollerances of the ADMM.}
 }
 \value{
 Either a matrix, that is the maximum likelihood estimate of
-\eqn{K=\Sigma^{-1}} under the pdRCON model represented by \code{pdColG}, or
-\code{NULL} if the maximum likelihood estimate does not exist.
+  \eqn{K=\Sigma^{-1}} under the pdRCON model represented by `pdColG`, or
+  `NULL` if the maximum likelihood estimate does not exist.
 }
 \description{
 Computes the maximum likelihood estimate of the concentration matrix of a pdRCON model.
 }
 \details{
 If the sample covariance matrix is not full-rank, then it is
-possible that the maximum likelihood estimate does not exist. The maximum
-likelihood estimate is computed by running the function \code{\link{admm.pdglasso}}
-with suitable penalties and, if it does not exist, then the ADMM algorithm
-fails to converge. In this case, a warning is produced and a \code{NULL} is returned.
+  possible that the maximum likelihood estimate does not exist. The maximum
+  likelihood estimate is computed by running the function [`admm.pdglasso`]
+  with suitable penalties and, if it does not exist, then the ADMM algorithm
+  fails to converge. In this case, a warning is produced and a `NULL` is returned.
 }
 \examples{
 S <- var(toy_data$sample.data)

@@ -2,38 +2,38 @@
 % Please edit documentation in R/estimates.R
 \name{pdColG.get}
 \alias{pdColG.get}
-\title{pdColG matrix from the output of a call to \code{\link{admm.pdglasso}}}
+\title{pdColG matrix from the output of a call to [`admm.pdglasso`]}
 \usage{
 pdColG.get(admm.out, th1 = NULL, th2 = NULL, model.dimension = FALSE)
 }
 \arguments{
-\item{admm.out}{an object of class \code{ADMMoutput}.}
+\item{admm.out}{an object of class `ADMMoutput`.}
 
 \item{th1, th2}{two positive scalars; the thresholds to identify missing edges
-(\code{th1}) and coloured edges (\code{th2}) in the graph, if \code{NULL}
+(`th1`) and coloured edges (`th2`) in the graph, if `NULL` 
 a default value is used; see the "Details" section below.}
 
-\item{model.dimension}{a logical, if \code{TRUE} the number of parameters of the model is returned.}
+\item{model.dimension}{a logical, if `TRUE` the number of parameters of the model is returned.}
 }
 \value{
-Either an object of class \code{pdColG}, if \code{model.dimension=FALSE}, or a list with the following components if \code{model.dimension=TRUE}:
-\itemize{
-\item \code{pdColG} an object of class \code{pdColG}, that is a matrix representing a coloured graph for paired data.
-\item \code{n.par} the number of parameters of the pdRCON model.
-}
+Either an object of class `pdColG`, if `model.dimension=FALSE`, or a list with the following components if `model.dimension=TRUE`:
+
+* `pdColG` an object of class `pdColG`, that is a matrix representing a coloured graph for paired data.
+
+* `n.par` the number of parameters of the pdRCON model.
 }
 \description{
-This function returns the pdColG matrix representing the pdRCON model
-resulting from a call to \code{\link{admm.pdglasso}}; see also \code{\link{pdRCON.select}}.
+This function returns the pdColG matrix representing the pdRCON model 
+resulting from a call to [`admm.pdglasso`]; see also [`pdRCON.select`].
 }
 \details{
-\strong{Details of the specification of the argument th1 and th2}
+**Details of the specification of the argument th1 and th2**
 
-Due to finite-precision arithmetic in computing, the fitted concentration matrix obtained from the ADMM has no exact zeros and no exact identical
-pairs of concentration values. Hence, \code{th1} and \code{th2} provide tollerances for values and differences, respectively, to be regarded as close enough to
-zero. \code{NULL} values are replaced by default thresholds automatically obtained from tollerance values used to check convergence of the ADMM.
-Note that the function \code{\link{plot.ADMMoutput}} allows one to visualize the role played by the default threshold as well as to
-facilitate the specification of suitable values for the personalized thresholds \code{th1} and \code{th2}.
+Due to finite-precision arithmetic in computing, the fitted concentration matrix obtained from the ADMM has no exact zeros and no exact identical 
+pairs of concentration values. Hence, `th1` and `th2` provide tollerances for values and differences, respectively, to be regarded as close enough to 
+zero. `NULL` values are replaced by default thresholds automatically obtained from tollerance values used to check convergence of the ADMM. 
+Note that the function [`plot.ADMMoutput`] allows one to visualize the role played by the default threshold as well as to 
+facilitate the specification of suitable values for the personalized thresholds `th1` and `th2`.
 }
 \examples{
 
