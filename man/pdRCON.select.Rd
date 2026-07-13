@@ -48,8 +48,8 @@ iteratively to speed-up convergence.}
 
 \item{max_iter}{an integer; maximum number of iterations for convergence.}
 
-\item{eps.abs, eps.rel}{two  positive scalars; the absolute and relative tollerance, respectively, for the computation
-of primal and dual feasibility tollerances of the ADMM.}
+\item{eps.abs, eps.rel}{two  positive scalars; the absolute and relative tolerance, respectively, for the computation
+of primal and dual feasibility tolerances of the ADMM.}
 
 \item{verbose}{a logical; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`}
 

@@ -30,8 +30,8 @@ resulting from a call to [`admm.pdglasso`]; see also [`pdRCON.select`].
 **Details of the specification of the argument th1 and th2**
 
 Due to finite-precision arithmetic in computing, the fitted concentration matrix obtained from the ADMM has no exact zeros and no exact identical 
-pairs of concentration values. Hence, `th1` and `th2` provide tollerances for values and differences, respectively, to be regarded as close enough to 
-zero. `NULL` values are replaced by default thresholds automatically obtained from tollerance values used to check convergence of the ADMM. 
+pairs of concentration values. Hence, `th1` and `th2` provide tolerances for values and differences, respectively, to be regarded as close enough to 
+zero. `NULL` values are replaced by default thresholds automatically obtained from tolerance values used to check convergence of the ADMM. 
 Note that the function [`plot.ADMMoutput`] allows one to visualize the role played by the default threshold as well as to 
 facilitate the specification of suitable values for the personalized thresholds `th1` and `th2`.
 }
