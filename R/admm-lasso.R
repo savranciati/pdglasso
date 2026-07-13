@@ -22,7 +22,7 @@
 #'   iteratively to speed-up convergence.
 #' @param max_iter an integer; maximum number of iterations for convergence. 
 #' @param eps.abs,eps.rel two  positive scalars; the absolute and relative tolerance, respectively, for the computation
-#'   of primal and dual feasibility tollerances of the ADMM.
+#'   of primal and dual feasibility tolerances of the ADMM.
 #' @param rcpp a logical; if `TRUE`, computations are performed using the Rcpp (C++) implementation;
 #' if `FALSE`, a pure (slower) R implementation is used.
 #' @param print.type a logical; if `TRUE` the pdRCON submodel class considered, as
