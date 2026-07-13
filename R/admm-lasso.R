@@ -21,7 +21,7 @@
 #' @param varying.rho1,varying.rho2 two logicals; if `TRUE` the parameters `rho1` and `rho2`, respectively, are updated
 #'   iteratively to speed-up convergence.
 #' @param max_iter an integer; maximum number of iterations for convergence. 
-#' @param eps.abs,eps.rel two  positive scalars; the absolute and relative tollerance, respectively, for the computation
+#' @param eps.abs,eps.rel two  positive scalars; the absolute and relative tolerance, respectively, for the computation
 #'   of primal and dual feasibility tollerances of the ADMM.
 #' @param rcpp a logical; if `TRUE`, computations are performed using the Rcpp (C++) implementation;
 #' if `FALSE`, a pure (slower) R implementation is used.
