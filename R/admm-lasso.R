@@ -25,9 +25,9 @@
 #'   of primal and dual feasibility tolerances of the ADMM.
 #' @param rcpp a logical; if `TRUE`, computations are performed using the Rcpp (C++) implementation;
 #' if `FALSE`, a pure (slower) R implementation is used.
-#' @param print.type a logical; if `TRUE` the pdRCON submodel class considered, as
+#' @param verbose a logical; if `TRUE` the pdRCON submodel class considered, as
 #'   specified by the arguments `type` and `force.symm`, is returned as printed
-#'   output in the console.
+#'   output on the console.
 #'
 #' @return A object of class `ADMMoutput` that is a list with the following components:
 #'
@@ -54,7 +54,7 @@
 #' summary(G)
 #' 
 #' # model with no across-block symmetries allowed and full vertex-symmetry required
-#' admm.out <-admm.pdglasso(S, , lambda1=4, lambda2=0.7, type=c("v", "i"), force.symm = c("v"))
+#' admm.out <-admm.pdglasso(S, , lambda1=4, lambda2=0.7, type=c("v", "i"), force.symm = c("v"), verbose=TRUE)
 #' G <- pdColG.get(admm.out)
 #' summary(G)
 #' 
@@ -73,7 +73,7 @@ admm.pdglasso <- function(S,
                           eps.abs      = 1e-6,
                           eps.rel      = 1e-6,
                           rcpp         = TRUE,
-                          print.type   = TRUE) {
+                          verbose   = FALSE) {
   
   stopifnot(is.matrix(S), nrow(S) == ncol(S))
   stopifnot(is.numeric(lambda1), all(lambda1 >= 0))
@@ -86,7 +86,7 @@ admm.pdglasso <- function(S,
   
   time.start <- Sys.time()
   
-  out.make.a <- make.acronyms(type, force.symm, print.type = print.type)
+  out.make.a <- make.acronyms(type, force.symm, verbose = verbose)
   acr.type  <- out.make.a$acronym.of.type
   acr.force <- out.make.a$acronym.of.force
   

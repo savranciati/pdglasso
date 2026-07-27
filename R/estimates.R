@@ -13,7 +13,8 @@
 #' @param lams a 2x4 numeric matrix that specifies the path of lambda values, if `NULL` default values are
 #'   used, as explained in the "Details" section below.
 #' @param gamma.eBIC a value between zero and one; the magnitude of the penalization term of the eBIC; see  [`compute.eBIC`] for details.
-#' @param verbose a logical; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`
+#' @param verbose a logical; if `TRUE` both a visual update about the grid search over `lambda1` and `lambda2` and 
+#' the pdRCON submodel class considered are returned as printed output on the console.
 #' @param mle.estimate a logical; if `TRUE`, compute eBIC via the MLE,
 #' if `FALSE` the pdglasso estimator is used; see [`compute.eBIC`] for details.
 #'
@@ -48,7 +49,7 @@
 #'
 #' @examples
 #' S <- cov(toy_data$sample.data)
-#' sel.mod <- pdRCON.select(S, n=60)
+#' sel.mod <- pdRCON.select(S, n=60, verbose=TRUE)
 #' sel.mod$l1.path
 #' sel.mod$l2.path
 #' plot(sel.mod$model)
@@ -68,11 +69,10 @@ pdRCON.select <- function(S,
                        max_iter    = 5000,
                        eps.abs     = 1e-08,
                        eps.rel     = 1e-08,
-                       verbose    = TRUE,
-                       print.type  = TRUE,
+                       verbose    = FALSE,
                        mle.estimate = TRUE){
   start.time <- Sys.time()
-  ## Max values for lambda_1 and lambda_2 according to theorems; only needed for the grid search
+  ## Max values for lambda_1 and lambda_2; only needed for the grid search
   
   if(is.null(lams)){
     lams <- matrix(0,2,4)
@@ -92,7 +92,7 @@ pdRCON.select <- function(S,
   if(lams[1,4]==1) l1.vec <- exp(seq(log(lams[1,1]),log(lams[1,2]), length.out=lams[1,3])) else l1.vec <- seq(lams[1,1], lams[1,2], length.out=lams[1,3])
   l1.vec <- sort(l1.vec, decreasing=TRUE)
   for(i in 1:lams[1,3]){
-    if(verbose==TRUE) cat("Searching over lambda1 grid (",i,"/",lams[1,3],").\n", sep="")
+    if(verbose) cat("Searching over lambda1 grid (",i,"/",lams[1,3],").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=l1.vec[i],
                              lambda2=0,
@@ -106,25 +106,25 @@ pdRCON.select <- function(S,
                              max_iter=max_iter,
                              eps.abs=eps.abs,
                              eps.rel=eps.rel,
-                             print.type=FALSE)
+                             verbose=FALSE)
     eBIC.l1[i,1:3] <- compute.eBIC(S=S,
                                    admm.out=mod.out,
                                    n=n,
                                    gamma.eBIC=gamma.eBIC,
                                    mle = mle.estimate)
     eBIC.l1[i,4] <- mod.out$internal.par$converged+0
-    if(eBIC.l1[i,4]==0) cat("Convergence not achieved for this value of lambda1! \n")
+    if(eBIC.l1[i,4]==0) warning("Convergence not achieved for this value of lambda1! \n")
   }
   best.l1 <- l1.vec[which.min(eBIC.l1[,1])]
   if(length(best.l1)==0) stop("Grid search of lambda1 failed!")
   
-  if(verbose==TRUE) cat("--- \n", sep="")
+  if(verbose) cat("--- \n", sep="")
   
   ### Second grid search for lambda_2, with lambda_1=best.l1
   if(lams[2,4]==1) l2.vec <- exp(seq(log(lams[2,1]),log(lams[2,2]), length.out=lams[2,3])) else l2.vec <-  seq(lams[2,1], lams[2,2], length.out=lams[2,3])
   l2.vec <- sort(l2.vec, decreasing=TRUE)
   for(i in 1:lams[2,3]){
-    if(verbose==TRUE) cat("Searching over lambda2 grid (",i,"/",lams[2,3],").\n", sep="")
+    if(verbose) cat("Searching over lambda2 grid (",i,"/",lams[2,3],").\n", sep="")
     mod.out <- admm.pdglasso(S,
                              lambda1=best.l1,
                              lambda2=l2.vec[i],
@@ -138,14 +138,14 @@ pdRCON.select <- function(S,
                              max_iter=max_iter,
                              eps.abs=eps.abs,
                              eps.rel=eps.rel,
-                             print.type=FALSE)
+                             verbose=FALSE)
     eBIC.l2[i,1:3] <- compute.eBIC(S=S,
                                    admm.out=mod.out,
                                    n=n,
                                    gamma.eBIC=gamma.eBIC,
                                    mle = mle.estimate)
     eBIC.l2[i,4] <- mod.out$internal.par$converged+0
-    if(eBIC.l2[i,4]==0) cat("Convergence not achieved for this value of lambda2! \n")
+    if(eBIC.l2[i,4]==0) warning("Convergence not achieved for this value of lambda2! \n")
   }
   ### adding eBIC value/results and l2 value to path
   ### already estimated from the first grid.search where lam2=0
@@ -168,7 +168,7 @@ pdRCON.select <- function(S,
                            max_iter=max_iter,
                            eps.abs=eps.abs,
                            eps.rel=eps.rel,
-                           print.type=print.type)
+                           verbose=verbose)
   
   l1.path=cbind(l1.vec,eBIC.l1)
   l2.path=cbind(l2.vec,eBIC.l2)
@@ -234,136 +234,10 @@ pdRCON.mle <- function(S, pdColG,
                             eps.rel = eps.rel,
                             eps.abs = eps.abs,
                             max_iter= max_iter,
-                            print.type=FALSE)
+                            verbose=FALSE)
   K.hat <- NULL
   if(out.admm$internal.par$converged) K.hat = out.admm$X
   return(K.hat)
-}
-
-
-
-
-#' Check if a concentration matrix satisfies the likelihood equations
-#'
-#' Checks if a matrix is the maximum likelihood estimate of the concentration
-#' matrix of a pdRCON model represented by the colored graph for paired data
-#' `pdColG`, computed from the covariance matrix `S`.
-#'
-#' @param K.mle candidate mle of \eqn{K} to be checked.
-#' @param pdColG matrix representing a colored graph for paired data;
-#' see [`pdglasso-package`] for details.
-#' @param S a sample covariance matrix with the block structure described
-#' in [`pdglasso-package`].
-#' @param tolerance threshold to check whether a value is equal to zero.
-#' @param print.checks a logical (default `TRUE`).
-#'
-#' @return a logical equal to `TRUE` if `K.mle` satisfies the likelihood equations
-#' and `FALSE` otherwise. If `print.checks = TRUE` the values used for the
-#' checking are printed.
-#'
-#' @details
-#' In order to check if `K.mle` is the maximum likelihood estimate, computed
-#' from `S`, under the model represented by `pdColG` the following quantities
-#' are considered:
-#'
-#' * the values of `K.mle` that are expected to be zero;
-#'
-#' * the differences between the entries of `K.mle` which are expected to be equal;
-#'
-#' * the differences between the relevant sums of the entries of `solve(K.mle)`
-#'   and `S` which are expected to be equal, so as to satisfy the
-#'   likelihood equations.
-#'
-#' * all the absolute quantities of the previous three points are divided
-#'   by the \eqn{\ell_2} norm of the non-zero entries of `K.mle` so as to
-#'   obtain relative quantities.
-#'
-#'   Then if all the above quantities are smaller than `toll` the check is
-#'   considered successful and a `TRUE` is returned.
-#' 
-#' @noRd
-## @examples
-## S <- var(toy_data$sample.data)
-## K.hat <- pdRCON.mle(S, toy_data$pdColG)
-## is.pdRCON.mle(K.hat, toy_data$pdColG, S)
-##
-is.pdRCON.mle <- function(K.mle, pdColG, S, toll=1e-8, print.checks=TRUE){
-  S.mle <- solve(K.mle)
-  G <- pdColG
-  p <- dim(G)[1]
-  q <- p/2
-  l <- 1:q
-  r <- (q+1):p
-  #
-  nz.ms <- sqrt(mean(K.mle[G!=0]^2))
-  # missing edges
-  Bz <- (G==0)
-  #
-  # uncoloured vertices and edges
-  Bu <- (G==1)
-  #
-  # coloured vertices and inside-block coloured edges
-  Bci <- (G[l,l]==2)
-  #
-  # across-block coloured edges
-  Bca <- (G[l,r]==2)
-  #
-  # missing edges: check zero concentrations
-  if(any(Bz)){
-    am <- max(abs(K.mle[G==0]))
-  }else{
-    am <- 0
-  }
-  v  <- c()
-  sK <- c()
-  #
-  # coloured vertices and inside-block coloured edges:
-  # check equality constraints in K.mle
-  # check likelihood equations in S.mle
-  if(any(Bci)){
-    sK[1] <- max(abs((K.mle[l,l]-K.mle[r,r])[Bci]))
-    v[1]  <- max(abs((S.mle[l,l]+S.mle[r,r]-S[l,l]-S[r,r])[Bci]))
-  }else{
-    sK[1] <- 0
-    v[1]  <- 0
-  }
-  ##
-  # across-block coloured edges:
-  # check equality constraints in K.mle
-  # check likelihood equations in S.mle
-  if(any(Bca)){
-    sK[2] <- max(abs((K.mle[l,r]-K.mle[r,l])[Bca]))
-    v[2]  <- max(abs((S.mle[l,r]+S.mle[r,l]-S[l,r]-S[r,l])[Bca]))
-  }else{
-    sK[2] <- 0
-    v[2]  <- 0
-  }
-  #
-  # uncoloured vertices and edges: check likelihood equations
-  if(any(Bu)){
-    v[3] <- max(abs((S.mle-S)[G==1]))
-  }else{
-    v[3] <- 0
-  }
-  if(print.checks){
-    cat("\nABSOLUTE QUANTITIES:\n")
-    cat("Max zero concentration           : ", am, "\n")
-    cat("Max diff. of equal concentrations: ", max(sK), "\n")
-    cat("Max error in likelihood equations: ", max(v), "\n")
-    #
-    cat("\nRELATIVE QUANTITIES:\n")
-    cat("Max zero concentration           : ", am/nz.ms, "\n")
-    cat("Max diff. of equal concentrations: ", max(sK)/nz.ms, "\n")
-    cat("Max error in likelihood equations: ", max(v)/nz.ms, "\n\n")
-  }
-  max.all <- max(c(am, max(sK), max(v), am/nz.ms, max(sK)/nz.ms, max(v)/nz.ms))
-  
-  if(max.all < toll){
-    check.result <- TRUE
-  }else{
-    check.result <- FALSE
-  }
-  return(check.result)
 }
 
 

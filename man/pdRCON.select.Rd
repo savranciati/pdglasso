@@ -19,8 +19,7 @@ pdRCON.select(
   max_iter = 5000,
   eps.abs = 1e-08,
   eps.rel = 1e-08,
-  verbose = TRUE,
-  print.type = TRUE,
+  verbose = FALSE,
   mle.estimate = TRUE
 )
 }
@@ -51,11 +50,8 @@ iteratively to speed-up convergence.}
 \item{eps.abs, eps.rel}{two  positive scalars; the absolute and relative tolerance, respectively, for the computation
 of primal and dual feasibility tolerances of the ADMM.}
 
-\item{verbose}{a logical; if `TRUE` provides a visual update in the console about the grid search over `lambda1` and `lambda2`}
-
-\item{print.type}{a logical; if `TRUE` the pdRCON submodel class considered, as
-specified by the arguments `type` and `force.symm`, is returned as printed
-output in the console.}
+\item{verbose}{a logical; if `TRUE` both a visual update about the grid search over `lambda1` and `lambda2` and 
+the pdRCON submodel class considered are returned as printed output on the console.}
 
 \item{mle.estimate}{a logical; if `TRUE`, compute eBIC via the MLE,
 if `FALSE` the pdglasso estimator is used; see [`compute.eBIC`] for details.}
@@ -100,7 +96,7 @@ and paths of 20 points are used form max.lams/20 to max.lams, with logarithm spa
 }
 \examples{
 S <- cov(toy_data$sample.data)
-sel.mod <- pdRCON.select(S, n=60)
+sel.mod <- pdRCON.select(S, n=60, verbose=TRUE)
 sel.mod$l1.path
 sel.mod$l2.path
 plot(sel.mod$model)

@@ -172,7 +172,7 @@ plot.pdColG <- function(x,
 #' of an object of class `pdColG`, such as that raturned by a call to  [`pdColG.get`].
 #'
 #' @param object a matrix of class `pdColG`; see [`pdglasso-package`] for details.
-#' @param print.summary a logical; if `TRUE` the summary is printed on the console.
+#' @param verbose a logical; if `TRUE` the summary is printed on the console.
 #' @param ... not used. Included for compatibility with the generic `summary()` method.
 #'
 #' @return An invisible list with the following components:
@@ -190,10 +190,10 @@ plot.pdColG <- function(x,
 #' @examples
 #' summary(toy_data$pdColG)
 #' 
-#' model.summary <- summary(toy_data$pdColG, print.summary=FALSE)
+#' model.summary <- summary(toy_data$pdColG, verbose=FALSE)
 #' model.summary
 #' 
-summary.pdColG <- function(object, print.summary=TRUE, ...){
+summary.pdColG <- function(object, verbose=TRUE, ...){
   pdColG <- object
   X <- G.split(pdColG)
   G <- X$G
@@ -226,7 +226,7 @@ summary.pdColG <- function(object, print.summary=TRUE, ...){
   n.par <- n.edges + p -(n.col.vertices+n.col.inside.edges+n.col.across.edges)/2
   
   #
-  if(print.summary){
+  if(verbose){
     cat("\nOVERALL\n")
     cat("number of vertices   :", p, " \n")
     cat("number of edges      :", n.edges, " \n")
@@ -315,11 +315,11 @@ plot.ADMMoutput <- function(x, y=NULL, add.default.th=TRUE, th1=NULL, th2=NULL, 
   
   # Prepare canvas
   def.pars <- par(no.readonly = TRUE)
-  #par(mfrow = c(3, 2))
-  #par(mar = c(2, 2, 1.5, 1))
+  on.exit(par(def.pars))
   if (nchar(acronyms)==3) layout(matrix(c(1, 2, 3, 4, 5, 5), nrow=3, byrow=TRUE), heights = c(3,3,1),  respect=FALSE)
   if (nchar(acronyms)==2) layout(matrix(c(1, 1, 2, 3, 4, 4), nrow=3, byrow=TRUE), heights = c(3,3,1),  respect=FALSE)
   if (nchar(acronyms)==1) layout(matrix(c(1, 2, 3, 3), nrow=2, byrow=TRUE), heights = c(3,1),  respect=FALSE)
+  on.exit(layout(1), add=TRUE)
   #
   # off-diagonal
   off.d <- mod.out$X[upper.tri(mod.out$X, diag=FALSE)]
@@ -364,7 +364,8 @@ plot.ADMMoutput <- function(x, y=NULL, add.default.th=TRUE, th1=NULL, th2=NULL, 
     if (y) abline(h=th.default, lty=2, col="red", lwd=2)
     if (!is.null(th2)) abline(h=th2, lty=2, col="blue", lwd=2)
   }
-  par(mar = c(0, 0, 0, 0))
+  new.mar <- par(mar = c(0, 0, 0, 0))
+  on.exit(par(new.mar), add=TRUE)
   plot(0, 0, type = "n", axes = FALSE, xlab = "", ylab = "", xlim = c(0, 1), ylim = c(0, 1))
   #plot(1, type = "n", axes=FALSE, xlab="", ylab="")
   legend("center",inset = 0,
@@ -372,15 +373,11 @@ plot.ADMMoutput <- function(x, y=NULL, add.default.th=TRUE, th1=NULL, th2=NULL, 
          col=c("red", "green", "blue"), lty=2, lwd=1.5, cex=0.8, horiz = TRUE)
   
   # Reset canvas
-  on.exit(layout(1), add=TRUE)
-  on.exit(par(def.pars), add=TRUE)
   #
   if(is.null(th1)) th1 <- th.default
   if(is.null(th2)) th2 <- th.default
   return(invisible(c(th1=10^th1, th2=10^th2, th.default=10^th.default)))
 }
-
-
 
 
 #' Maximum theoretical values of lambda1 and lambda2
@@ -620,12 +617,12 @@ G.merge <- function(X) {
 #'
 #' @param type a character vector.
 #' @param force.symm either a character vector or `NULL`.
-#' @param print.type logical (default `TRUE`) indicating whether the model details should be printed.
+#' @param verbose logical (default `TRUE`) indicating whether the model details should be printed.
 #'
 #' @return A list with two character strings named `acronym.of.type` and `acronym.of.force`, the latter is  `NULL` if `force.symm` is   `NULL`.
 #' @noRd
 
-make.acronyms <- function(type, force.symm, print.type=TRUE){
+make.acronyms <- function(type, force.symm, verbose=TRUE){
   # internal function which actually makes the acronym
   make.a <- function(opt.str){
     opt.str <- tolower(opt.str)
@@ -657,7 +654,7 @@ make.acronyms <- function(type, force.symm, print.type=TRUE){
     }
   }
   if(is.null(force.symm)) acr.force <- list("acronym"=NULL, "choice.print"="NONE")
-  if(print.type){
+  if(verbose){
     cat("\nCall:\nColoured GGM for paired data with:\nallowed types of coloured symmetry = ",  acr.type$choice.print, "\n", sep="")
     cat("forced coloured symmetry = ",  acr.force$choice.print, "\n\n", sep="")
   }

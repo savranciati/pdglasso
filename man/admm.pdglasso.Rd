@@ -19,7 +19,7 @@ admm.pdglasso(
   eps.abs = 1e-06,
   eps.rel = 1e-06,
   rcpp = TRUE,
-  print.type = TRUE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -48,9 +48,9 @@ of primal and dual feasibility tolerances of the ADMM.}
 \item{rcpp}{a logical; if `TRUE`, computations are performed using the Rcpp (C++) implementation;
 if `FALSE`, a pure (slower) R implementation is used.}
 
-\item{print.type}{a logical; if `TRUE` the pdRCON submodel class considered, as
+\item{verbose}{a logical; if `TRUE` the pdRCON submodel class considered, as
 specified by the arguments `type` and `force.symm`, is returned as printed
-output in the console.}
+output on the console.}
 }
 \value{
 A object of class `ADMMoutput` that is a list with the following components:
@@ -83,7 +83,7 @@ G <- pdColG.get(admm.out)
 summary(G)
 
 # model with no across-block symmetries allowed and full vertex-symmetry required
-admm.out <-admm.pdglasso(S, , lambda1=4, lambda2=0.7, type=c("v", "i"), force.symm = c("v"))
+admm.out <-admm.pdglasso(S, , lambda1=4, lambda2=0.7, type=c("v", "i"), force.symm = c("v"), verbose=TRUE)
 G <- pdColG.get(admm.out)
 summary(G)
 

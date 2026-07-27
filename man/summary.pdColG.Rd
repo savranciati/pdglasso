@@ -4,12 +4,12 @@
 \alias{summary.pdColG}
 \title{Structural properties of a coloured graph for paired data}
 \usage{
-\method{summary}{pdColG}(object, print.summary = TRUE, ...)
+\method{summary}{pdColG}(object, verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{a matrix of class `pdColG`; see [`pdglasso-package`] for details.}
 
-\item{print.summary}{a logical; if `TRUE` the summary is printed on the console.}
+\item{verbose}{a logical; if `TRUE` the summary is printed on the console.}
 
 \item{...}{not used. Included for compatibility with the generic `summary()` method.}
 }
@@ -31,7 +31,7 @@ of an object of class `pdColG`, such as that raturned by a call to  [`pdColG.get
 \examples{
 summary(toy_data$pdColG)
 
-model.summary <- summary(toy_data$pdColG, print.summary=FALSE)
+model.summary <- summary(toy_data$pdColG, verbose=FALSE)
 model.summary
 
 }
