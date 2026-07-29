@@ -364,8 +364,7 @@ plot.ADMMoutput <- function(x, y=NULL, add.default.th=TRUE, th1=NULL, th2=NULL, 
     if (y) abline(h=th.default, lty=2, col="red", lwd=2)
     if (!is.null(th2)) abline(h=th2, lty=2, col="blue", lwd=2)
   }
-  new.mar <- par(mar = c(0, 0, 0, 0))
-  on.exit(par(new.mar), add=TRUE)
+  par(mar = c(0, 0, 0, 0))
   plot(0, 0, type = "n", axes = FALSE, xlab = "", ylab = "", xlim = c(0, 1), ylim = c(0, 1))
   #plot(1, type = "n", axes=FALSE, xlab="", ylab="")
   legend("center",inset = 0,

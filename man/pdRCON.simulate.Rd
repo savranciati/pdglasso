@@ -16,7 +16,7 @@ pdRCON.simulate(
   dens.vertex = NULL,
   dens.inside = NULL,
   dens.across = NULL,
-  print.type = TRUE
+  verbose = TRUE
 )
 }
 \arguments{
@@ -47,7 +47,7 @@ explained in the "Details" section below. The default `dens.vertex=NULL` is
 equivalent to `dens.vertex=dens`, and similarly for `dens.inside` and
 `dens.across`.}
 
-\item{print.type}{a logical; if `TRUE` the pdRCON submodel class considered, as
+\item{verbose}{a logical; if `TRUE` the pdRCON submodel class considered, as
 specified by the arguments `type` and `force.symm`, is returned as printed
 output in the console.}
 }

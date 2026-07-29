@@ -305,7 +305,6 @@ admm_inner_r <- function(X,
 #' @param max_iter an integer.
 #' @param eps.abs a scalar.
 #' @param eps.rel a scalar.
-#' @param print.type a logical.
 #'
 #' @return A list.
 #' @noRd

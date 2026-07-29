@@ -54,7 +54,8 @@
 #' summary(G)
 #' 
 #' # model with no across-block symmetries allowed and full vertex-symmetry required
-#' admm.out <-admm.pdglasso(S, , lambda1=4, lambda2=0.7, type=c("v", "i"), force.symm = c("v"), verbose=TRUE)
+#' admm.out <- admm.pdglasso(S, lambda1=4, lambda2=0.7, type=c("v", "i"),
+#'             force.symm = c("v"), verbose=TRUE)
 #' G <- pdColG.get(admm.out)
 #' summary(G)
 #' 

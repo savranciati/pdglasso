@@ -26,7 +26,7 @@
 #'   explained in the "Details" section below. The default `dens.vertex=NULL` is
 #'   equivalent to `dens.vertex=dens`, and similarly for `dens.inside` and
 #'   `dens.across`.
-#' @param print.type a logical; if `TRUE` the pdRCON submodel class considered, as
+#' @param verbose a logical; if `TRUE` the pdRCON submodel class considered, as
 #'   specified by the arguments `type` and `force.symm`, is returned as printed
 #'   output in the console.
 #'
@@ -123,7 +123,7 @@ pdRCON.simulate <- function(p,
                             dens.vertex = NULL,
                             dens.inside = NULL,
                             dens.across = NULL,
-                            print.type = TRUE){
+                            verbose = TRUE){
   if((p %% 2) != 0) stop("The number of variables p must be even")
   if(concent.mat) {
     if(is.null(Sigma)) Sigma <- diag(1, p)
@@ -136,7 +136,7 @@ pdRCON.simulate <- function(p,
   PDCG <- make.pdColG(p = p, K = S.inv, type = type, force.symm = force.symm,
                       dens = dens,
                       dens.vertex = dens.vertex, dens.inside = dens.inside, dens.across = dens.across,
-                      print.type=print.type)
+                      verbose = verbose)
   if(concent.mat){
     K <- pdRCON.mle(S, PDCG)
     K[PDCG==0] <- 0
@@ -190,7 +190,7 @@ make.pdColG <- function(p=NULL,
                         dens.vertex=NULL,
                         dens.inside=NULL,
                         dens.across=NULL,
-                        print.type=FALSE){
+                        verbose=FALSE){
   
   # initialization and checks
   if(is.null(dens.vertex)) dens.vertex <- dens
@@ -199,7 +199,7 @@ make.pdColG <- function(p=NULL,
   dens.v <- c(dens, dens.vertex, dens.inside, dens.across)
   if (any(dens.v>1) | any(dens.v<0)) stop("all densities must be values in the interval [0; 1]")
   #
-  out.make.a <- make.acronyms(type, force.symm, print.type=print.type)
+  out.make.a <- make.acronyms(type, force.symm, verbose=verbose)
   acr.type <- strsplit(out.make.a$acronym.of.type, split = "")[[1]]
   acr.force <- out.make.a$acronym.of.force
   #
@@ -462,7 +462,7 @@ GenMod <- pdRCON.simulate (p,
                              dens.vertex = 0,
                              dens.inside = 0,
                              dens.across= 0,
-                             print.type = FALSE)
+                             verbose = FALSE)
   V.lab <- paste("V", 1:p, sep="")
   names(GenMod)[1] <- "G"
   dimnames(GenMod$G) <- list(V.lab, V.lab)
